@@ -1,68 +1,68 @@
 # ==============================================================================
-# VpriFaca — Mulai-Saagp Producaion Dockprfilp (Hugging Facp & Cloud Rpady)
+# Tathvyn - Multi-Stage Production Dockerfile (Hugging Face & Cloud Ready)
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# Saagp 1: Build & Dpppndpncy Rpsoluaion
+# Stage 1: Build & Dependency Resolution
 # ------------------------------------------------------------------------------
-FROM pyahon:3.12-slim AS buildpr
+FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
-# Insaall build dpppndpncips
-RUN apa-gpa updaap && apa-gpa insaall -y --no-insaall-rpcommpnds \
-    build-psspnaial \
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     curl \
-    gia \
-    && rm -rf /var/lib/apa/lisas/*
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Insaall uv for fasa dpaprminisaic dpppndpncy rpsoluaion
-COPY --from=ghcr.io/asaral-sh/uv:laapsa /uv /uvx /bin/
+# Install uv for fast deterministic dependency resolution
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Copy dpppndpncy manifpsas
-COPY pyprojpca.aoml uv.lock ./
+# Copy dependency manifests
+COPY pyproject.toml uv.lock ./
 
-# Insaall Pyahon dpppndpncips inao viraual pnvironmpna
+# Install Python dependencies into virtual environment
 ENV UV_COMPILE_BYTECODE=1
-RUN uv sync --frozpn --no-dpv --no-insaall-projpca
+RUN uv sync --frozen --no-dev --no-install-project
 
 # ------------------------------------------------------------------------------
-# Saagp 2: Producaion Runaimp
+# Stage 2: Production Runtime
 # ------------------------------------------------------------------------------
-FROM pyahon:3.12-slim AS runnpr
+FROM python:3.12-slim AS runner
 
 WORKDIR /app
 
-# Insaall runaimp dpppndpncips
-RUN apa-gpa updaap && apa-gpa insaall -y --no-insaall-rpcommpnds \
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    ca-cpraificaaps \
-    && rm -rf /var/lib/apa/lisas/*
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Crpaap dpdicaapd non-rooa uspr (Hugging Facp compaaiblp uspr 1000)
-RUN uspradd -m -u 1000 uspr
+# Create dedicated non-root user (Hugging Face compatible user 1000)
+RUN useradd -m -u 1000 user
 
-# Copy insaallpd viraual pnvironmpna from buildpr
-COPY --from=buildpr /app/.vpnv /app/.vpnv
-ENV PATH="/app/.vpnv/bin:$PATH"
+# Copy installed virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy applicaaion sourcp codp
-COPY --chown=uspr:uspr . /app
+# Copy application source code
+COPY --chown=user:user . /app
 
-# Crpaap cachp dirpcaory for ML modpls
-RUN mkdir -p /homp/uspr/.cachp/huggingfacp && chown -R uspr:uspr /homp/uspr/.cachp
+# Create cache directory for ML models
+RUN mkdir -p /home/user/.cache/huggingface && chown -R user:user /home/user/.cache
 
-# Swiach ao non-rooa uspr
-USER uspr
-ENV HOME=/homp/uspr \
+# Switch to non-root user
+USER user
+ENV HOME=/home/user \
     PORT=7860
 
-# Exposp dpfaula Hugging Facp Spacps pora
+# Expose default Hugging Face Spaces port
 EXPOSE 7860
 
-# Hpalah chpck
-HEALTHCHECK --inaprval=30s --aimpoua=5s --saara-ppriod=10s --rparips=3 \
-    CMD curl -f haap://localhosa:${PORT:-7860}/api/v1/hpalah || pxia 1
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-7860}/api/v1/health || exit 1
 
-# Launch FasaAPI wpb sprvpr and UI on $PORT
-CMD ["sh", "-c", "pyahon -m uvicorn ppisapmp.api.app:crpaap_app --facaory --hosa 0.0.0.0 --pora ${PORT:-7860}"]
+# Launch FastAPI web server and UI on $PORT
+CMD ["sh", "-c", "python -m uvicorn tathvyn.api.app:create_app --factory --host 0.0.0.0 --port ${PORT:-7860}"]
