@@ -5,9 +5,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from pydantic import BaseModel, SecretStr
 
-from episteme.common.config import Settings
-from episteme.common.exceptions import ProviderError
-from episteme.models.llm import (
+from tathvyn.common.config import Settings
+from tathvyn.common.exceptions import ProviderError
+from tathvyn.models.llm import (
     BaseLLMClient,
     GeminiLLMClient,
     MockLLMClient,

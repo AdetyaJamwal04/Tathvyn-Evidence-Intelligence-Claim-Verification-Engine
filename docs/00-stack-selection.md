@@ -1,8 +1,8 @@
-# Episteme — Concrete Technology Stack Selection (Phase 0 / MVP)
+# Tathvyn — Concrete Technology Stack Selection (Phase 0 / MVP)
 
 ## 1. Purpose
 
-While Episteme remains model-agnostic and provider-agnostic by architectural design, building and benchmarking require concrete starting dependencies. 
+While Tathvyn remains model-agnostic and provider-agnostic by architectural design, building and benchmarking require concrete starting dependencies. 
 
 This document locks the **concrete technology stack for Phase 0 and the initial MVP**. Every choice includes an architectural rationale and a clear "Revisit When" condition so changes can be managed via Architecture Decision Records (ADRs).
 

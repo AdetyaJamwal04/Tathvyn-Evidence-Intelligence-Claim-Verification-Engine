@@ -1,8 +1,8 @@
-# Episteme — System Architecture and Services Specification
+# Tathvyn — System Architecture and Services Specification
 
 ## 1. Purpose & Architectural Overview
 
-This document specifies the technical system architecture for Episteme. It defines:
+This document specifies the technical system architecture for Tathvyn. It defines:
 1. The **Modular Monolith** core package structure for early phases (Phase 0–Phase 4).
 2. The **Asynchronous Worker & Queue Topology** for scaling deep verification workloads.
 3. The **Service Boundaries & Extraction Path** for evolving into distributed services.
@@ -15,10 +15,10 @@ The guiding principle is:
 
 ## 2. Canonical Modular Monolith Package Structure
 
-All backend application code resides within the `episteme` namespace package. Cyclic dependencies between modules are strictly forbidden and enforced via CI linting rules.
+All backend application code resides within the `Tathvyn` namespace package. Cyclic dependencies between modules are strictly forbidden and enforced via CI linting rules.
 
 ```text
-episteme/
+Tathvyn/
 ├── __init__.py
 ├── main.py                                  # FastAPI application entrypoint & lifespan manager
 │
@@ -152,7 +152,7 @@ While synchronous verification (`FAST` mode) executes inline within the API requ
                                                           ▼
                                               ┌───────────────────────┐
                                               │ Redis Stream:         │
-                                              │ 'episteme:deep_queue' │
+                                              │ 'Tathvyn:deep_queue' │
                                               └───────────┬───────────┘
                                                           │
                                  ┌────────────────────────┼────────────────────────┐
@@ -190,7 +190,7 @@ class ResearchWorker:
             entries = await self.redis.xreadgroup(
                 groupname="research-workers",
                 consumername=self.worker_id,
-                streams={"episteme:deep_queue": ">"},
+                streams={"Tathvyn:deep_queue": ">"},
                 count=1,
                 block=2000
             )
@@ -256,7 +256,7 @@ def evaluate_evidence_graph(
 
 ## 5. Persistence Tier Architecture
 
-Episteme strictly separates **metadata & relational entities** from **raw document text** and **vector embeddings**:
+Tathvyn strictly separates **metadata & relational entities** from **raw document text** and **vector embeddings**:
 
 | Data Type | Target Storage System | Lifecycle & Eviction Policy |
 |---|---|---|
@@ -274,7 +274,7 @@ When traffic exceeds **500 requests per second**, the modular monolith separates
 
 ```text
 ┌─────────────────────────┐     gRPC      ┌─────────────────────────┐
-│   Episteme API Gateway  │ ────────────> │ Claim & Research Agent  │
+│   Tathvyn API Gateway  │ ────────────> │ Claim & Research Agent  │
 │   (Auth, Routing, Rate) │               │ (Orchestrator Service)  │
 └─────────────────────────┘               └───────────┬─────────────┘
                                                       │

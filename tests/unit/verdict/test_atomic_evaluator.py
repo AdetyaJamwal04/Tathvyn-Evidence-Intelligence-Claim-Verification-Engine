@@ -2,9 +2,9 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import AtomicClaimVerdict, EvidenceRelationship
-from episteme.common.models.evidence import Evidence, EvidenceState
-from episteme.verdict.atomic_evaluator import AtomicClaimVerdictEvaluator
+from tathvyn.common.enums import AtomicClaimVerdict, EvidenceRelationship
+from tathvyn.common.models.evidence import Evidence, EvidenceState
+from tathvyn.verdict.atomic_evaluator import AtomicClaimVerdictEvaluator
 
 
 def test_atomic_evaluation_supported() -> None:

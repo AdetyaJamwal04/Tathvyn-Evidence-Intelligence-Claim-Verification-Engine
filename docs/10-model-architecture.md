@@ -1,8 +1,8 @@
-# Episteme — Model Architecture
+# Tathvyn — Model Architecture
 
 ## 1. Purpose
 
-This document translates the Episteme methodology into a concrete machine-learning architecture.
+This document translates the Tathvyn methodology into a concrete machine-learning architecture.
 
 The objective is not to maximize model size.
 
@@ -39,7 +39,7 @@ The model architecture must therefore be:
 
 # 2. Model Architecture Principle
 
-Episteme should not depend on one "fact-checking model."
+Tathvyn should not depend on one "fact-checking model."
 
 Instead:
 
@@ -440,7 +440,7 @@ Memory
 
 Generic embedding benchmarks are insufficient.
 
-Episteme needs verification-specific evaluation.
+Tathvyn needs verification-specific evaluation.
 
 ---
 
@@ -1904,7 +1904,7 @@ API popularity
 
 > **Use the smallest, cheapest, most reliable model capable of solving each subproblem to the required quality level, and escalate only when the evidence state demands greater reasoning capability.**
 
-This principle is central to building Episteme for millions of users.
+This principle is central to building Tathvyn for millions of users.
 
 ---
 

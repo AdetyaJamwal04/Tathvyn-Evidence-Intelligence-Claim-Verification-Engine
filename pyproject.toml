@@ -1,5 +1,5 @@
 [project]
-name = "episteme"
+name = "tathvyn"
 version = "0.1.0"
 description = "Evidence-Grounded Automated Claim Verification Platform"
 readme = "README.md"
@@ -74,6 +74,6 @@ minversion = "8.0"
 asyncio_mode = "auto"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-addopts = "-v --cov=episteme --cov-report=term-missing"
+addopts = "-v --cov=tathvyn --cov-report=term-missing"
 
 

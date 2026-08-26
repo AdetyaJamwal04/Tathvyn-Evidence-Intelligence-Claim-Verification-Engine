@@ -1,14 +1,14 @@
-# Episteme — Evaluation and Benchmarking
+# Tathvyn — Evaluation and Benchmarking
 
 ## 1. Purpose
 
-Evaluation is not a final testing phase of Episteme.
+Evaluation is not a final testing phase of Tathvyn.
 
 It is a core architectural subsystem.
 
 The system makes a strong claim:
 
-> **Episteme can determine the factual status of claims using retrieved evidence.**
+> **Tathvyn can determine the factual status of claims using retrieved evidence.**
 
 That claim is meaningful only if it can be measured rigorously.
 
@@ -566,7 +566,7 @@ EvidenceRecall@K =
 {\text{gold evidence available}}
 \]
 
-This is a core Episteme metric.
+This is a core Tathvyn metric.
 
 ---
 
@@ -2257,7 +2257,7 @@ Promote only if the quality improvement justifies the cost.
              │                       │
              └───────────┬───────────┘
                          ▼
-                       Episteme
+                       Tathvyn
                          │
                          ▼
                      Predictions
@@ -2350,7 +2350,7 @@ The evaluation program should answer:
 
 > **If we cannot measure an improvement, we should not assume we engineered one.**
 
-Episteme should be developed as an empirical system:
+Tathvyn should be developed as an empirical system:
 
 ```text
 Hypothesis
@@ -2394,4 +2394,4 @@ It will define the actual decision layer:
 - verdict thresholds;
 - confidence intervals;
 - explanation generation boundaries;
-- and how Episteme converts an evidence graph into a **defensible final decision without pretending to know more than the evidence supports**.
+- and how Tathvyn converts an evidence graph into a **defensible final decision without pretending to know more than the evidence supports**.

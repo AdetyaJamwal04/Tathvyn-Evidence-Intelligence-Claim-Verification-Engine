@@ -2,15 +2,15 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import (
+from tathvyn.common.enums import (
     AtomicClaimVerdict,
     ClaimVerifiability,
     InternalVerdict,
     Materiality,
     PublicVerdict,
 )
-from episteme.common.models.claim import AtomicClaim
-from episteme.verdict.aggregator import ParentVerdictAggregator
+from tathvyn.common.models.claim import AtomicClaim
+from tathvyn.verdict.aggregator import ParentVerdictAggregator
 
 
 def test_unverifiable_claim_aggregation() -> None:

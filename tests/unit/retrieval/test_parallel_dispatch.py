@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.retrieval.interfaces import SearchProvider, SearchResponse, SearchResultItem
-from episteme.retrieval.providers.manager import SearchProviderManager
+from tathvyn.retrieval.interfaces import SearchProvider, SearchResponse, SearchResultItem
+from tathvyn.retrieval.providers.manager import SearchProviderManager
 
 
 class DummySearchProvider(SearchProvider):

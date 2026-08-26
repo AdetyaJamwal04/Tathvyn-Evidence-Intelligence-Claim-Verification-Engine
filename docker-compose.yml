@@ -10,11 +10,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - EPISTEME_ENVIRONMENT=production
-      - EPISTEME_HOST=0.0.0.0
-      - EPISTEME_PORT=8000
-      - EPISTEME_DATABASE_URL=postgresql+asyncpg://episteme:verifact_secret@postgres:5432/verifact_db
-      - EPISTEME_REDIS_URL=redis://redis:6379/0
+      - TATHVYN_ENVIRONMENT=production
+      - TATHVYN_HOST=0.0.0.0
+      - TATHVYN_PORT=8000
+      - TATHVYN_DATABASE_URL=postgresql+asyncpg://tathvyn:verifact_secret@postgres:5432/verifact_db
+      - TATHVYN_REDIS_URL=redis://redis:6379/0
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - TAVILY_API_KEY=${TAVILY_API_KEY:-}
       - BRAVE_SEARCH_API_KEY=${BRAVE_SEARCH_API_KEY:-}
@@ -37,11 +37,11 @@ services:
       dockerfile: Dockerfile
     container_name: verifact-worker
     restart: unless-stopped
-    command: ["python", "-c", "import asyncio; from episteme.workers.worker import ResearchWorker; from episteme.workers.queue import JobQueueManager; asyncio.run(ResearchWorker(JobQueueManager()).run_loop())"]
+    command: ["python", "-c", "import asyncio; from tathvyn.workers.worker import ResearchWorker; from tathvyn.workers.queue import JobQueueManager; asyncio.run(ResearchWorker(JobQueueManager()).run_loop())"]
     environment:
-      - EPISTEME_ENVIRONMENT=production
-      - EPISTEME_DATABASE_URL=postgresql+asyncpg://episteme:verifact_secret@postgres:5432/verifact_db
-      - EPISTEME_REDIS_URL=redis://redis:6379/0
+      - TATHVYN_ENVIRONMENT=production
+      - TATHVYN_DATABASE_URL=postgresql+asyncpg://tathvyn:verifact_secret@postgres:5432/verifact_db
+      - TATHVYN_REDIS_URL=redis://redis:6379/0
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - TAVILY_API_KEY=${TAVILY_API_KEY:-}
       - BRAVE_SEARCH_API_KEY=${BRAVE_SEARCH_API_KEY:-}

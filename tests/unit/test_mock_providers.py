@@ -2,9 +2,9 @@
 
 import pytest
 
-from episteme.common.enums import EvidenceRelationship
-from episteme.models.mock import MockEmbeddingModel, MockNLIModel, MockRerankerModel
-from episteme.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
+from tathvyn.common.enums import EvidenceRelationship
+from tathvyn.models.mock import MockEmbeddingModel, MockNLIModel, MockRerankerModel
+from tathvyn.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
 
 
 @pytest.mark.asyncio

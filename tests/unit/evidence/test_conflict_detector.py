@@ -2,9 +2,9 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import ConflictSeverity, ConflictType, EvidenceRelationship
-from episteme.common.models.evidence import Evidence
-from episteme.evidence.conflict_detector import ConflictDetector
+from tathvyn.common.enums import ConflictSeverity, ConflictType, EvidenceRelationship
+from tathvyn.common.models.evidence import Evidence
+from tathvyn.evidence.conflict_detector import ConflictDetector
 
 
 def test_direct_contradiction_detection() -> None:

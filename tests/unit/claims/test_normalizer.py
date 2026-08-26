@@ -1,6 +1,6 @@
 """Tests for Claim Normalization and Framing Removal."""
 
-from episteme.claims.normalizer import normalize_claim_text
+from tathvyn.claims.normalizer import normalize_claim_text
 
 
 def test_inquiry_framing_removal() -> None:

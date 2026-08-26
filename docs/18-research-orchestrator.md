@@ -1,14 +1,14 @@
-# Episteme — Research Orchestrator (Control Plane Specification)
+# Tathvyn — Research Orchestrator (Control Plane Specification)
 
 ## 1. Purpose & System Role
 
-The **Research Orchestrator** is the central control plane of Episteme. It converts the verification process from a rigid, one-shot retrieval pipeline into an **adaptive, hypothesis-driven sequential decision process**.
+The **Research Orchestrator** is the central control plane of Tathvyn. It converts the verification process from a rigid, one-shot retrieval pipeline into an **adaptive, hypothesis-driven sequential decision process**.
 
 ```text
 Static Pipeline (Insufficient):
 Claim → Search Queries → Retrieve Top-K → NLI Stance → Verdict
 
-Adaptive Agent (Episteme Orchestrator):
+Adaptive Agent (Tathvyn Orchestrator):
 Claim → Plan → Execute Action → Ingest Evidence → Assess Gaps & Conflicts → Decide Next Action → Stop → Verdict
 ```
 

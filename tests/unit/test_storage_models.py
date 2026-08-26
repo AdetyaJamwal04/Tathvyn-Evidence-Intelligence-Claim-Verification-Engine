@@ -1,7 +1,7 @@
 """Tests for SQLAlchemy ORM Models and Database Setup."""
 
-from episteme.storage.database import get_engine, get_session_factory
-from episteme.storage.models import (
+from tathvyn.storage.database import get_engine, get_session_factory
+from tathvyn.storage.models import (
     AtomicClaimORM,
     ClaimORM,
     ConflictORM,
@@ -14,7 +14,7 @@ from episteme.storage.models import (
     VerdictORM,
     VerificationRequestORM,
 )
-from episteme.storage.redis_client import get_redis_client, get_redis_pool
+from tathvyn.storage.redis_client import get_redis_client, get_redis_pool
 
 
 def test_orm_models_instantiation() -> None:

@@ -1,5 +1,5 @@
 /**
- * Episteme Pro — Modern Application Logic
+ * Tathvyn — Modern Application Logic
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderExportDossier(data, originalClaim, depth) {
-        const md = `# Episteme Investigation Dossier
+        const md = `# Tathvyn Investigation Dossier
 **Inquiry:** "${originalClaim}"
 **Verdict:** **${data.public_label}** (${Math.round((data.confidence || 0) * 100)}% Confidence)
 **Sufficiency:** ${Math.round((data.evidence_sufficiency || 0) * 100)}%
@@ -258,7 +258,7 @@ ${(data.citations || []).map(c => `- **[${c.citation_id}] ${c.source_name}** (${
 `;
         markdownReportPreview.value = md;
 
-        const curl = `curl -X POST "https://episteme-ai.onrender.com/api/v1/check" \\
+        const curl = `curl -X POST "https://Tathvyn-ai.onrender.com/api/v1/check" \\
   -H "Content-Type: application/json" \\
   -d '${JSON.stringify({ claim: originalClaim, depth: depth }, null, 2)}'`;
         curlSnippetPreview.textContent = curl;
@@ -280,7 +280,7 @@ ${(data.citations || []).map(c => `- **[${c.citation_id}] ${c.source_name}** (${
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `episteme_dossier_${currentData.request_id || Date.now()}.json`;
+        a.download = `Tathvyn_dossier_${currentData.request_id || Date.now()}.json`;
         a.click();
         URL.revokeObjectURL(url);
         showToast('JSON dossier downloaded!');
@@ -289,7 +289,7 @@ ${(data.citations || []).map(c => `- **[${c.citation_id}] ${c.source_name}** (${
     // 10. History Storage
     function getHistory() {
         try {
-            return JSON.parse(localStorage.getItem('episteme_history') || '[]');
+            return JSON.parse(localStorage.getItem('Tathvyn_history') || '[]');
         } catch {
             return [];
         }
@@ -305,7 +305,7 @@ ${(data.citations || []).map(c => `- **[${c.citation_id}] ${c.source_name}** (${
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             data: data
         });
-        localStorage.setItem('episteme_history', JSON.stringify(hist.slice(0, 20)));
+        localStorage.setItem('Tathvyn_history', JSON.stringify(hist.slice(0, 20)));
     }
 
     function renderHistory() {
@@ -346,7 +346,7 @@ ${(data.citations || []).map(c => `- **[${c.citation_id}] ${c.source_name}** (${
     }
 
     btnPurgeHistory.addEventListener('click', () => {
-        localStorage.removeItem('episteme_history');
+        localStorage.removeItem('Tathvyn_history');
         renderHistory();
         showToast('History cleared');
     });

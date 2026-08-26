@@ -1,4 +1,4 @@
-"""Interactive CLI for Episteme Claim Verification.
+"""Interactive CLI for Tathvyn Claim Verification.
 
 Runs the complete adaptive research engine and fact verification pipeline
 without requiring Docker, PostgreSQL, or Redis.
@@ -12,10 +12,10 @@ import sys
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from episteme.common.config import get_settings
-from episteme.common.enums import ResearchDepth
-from episteme.orchestration.engine import AdaptiveResearchEngine
-from episteme.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
+from tathvyn.common.config import get_settings
+from tathvyn.common.enums import ResearchDepth
+from tathvyn.orchestration.engine import AdaptiveResearchEngine
+from tathvyn.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
 
 
 async def verify_single_claim(
@@ -79,7 +79,7 @@ async def verify_single_claim(
 
 
 async def main() -> None:
-    parser = argparse.ArgumentParser(description="Episteme Claim Verification CLI")
+    parser = argparse.ArgumentParser(description="Tathvyn Claim Verification CLI")
     parser.add_argument("claim", nargs="*", help="The claim text to verify.")
     parser.add_argument(
         "--depth",
@@ -99,7 +99,7 @@ async def main() -> None:
         claim_text = " ".join(parsed_args.claim)
     else:
         print("\n" + "=" * 65)
-        print("🔍 Episteme — Automated Fact Verification Platform (MVP)")
+        print("🔍 Tathvyn — Automated Fact Verification Platform (MVP)")
         print("=" * 65)
         claim_text = input("\nEnter a claim to verify (or press Enter for default):\n> ").strip()
         if not claim_text:

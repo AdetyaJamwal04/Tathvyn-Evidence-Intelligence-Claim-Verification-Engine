@@ -1,10 +1,10 @@
-# Episteme — Security, Safety, and Adversarial Resilience Specification
+# Tathvyn — Security, Safety, and Adversarial Resilience Specification
 
 ## 1. Purpose & Threat Landscape
 
-Episteme autonomously retrieves, parses, and processes untrusted text from across the public internet. It is therefore exposed to a wide variety of web-borne attacks, adversarial content manipulation, prompt injection, and infrastructure abuse.
+Tathvyn autonomously retrieves, parses, and processes untrusted text from across the public internet. It is therefore exposed to a wide variety of web-borne attacks, adversarial content manipulation, prompt injection, and infrastructure abuse.
 
-This document establishes the **defense-in-depth security architecture** for Episteme. The core security invariant is:
+This document establishes the **defense-in-depth security architecture** for Tathvyn. The core security invariant is:
 > **All retrieved web documents, search snippets, and model outputs are strictly untrusted passive data. No external content shall ever possess execution authority, modify system verification thresholds, bypass safety policies, or access internal network boundaries.**
 
 ---
@@ -35,7 +35,7 @@ Threat Landscape:
 
 ## 3. Server-Side Request Forgery (SSRF) Protection
 
-When Episteme downloads web content via candidate URLs, all network requests MUST pass through a hardened fetcher pipeline.
+When Tathvyn downloads web content via candidate URLs, all network requests MUST pass through a hardened fetcher pipeline.
 
 ```mermaid
 flowchart TD
@@ -92,7 +92,7 @@ class HardenedURLFetcher:
 
 ## 4. Prompt Injection Defense Layers
 
-Because retrieved passages are fed into LLMs for decomposition, reasoning, and explanation, Episteme implements a multi-layered defense to prevent indirect prompt injection:
+Because retrieved passages are fed into LLMs for decomposition, reasoning, and explanation, Tathvyn implements a multi-layered defense to prevent indirect prompt injection:
 
 ```text
 Layer 1: Structural Delimitation

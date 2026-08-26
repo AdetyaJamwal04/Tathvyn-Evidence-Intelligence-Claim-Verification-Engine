@@ -1,8 +1,8 @@
-# Episteme — Evidence Model
+# Tathvyn — Evidence Model
 
 ## 1. Purpose
 
-This document defines how Episteme represents, evaluates, relates, and aggregates evidence.
+This document defines how Tathvyn represents, evaluates, relates, and aggregates evidence.
 
 Evidence is the central object of the verification system.
 
@@ -114,7 +114,7 @@ The object should remain traceable to its exact passage.
 
 # 6. Evidence Relationship
 
-The canonical relationship taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+The canonical relationship taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 
 Values:
 
@@ -1284,7 +1284,7 @@ Absolute risk reduction
 
 The evidence may support the literal statistic while the original framing is misleading.
 
-This is one reason Episteme needs a distinction between:
+This is one reason Tathvyn needs a distinction between:
 
 ```text
 SUPPORTED
@@ -1644,7 +1644,7 @@ LLM
 TRUE/FALSE
 ```
 
-Episteme instead aims for:
+Tathvyn instead aims for:
 
 ```text
 Claim
@@ -1672,7 +1672,7 @@ Evidence sufficiency
 Verdict
 ```
 
-This is the central architectural distinction of Episteme.
+This is the central architectural distinction of Tathvyn.
 
 ---
 

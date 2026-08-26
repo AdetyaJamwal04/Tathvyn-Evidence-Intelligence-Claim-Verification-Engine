@@ -1,8 +1,8 @@
-# Episteme — Production System Architecture
+# Tathvyn — Production System Architecture
 
 ## 1. Purpose
 
-This document translates the Episteme domain and ML architecture into a production-grade system architecture.
+This document translates the Tathvyn domain and ML architecture into a production-grade system architecture.
 
 The system must support two objectives simultaneously:
 
@@ -2129,7 +2129,7 @@ Do not extract services simply to make architecture diagrams larger.
 A practical codebase:
 
 ```text
-episteme/
+Tathvyn/
 ├── api/
 ├── domain/
 ├── application/

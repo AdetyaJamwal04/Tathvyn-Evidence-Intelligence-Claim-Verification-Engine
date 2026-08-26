@@ -2,11 +2,11 @@
 
 import pytest
 
-from episteme.common.enums import InternalVerdict, PublicVerdict
-from episteme.evidence.engine import EvidenceAssessmentEngine
-from episteme.models.mock import MockNLIModel, MockRerankerModel
-from episteme.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
-from episteme.verdict.pipeline import VeriFactPipeline
+from tathvyn.common.enums import InternalVerdict, PublicVerdict
+from tathvyn.evidence.engine import EvidenceAssessmentEngine
+from tathvyn.models.mock import MockNLIModel, MockRerankerModel
+from tathvyn.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
+from tathvyn.verdict.pipeline import VeriFactPipeline
 
 
 @pytest.mark.asyncio

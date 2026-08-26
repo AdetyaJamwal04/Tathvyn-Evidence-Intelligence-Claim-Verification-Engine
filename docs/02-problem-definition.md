@@ -1,8 +1,8 @@
-# Episteme — Problem Definition
+# Tathvyn — Problem Definition
 
 ## 1. Problem Statement
 
-Given a natural-language factual claim, Episteme must determine the state of available evidence surrounding that claim.
+Given a natural-language factual claim, Tathvyn must determine the state of available evidence surrounding that claim.
 
 The system must not simply classify:
 
@@ -110,7 +110,7 @@ Each atomic claim receives its own evidence and verification state.
 
 ## 7. Verification Objectives
 
-Episteme must:
+Tathvyn must:
 
 1. understand the claim;
 2. decompose compound claims;
@@ -169,7 +169,7 @@ A lack of evidence must not automatically be interpreted as evidence of falsity.
 
 ## 10. Overall Verdict Taxonomy
 
-The canonical taxonomies are formally defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+The canonical taxonomies are formally defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 
 | Verdict | Meaning |
 |---|---|
@@ -232,7 +232,7 @@ Performance should remain acceptable under ambiguity, contradiction, duplication
 
 ## 13. Product Constraints
 
-Episteme must simultaneously optimize:
+Tathvyn must simultaneously optimize:
 
 - verification quality;
 - evidence quality;

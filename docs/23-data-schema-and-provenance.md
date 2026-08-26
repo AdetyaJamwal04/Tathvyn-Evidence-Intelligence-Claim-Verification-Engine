@@ -1,8 +1,8 @@
-# Episteme — Data Schema, Storage, and Provenance Graph Specification
+# Tathvyn — Data Schema, Storage, and Provenance Graph Specification
 
 ## 1. Purpose & Persistence Architecture
 
-Episteme requires a persistent, auditable data store capable of satisfying two distinct workloads:
+Tathvyn requires a persistent, auditable data store capable of satisfying two distinct workloads:
 1. **High-Throughput Verification Engine Workloads**: Fast indexed lookups for claim deduplication, semantic vector searches over passages, and real-time state persistence.
 2. **Epistemic Traceability & Auditability**: Permanent, immutable recording of historical evidence snapshots, provenance trees, model versions, and calibrated verdict decisions.
 

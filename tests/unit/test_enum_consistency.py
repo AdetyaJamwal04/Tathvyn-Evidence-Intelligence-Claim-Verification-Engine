@@ -1,6 +1,6 @@
 """Tests for Canonical Enum Taxonomies and Verdict Mappings."""
 
-from episteme.common.enums import (
+from tathvyn.common.enums import (
     INTERNAL_TO_PUBLIC_VERDICT,
     EvidenceRelationship,
     InternalVerdict,

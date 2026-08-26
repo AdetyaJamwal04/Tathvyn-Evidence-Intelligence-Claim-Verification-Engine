@@ -1,4 +1,4 @@
-# Episteme — Phase 0: Definition of Done (Foundations)
+# Tathvyn — Phase 0: Definition of Done (Foundations)
 
 ## 1. Purpose
 
@@ -17,8 +17,8 @@ To prevent premature feature work before the scaffolding is rock-solid, this doc
 - [ ] `.env.example` file specifying all environment variables (API keys, database URLs, model cache paths) without exposing real credentials.
 
 ### 2.2 Configuration Management
-- [ ] `episteme/common/config.py` implemented using `pydantic-settings`.
-- [ ] Hierarchical configuration: default parameters, YAML override support, and environment variable overrides (`EPISTEME_*` prefix).
+- [ ] `Tathvyn/common/config.py` implemented using `pydantic-settings`.
+- [ ] Hierarchical configuration: default parameters, YAML override support, and environment variable overrides (`Tathvyn_*` prefix).
 - [ ] Settings include typed configurations for:
   - Database & Redis connection parameters
   - Search provider keys & rate limits
@@ -27,7 +27,7 @@ To prevent premature feature work before the scaffolding is rock-solid, this doc
   - Verification budget defaults (search call limits, token limits)
 
 ### 2.3 Canonical Domain Models
-- [ ] Core domain objects implemented in `episteme/common/models/` as typed Pydantic v2 schemas matching `00-canonical-enums.md`:
+- [ ] Core domain objects implemented in `Tathvyn/common/models/` as typed Pydantic v2 schemas matching `00-canonical-enums.md`:
   - `Claim`, `AtomicClaim`, `ClaimType`, `Materiality`
   - `Source`, `Document`, `Passage`, `SourceType`, `AuthorityClass`
   - `Evidence`, `EvidenceRelationship`, `EvidenceState`, `EvidenceSnapshot`
@@ -40,12 +40,12 @@ To prevent premature feature work before the scaffolding is rock-solid, this doc
 
 ### 2.4 Abstract Provider Interfaces
 - [ ] Abstract Base Classes (ABCs) created with strict type signatures:
-  - `SearchProvider` (`episteme/retrieval/interfaces.py`)
-  - `DocumentFetcher` (`episteme/retrieval/interfaces.py`)
-  - `EmbeddingModel` (`episteme/models/interfaces.py`)
-  - `RerankerModel` (`episteme/models/interfaces.py`)
-  - `NLIModel` (`episteme/models/interfaces.py`)
-  - `ReasoningLLM` (`episteme/orchestration/interfaces.py`)
+  - `SearchProvider` (`Tathvyn/retrieval/interfaces.py`)
+  - `DocumentFetcher` (`Tathvyn/retrieval/interfaces.py`)
+  - `EmbeddingModel` (`Tathvyn/models/interfaces.py`)
+  - `RerankerModel` (`Tathvyn/models/interfaces.py`)
+  - `NLIModel` (`Tathvyn/models/interfaces.py`)
+  - `ReasoningLLM` (`Tathvyn/orchestration/interfaces.py`)
 - [ ] Mock / stub implementations for each interface to allow testing without live network or GPU resources.
 
 ### 2.5 Database & Storage Scaffolding
@@ -69,7 +69,7 @@ To prevent premature feature work before the scaffolding is rock-solid, this doc
   - `tests/unit/test_config.py`
   - `tests/unit/test_enum_consistency.py`
   - `tests/unit/test_mock_providers.py`
-- [ ] Code formatting (`ruff format --check`) and type checking (`mypy episteme`) pass with **zero errors and zero warnings**.
+- [ ] Code formatting (`ruff format --check`) and type checking (`mypy Tathvyn`) pass with **zero errors and zero warnings**.
 
 ---
 
@@ -78,13 +78,13 @@ To prevent premature feature work before the scaffolding is rock-solid, this doc
 Phase 0 is officially declared complete and Phase 1 (Claim Intelligence) may begin only when:
 ```bash
 # Run formatting and linting
-ruff check episteme tests
-ruff format --check episteme tests
+ruff check Tathvyn tests
+ruff format --check Tathvyn tests
 
 # Run strict type checking
-mypy episteme
+mypy Tathvyn
 
 # Run all unit tests
-pytest tests/unit -v --cov=episteme
+pytest tests/unit -v --cov=Tathvyn
 ```
 All commands return exit code `0`.

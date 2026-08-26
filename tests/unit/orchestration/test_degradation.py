@@ -1,7 +1,7 @@
 """Unit Tests for Degradation Controller and Load Shedding."""
 
-from episteme.common.enums import VerificationMode
-from episteme.orchestration.degradation import DegradationController
+from tathvyn.common.enums import VerificationMode
+from tathvyn.orchestration.degradation import DegradationController
 
 
 def test_degradation_normal_load() -> None:

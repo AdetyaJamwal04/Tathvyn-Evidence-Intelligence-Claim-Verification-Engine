@@ -2,10 +2,10 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import EvidenceRelationship
-from episteme.common.models.evidence import Evidence
-from episteme.common.models.source import Document, Passage
-from episteme.evidence.provenance import ProvenanceClusterer
+from tathvyn.common.enums import EvidenceRelationship
+from tathvyn.common.models.evidence import Evidence
+from tathvyn.common.models.source import Document, Passage
+from tathvyn.evidence.provenance import ProvenanceClusterer
 
 
 def test_domain_clustering_and_independence_discounting() -> None:

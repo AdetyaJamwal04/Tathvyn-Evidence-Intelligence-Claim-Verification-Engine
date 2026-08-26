@@ -1,6 +1,6 @@
 """Tests for Confidence Calibrator."""
 
-from episteme.verdict.calibrator import ConfidenceCalibrator
+from tathvyn.verdict.calibrator import ConfidenceCalibrator
 
 
 def test_confidence_calibration_scaling() -> None:

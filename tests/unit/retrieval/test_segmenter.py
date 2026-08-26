@@ -2,7 +2,7 @@
 
 from uuid import uuid4
 
-from episteme.retrieval.segmenter import segment_document_text
+from tathvyn.retrieval.segmenter import segment_document_text
 
 
 def test_short_document_single_passage() -> None:

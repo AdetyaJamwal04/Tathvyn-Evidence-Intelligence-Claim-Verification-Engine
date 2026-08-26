@@ -2,9 +2,9 @@
 
 from uuid import uuid4
 
-from episteme.claims.decomposer import decompose_claim
-from episteme.common.enums import ClaimType, Materiality
-from episteme.common.models.claim import Claim
+from tathvyn.claims.decomposer import decompose_claim
+from tathvyn.common.enums import ClaimType, Materiality
+from tathvyn.common.models.claim import Claim
 
 
 def test_already_atomic_claim_preservation() -> None:

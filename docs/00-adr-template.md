@@ -1,6 +1,6 @@
 # Architecture Decision Record (ADR) Template
 
-All architectural, algorithmic, infrastructure, or model selection decisions in Episteme must be formally recorded using this template. Store completed records under `docs/adr/ADR-XXX-short-title.md`.
+All architectural, algorithmic, infrastructure, or model selection decisions in Tathvyn must be formally recorded using this template. Store completed records under `docs/adr/ADR-XXX-short-title.md`.
 
 ---
 

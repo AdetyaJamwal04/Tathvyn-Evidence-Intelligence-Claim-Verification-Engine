@@ -1,8 +1,8 @@
-# Episteme — Verdict Engine and Calibration
+# Tathvyn — Verdict Engine and Calibration
 
 ## 1. Purpose
 
-The Verdict Engine is the decision layer of Episteme.
+The Verdict Engine is the decision layer of Tathvyn.
 
 Its responsibility is to transform:
 
@@ -94,7 +94,7 @@ Explanation + Citations
 
 # 4. Verdict Classes
 
-Canonical internal and public taxonomies are defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+Canonical internal and public taxonomies are defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 
 Public user-facing verdicts:
 
@@ -2069,7 +2069,7 @@ Abstention
 Verdict
 ```
 
-The goal is not to make Episteme sound certain.
+The goal is not to make Tathvyn sound certain.
 
 The goal is to make its certainty **earned by evidence**.
 

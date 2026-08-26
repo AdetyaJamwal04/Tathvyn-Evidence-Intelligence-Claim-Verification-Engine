@@ -1,8 +1,8 @@
-# Episteme — Canonical Enums and Taxonomies
+# Tathvyn — Canonical Enums and Taxonomies
 
 ## 1. Purpose
 
-This document is the **single source of truth** for all enums, taxonomies, and categorical values used across the Episteme system.
+This document is the **single source of truth** for all enums, taxonomies, and categorical values used across the Tathvyn system.
 
 When any other document references a classification, label set, or categorical type, the canonical definition lives here. If a conflict exists between this document and another, **this document takes precedence**.
 

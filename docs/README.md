@@ -1,6 +1,6 @@
-# Episteme — Architecture and Engineering Documentation
+# Tathvyn — Architecture and Engineering Documentation
 
-Welcome to the comprehensive architecture and design specification for **Episteme**, an evidence-grounded claim verification platform designed for automated, calibrated, and auditable fact verification.
+Welcome to the comprehensive architecture and design specification for **Tathvyn**, an evidence-grounded claim verification platform designed for automated, calibrated, and auditable fact verification.
 
 ---
 
@@ -9,7 +9,7 @@ Welcome to the comprehensive architecture and design specification for **Epistem
 The documentation is organized into three major tiers: **Foundations & Canonical Standards (00–05)**, **Core Subsystem Specifications (06–17)**, and **Production & Scale Engineering (18–26)**.
 
 ```text
-episteme_docs/
+Tathvyn_docs/
 ├── 00-canonical-enums.md                              # Single source of truth for all taxonomies and enums
 ├── 00-stack-selection.md                              # Concrete Phase 0 / MVP technology choices
 ├── 00-seed-benchmark.md                               # 50-claim seed benchmark suite & evaluation runner contract
@@ -52,7 +52,7 @@ episteme_docs/
 
 ## 2. End-to-End Architectural Progression
 
-Episteme enforces a strict, multi-stage pipeline where raw text is converted into structured evidence before reaching a final verdict:
+Tathvyn enforces a strict, multi-stage pipeline where raw text is converted into structured evidence before reaching a final verdict:
 
 ```text
 User Claim Input
@@ -78,7 +78,7 @@ User Claim Input
 
 ## 3. Core Epistemic Invariants
 
-Across all documents, Episteme maintains these non-negotiable principles:
+Across all documents, Tathvyn maintains these non-negotiable principles:
 
 1. **Evidence Grounding**: The system never issues a directional verdict based solely on internal LLM parameters or knowledge.
 2. **Semantic Similarity $\neq$ Evidence**: Finding a topically similar webpage does not constitute proof or refutation.

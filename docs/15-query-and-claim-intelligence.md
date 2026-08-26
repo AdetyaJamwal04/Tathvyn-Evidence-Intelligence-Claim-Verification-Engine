@@ -1,8 +1,8 @@
-# Episteme — Query and Claim Intelligence
+# Tathvyn — Query and Claim Intelligence
 
 ## 1. Purpose
 
-Claim and Query Intelligence is the front end of the Episteme verification pipeline.
+Claim and Query Intelligence is the front end of the Tathvyn verification pipeline.
 
 Its job is to answer:
 
@@ -2020,7 +2020,7 @@ The system should empirically determine:
 
 # 101. Final Principle
 
-> **Before Episteme asks whether something is true, it must first establish what exactly is being asserted.**
+> **Before Tathvyn asks whether something is true, it must first establish what exactly is being asserted.**
 
 The Claim Intelligence layer should transform:
 
@@ -2063,4 +2063,4 @@ It will define:
 - statistical significance;
 - regression testing;
 - error taxonomy;
-- and the metrics required to prove that Episteme is actually improving rather than merely becoming more complex.
+- and the metrics required to prove that Tathvyn is actually improving rather than merely becoming more complex.

@@ -1,8 +1,8 @@
-# Episteme — Retrieval Strategy
+# Tathvyn — Retrieval Strategy
 
 ## 1. Purpose
 
-This document defines the retrieval architecture for Episteme.
+This document defines the retrieval architecture for Tathvyn.
 
 Retrieval is one of the most important components of the system because:
 
@@ -28,7 +28,7 @@ The retrieval layer therefore exists to construct a high-quality **candidate evi
 
 # 2. Retrieval Principle
 
-Episteme SHALL NOT treat web search as a single operation.
+Tathvyn SHALL NOT treat web search as a single operation.
 
 Instead:
 

@@ -3,11 +3,11 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from episteme.api.app import create_app
-from episteme.evidence.engine import EvidenceAssessmentEngine
-from episteme.models.mock import MockNLIModel, MockRerankerModel
-from episteme.orchestration.engine import AdaptiveResearchEngine
-from episteme.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
+from tathvyn.api.app import create_app
+from tathvyn.evidence.engine import EvidenceAssessmentEngine
+from tathvyn.models.mock import MockNLIModel, MockRerankerModel
+from tathvyn.orchestration.engine import AdaptiveResearchEngine
+from tathvyn.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
 
 
 @pytest.mark.asyncio

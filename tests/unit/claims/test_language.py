@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.claims.language import detect_language, enforce_language_gate
-from episteme.common.exceptions import UnsupportedLanguageError
+from tathvyn.claims.language import detect_language, enforce_language_gate
+from tathvyn.common.exceptions import UnsupportedLanguageError
 
 
 def test_english_detection_and_gate() -> None:

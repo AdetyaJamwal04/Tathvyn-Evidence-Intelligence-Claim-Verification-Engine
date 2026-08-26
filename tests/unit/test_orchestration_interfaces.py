@@ -4,7 +4,7 @@ from typing import Any, TypeVar
 
 from pydantic import BaseModel
 
-from episteme.orchestration.interfaces import LLMReasoningResponse, ReasoningLLM
+from tathvyn.orchestration.interfaces import LLMReasoningResponse, ReasoningLLM
 
 T = TypeVar("T", bound=BaseModel)
 

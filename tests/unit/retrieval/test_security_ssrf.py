@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.common.exceptions import SecurityViolationError, SSRFAttemptError
-from episteme.retrieval.security import is_ip_blocked, validate_url_security
+from tathvyn.common.exceptions import SecurityViolationError, SSRFAttemptError
+from tathvyn.retrieval.security import is_ip_blocked, validate_url_security
 
 
 def test_public_urls_allowed() -> None:

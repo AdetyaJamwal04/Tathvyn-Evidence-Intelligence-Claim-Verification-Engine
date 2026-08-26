@@ -1,16 +1,16 @@
-# Episteme — API and Product Contracts Specification (v1.0)
+# Tathvyn — API and Product Contracts Specification (v1.0)
 
 ## 1. Purpose & API Design Principles
 
-The Episteme REST API exposes a stable, versioned HTTP interface for automated fact verification. 
+The Tathvyn REST API exposes a stable, versioned HTTP interface for automated fact verification. 
 
 Key API Principles:
-1. **Canonical Schema Stability**: Output verdicts and evidence structures adhere strictly to [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+1. **Canonical Schema Stability**: Output verdicts and evidence structures adhere strictly to [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 2. **Epistemic Transparency**: Every response exposes calibrated confidence scores, evidence sufficiency metrics, and traceable citations.
 3. **Idempotency & Deduplication**: Long-running or repeated requests utilize `Idempotency-Key` headers to prevent redundant computation.
 4. **Structured Error Model**: Errors conform to RFC-7807 problem details, distinguishing infrastructure failures from epistemic uncertainty.
 
-Base URL: `https://api.episteme.io/api/v1`
+Base URL: `https://api.Tathvyn.io/api/v1`
 
 ---
 
@@ -112,7 +112,7 @@ Used for complex, multi-clause, or controversial claims requiring deep multi-rou
 {
   "claim": "Sweden joined NATO in March 2024 as its 32nd member state, whereas Finland rejected NATO membership in 2023.",
   "mode": "DEEP",
-  "webhook_url": "https://client.example.com/webhooks/episteme"
+  "webhook_url": "https://client.example.com/webhooks/Tathvyn"
 }
 ```
 
@@ -122,7 +122,7 @@ Used for complex, multi-clause, or controversial claims requiring deep multi-rou
   "request_id": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
   "status": "QUEUED",
   "estimated_duration_seconds": 12.0,
-  "status_url": "https://api.episteme.io/api/v1/research/7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d"
+  "status_url": "https://api.Tathvyn.io/api/v1/research/7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d"
 }
 ```
 
@@ -150,10 +150,10 @@ Returns full payload matching the structure in §3.2 with `verdict: "PARTIALLY T
 
 ```json
 {
-  "type": "https://episteme.io/errors/unsupported-language",
+  "type": "https://Tathvyn.io/errors/unsupported-language",
   "title": "Unsupported Language",
   "status": 422,
-  "detail": "Episteme MVP currently supports English claims only. Detected language: 'fr' (French) with confidence 0.98.",
+  "detail": "Tathvyn MVP currently supports English claims only. Detected language: 'fr' (French) with confidence 0.98.",
   "error_code": "UNSUPPORTED_LANGUAGE",
   "request_id": "req_error_7721",
   "timestamp": "2026-08-18T20:58:12.441Z"

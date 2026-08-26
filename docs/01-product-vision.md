@@ -1,10 +1,10 @@
-# Episteme — Product Vision
+# Tathvyn — Product Vision
 
 ## 1. Executive Vision
 
-**Episteme is an evidence-grounded claim verification platform designed to determine what the available evidence supports, contradicts, or leaves unresolved.**
+**Tathvyn is an evidence-grounded claim verification platform designed to determine what the available evidence supports, contradicts, or leaves unresolved.**
 
-The long-term vision is not to build another chatbot that searches the web and produces a confident-sounding answer. Episteme is intended to become a **reliable verification and evidence intelligence layer** for applications, researchers, enterprises, journalists, analysts, and AI agents.
+The long-term vision is not to build another chatbot that searches the web and produces a confident-sounding answer. Tathvyn is intended to become a **reliable verification and evidence intelligence layer** for applications, researchers, enterprises, journalists, analysts, and AI agents.
 
 > **A claim should not be judged by how plausible it sounds, how many webpages repeat it, or what an LLM believes. It should be judged by the quality, relevance, independence, temporal validity, and consistency of the evidence available for it.**
 
@@ -20,7 +20,7 @@ The central product problem is:
 
 ## 3. Product Thesis
 
-Episteme is built around five principles:
+Tathvyn is built around five principles:
 
 1. **Retrieval is not verification.**
 2. **Evidence quality matters more than source count.**
@@ -28,9 +28,9 @@ Episteme is built around five principles:
 4. **Uncertainty is a valid outcome.**
 5. **Every conclusion must be traceable to evidence.**
 
-## 4. What Episteme Is
+## 4. What Tathvyn Is
 
-Episteme is an adaptive, evidence-grounded claim verification system with five major capabilities:
+Tathvyn is an adaptive, evidence-grounded claim verification system with five major capabilities:
 
 1. **Claim Understanding** — understand what is actually being asserted.
 2. **Evidence Discovery** — search for supporting, contradicting, and primary evidence.
@@ -38,9 +38,9 @@ Episteme is an adaptive, evidence-grounded claim verification system with five m
 4. **Evidence Reasoning** — account for source quality, independence, contradictions, temporal validity, and claim coverage.
 5. **Uncertainty-Aware Verdict Generation** — communicate what the evidence supports and what remains unresolved.
 
-## 5. What Episteme Is Not
+## 5. What Tathvyn Is Not
 
-Episteme is not:
+Tathvyn is not:
 
 - a universal truth oracle;
 - a search engine;
@@ -78,13 +78,13 @@ Calibrated Explanation
 
 ## 7. Atomic Claim Philosophy
 
-Complex claims may contain several independently verifiable propositions. Episteme therefore decomposes compound claims into atomic claims and evaluates them individually before determining the status of the overall claim.
+Complex claims may contain several independently verifiable propositions. Tathvyn therefore decomposes compound claims into atomic claims and evaluates them individually before determining the status of the overall claim.
 
 This enables the system to distinguish between fully supported, refuted, partially supported, misleading, and insufficiently evidenced statements.
 
 ## 8. Evidence as a First-Class Object
 
-A webpage is not automatically evidence. Episteme treats evidence as a specific, traceable piece of information extracted from a source.
+A webpage is not automatically evidence. Tathvyn treats evidence as a specific, traceable piece of information extracted from a source.
 
 Evidence should retain:
 
@@ -124,7 +124,7 @@ The Evidence Graph connects claims, atomic claims, evidence, sources, and proven
 
 Verification must not be confirmation-only.
 
-For sufficiently complex claims, Episteme should investigate:
+For sufficiently complex claims, Tathvyn should investigate:
 
 - supporting evidence;
 - contradicting evidence;
@@ -144,7 +144,7 @@ The stopping decision should depend on **evidence sufficiency and expected value
 
 ## 12. Accuracy, Cost, and Scale
 
-Episteme optimizes verification quality under realistic product constraints.
+Tathvyn optimizes verification quality under realistic product constraints.
 
 The system should use:
 
@@ -161,7 +161,7 @@ Expensive operations should be used only where they provide measurable increment
 
 ## 13. Product-Scale Philosophy
 
-Episteme should be designed with millions of users as a long-term operating assumption.
+Tathvyn should be designed with millions of users as a long-term operating assumption.
 
 Important capabilities include:
 
@@ -193,7 +193,7 @@ System quality should be decomposed into:
 
 Model confidence, evidence strength, and probability of correctness are not automatically equivalent.
 
-Episteme should eventually calibrate reported confidence empirically using measures such as:
+Tathvyn should eventually calibrate reported confidence empirically using measures such as:
 
 - Expected Calibration Error;
 - Brier score;
@@ -225,7 +225,7 @@ The system must eventually address:
 
 ## 18. Temporal Awareness
 
-Facts change. Episteme must distinguish:
+Facts change. Tathvyn must distinguish:
 
 - historical truth;
 - current truth;
@@ -253,15 +253,15 @@ A user submits a claim encountered online and receives an evidence-backed assess
 
 ### Research Verification
 
-A researcher asks Episteme to investigate a factual assertion using authoritative and primary sources.
+A researcher asks Tathvyn to investigate a factual assertion using authoritative and primary sources.
 
 ### Developer API
 
-An application sends claims to Episteme and receives structured verification results.
+An application sends claims to Tathvyn and receives structured verification results.
 
 ### AI-Agent Verification
 
-An autonomous AI agent submits factual assertions to Episteme before presenting them to a user.
+An autonomous AI agent submits factual assertions to Tathvyn before presenting them to a user.
 
 ## 21. Differentiation
 
@@ -271,7 +271,7 @@ Conventional RAG generally follows:
 retrieve → generate
 ```
 
-Episteme is intended to follow:
+Tathvyn is intended to follow:
 
 ```text
 understand
@@ -353,7 +353,7 @@ The longer-term product can become:
 
 ## 24. Non-Goals
 
-For the initial product, Episteme will not attempt to:
+For the initial product, Tathvyn will not attempt to:
 
 - establish metaphysical or absolute truth;
 - verify every subjective opinion;
@@ -366,13 +366,13 @@ For the initial product, Episteme will not attempt to:
 
 > **Do not ask an AI whether something is true. Ask it to investigate what the evidence says.**
 
-Episteme's purpose is not to manufacture certainty. Its purpose is to construct the best available evidence picture, reason over it transparently, and communicate both the conclusion and the remaining uncertainty.
+Tathvyn's purpose is not to manufacture certainty. Its purpose is to construct the best available evidence picture, reason over it transparently, and communicate both the conclusion and the remaining uncertainty.
 
 ---
 
 # Final Vision
 
-**Episteme aims to become an evidence intelligence and claim verification layer for the AI-native world.**
+**Tathvyn aims to become an evidence intelligence and claim verification layer for the AI-native world.**
 
 The immediate product is a sophisticated claim verification system.
 
@@ -386,4 +386,4 @@ The deeper objective is infrastructure capable of answering:
 - What remains uncertain?
 - Is additional research worth its cost?
 
-If Episteme can answer those questions reliably, efficiently, transparently, and at scale, it moves beyond a conventional RAG application and becomes a **general-purpose evidence reasoning system** for humans, applications, and autonomous AI agents.
+If Tathvyn can answer those questions reliably, efficiently, transparently, and at scale, it moves beyond a conventional RAG application and becomes a **general-purpose evidence reasoning system** for humans, applications, and autonomous AI agents.

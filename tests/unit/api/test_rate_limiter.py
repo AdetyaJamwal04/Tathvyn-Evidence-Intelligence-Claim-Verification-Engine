@@ -3,8 +3,8 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from episteme.api.app import create_app
-from episteme.api.rate_limiter import RateLimiter
+from tathvyn.api.app import create_app
+from tathvyn.api.rate_limiter import RateLimiter
 
 
 def test_rate_limiter_sliding_window_logic() -> None:

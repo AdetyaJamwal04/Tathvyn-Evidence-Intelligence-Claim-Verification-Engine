@@ -1,6 +1,6 @@
 """Tests for Evaluation Metrics Engine."""
 
-from episteme.evaluation.metrics import (
+from tathvyn.evaluation.metrics import (
     calculate_brier_score,
     calculate_confusion_matrix,
     calculate_expected_calibration_error,

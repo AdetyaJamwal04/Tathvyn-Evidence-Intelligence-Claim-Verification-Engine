@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytest
 from pydantic import ValidationError
 
-from episteme.common.enums import (
+from tathvyn.common.enums import (
     AuthorityClass,
     ClaimType,
     InternalVerdict,
@@ -14,7 +14,7 @@ from episteme.common.enums import (
     PublicVerdict,
     SourceType,
 )
-from episteme.common.models import (
+from tathvyn.common.models import (
     AtomicClaim,
     Citation,
     Claim,

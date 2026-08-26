@@ -1,8 +1,8 @@
-# Episteme — Verification Methodology
+# Tathvyn — Verification Methodology
 
 ## 1. Purpose
 
-This document defines how Episteme transforms a natural-language claim into an evidence-grounded verification result.
+This document defines how Tathvyn transforms a natural-language claim into an evidence-grounded verification result.
 
 The methodology is deliberately specified before selecting concrete models or infrastructure.
 
@@ -14,7 +14,7 @@ The central objective is:
 
 # 2. Fundamental Verification Principle
 
-Episteme SHALL NOT treat verification as a direct classification problem:
+Tathvyn SHALL NOT treat verification as a direct classification problem:
 
 ```text
 Claim → TRUE / FALSE
@@ -505,7 +505,7 @@ Five URLs exist.
 
 But there may be only one underlying information origin.
 
-Episteme should therefore estimate:
+Tathvyn should therefore estimate:
 
 ```text
 Independent Evidence Units
@@ -808,7 +808,7 @@ A claim exhibits framing distortion when:
 - the framing creates a materially incorrect interpretation;
 - or a true statement is used to imply a false conclusion.
 
-In the **canonical MVP taxonomy** (defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md)), such claims receive the verdict `PARTIALLY_SUPPORTED` accompanied by a metadata flag `framing_concerns: true`. 
+In the **canonical MVP taxonomy** (defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md)), such claims receive the verdict `PARTIALLY_SUPPORTED` accompanied by a metadata flag `framing_concerns: true`. 
 
 A standalone `MISLEADING` top-level verdict is deferred to V2, where dedicated framing models and calibrated threshold data become available.
 

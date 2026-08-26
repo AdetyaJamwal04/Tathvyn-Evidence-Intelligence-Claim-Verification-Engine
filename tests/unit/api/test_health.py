@@ -1,6 +1,6 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
-from episteme.api.app import create_app
+from tathvyn.api.app import create_app
 
 @pytest.mark.asyncio
 async def test_health_check_endpoint() -> None:
@@ -21,7 +21,7 @@ async def test_openapi_schema_generation() -> None:
         response = await client.get("/openapi.json")
         assert response.status_code == 200
         data = response.json()
-        assert data["info"]["title"] == "Episteme API"
+        assert data["info"]["title"] == "Tathvyn API"
 
 @pytest.mark.asyncio
 async def test_web_dashboard_root_serving() -> None:
@@ -29,4 +29,4 @@ async def test_web_dashboard_root_serving() -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/")
         assert response.status_code == 200
-        assert "Episteme" in response.text
+        assert "Tathvyn" in response.text

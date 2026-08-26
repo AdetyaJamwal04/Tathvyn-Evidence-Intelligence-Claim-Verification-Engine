@@ -1,8 +1,8 @@
-# Episteme — Verdict Engine
+# Tathvyn — Verdict Engine
 
 ## 1. Purpose
 
-This document defines the final decision layer of Episteme.
+This document defines the final decision layer of Tathvyn.
 
 The Verdict Engine transforms the accumulated research state into a structured verification judgment.
 
@@ -55,7 +55,7 @@ Verification Result
 
 # 3. Verdict Vocabulary
 
-The canonical internal verdict taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md):
+The canonical internal verdict taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md):
 
 ```text
 SUPPORTED
@@ -1670,7 +1670,7 @@ The tradeoff must be measured rather than assumed.
 
 > **The correct verdict is not the most confident conclusion the system can produce. It is the strongest conclusion justified by the evidence state after accounting for uncertainty, source dependence, temporal validity, materiality, and research limitations.**
 
-A mature Episteme system should therefore be comfortable saying:
+A mature Tathvyn system should therefore be comfortable saying:
 
 ```text
 SUPPORTED

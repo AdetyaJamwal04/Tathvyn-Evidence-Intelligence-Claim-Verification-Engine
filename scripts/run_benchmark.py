@@ -1,4 +1,4 @@
-"""CLI Script to Execute the Episteme 50-Claim Seed Benchmark.
+"""CLI Script to Execute the Tathvyn 50-Claim Seed Benchmark.
 
 Usage:
     uv run python scripts/run_benchmark.py [--max-claims 10] [--output reports/]
@@ -13,13 +13,13 @@ from pathlib import Path
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from episteme.evaluation.reporter import BenchmarkReporter
-from episteme.evaluation.runner import BenchmarkRunner
+from tathvyn.evaluation.reporter import BenchmarkReporter
+from tathvyn.evaluation.runner import BenchmarkRunner
 
 
 async def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Run Episteme automated benchmark evaluation suite."
+        description="Run Tathvyn automated benchmark evaluation suite."
     )
     parser.add_argument(
         "--benchmark-file",
@@ -47,7 +47,7 @@ async def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     print("\n" + "=" * 65)
-    print("🧪 Episteme Automated Benchmark Evaluation Suite")
+    print("🧪 Tathvyn Automated Benchmark Evaluation Suite")
     print(f"📁 Benchmark:  {benchmark_path}")
     print(f"📊 Max Claims: {args.max_claims or 'ALL (50)'}")
     print("=" * 65 + "\n")

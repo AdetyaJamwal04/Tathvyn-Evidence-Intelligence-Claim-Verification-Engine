@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.common.exceptions import SSRFAttemptError
-from episteme.retrieval.fetcher import HTTPDocumentFetcher
+from tathvyn.common.exceptions import SSRFAttemptError
+from tathvyn.retrieval.fetcher import HTTPDocumentFetcher
 
 
 @pytest.mark.asyncio

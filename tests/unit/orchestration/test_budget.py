@@ -2,9 +2,9 @@
 
 import pytest
 
-from episteme.common.enums import BudgetUnit, ResearchDepth
-from episteme.common.exceptions import BudgetExhaustedError
-from episteme.orchestration.budget import BudgetLimits, BudgetTracker
+from tathvyn.common.enums import BudgetUnit, ResearchDepth
+from tathvyn.common.exceptions import BudgetExhaustedError
+from tathvyn.orchestration.budget import BudgetLimits, BudgetTracker
 
 
 def test_budget_limits_by_depth() -> None:

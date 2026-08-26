@@ -2,11 +2,11 @@
 
 import pytest
 
-from episteme.common.exceptions import ProviderError
-from episteme.retrieval.providers.brave_provider import BraveSearchProvider
-from episteme.retrieval.providers.manager import SearchProviderManager
-from episteme.retrieval.providers.mock import MockSearchProvider
-from episteme.retrieval.providers.tavily_provider import TavilySearchProvider
+from tathvyn.common.exceptions import ProviderError
+from tathvyn.retrieval.providers.brave_provider import BraveSearchProvider
+from tathvyn.retrieval.providers.manager import SearchProviderManager
+from tathvyn.retrieval.providers.mock import MockSearchProvider
+from tathvyn.retrieval.providers.tavily_provider import TavilySearchProvider
 
 
 @pytest.mark.asyncio

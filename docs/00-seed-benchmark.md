@@ -1,8 +1,8 @@
-# Episteme — Seed Benchmark Suite (v1.0)
+# Tathvyn — Seed Benchmark Suite (v1.0)
 
 ## 1. Purpose
 
-Episteme adheres to a core architectural principle: **no architecture change or complex reasoning subsystem shall be added without measurable empirical evaluation**.
+Tathvyn adheres to a core architectural principle: **no architecture change or complex reasoning subsystem shall be added without measurable empirical evaluation**.
 
 To enable benchmark-driven development starting in Phase 0 and Phase 1, this document provides:
 1. The **Benchmark Schema Specification**.

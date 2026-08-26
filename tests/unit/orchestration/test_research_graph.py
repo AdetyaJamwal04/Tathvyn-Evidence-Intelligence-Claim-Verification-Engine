@@ -2,12 +2,12 @@
 
 import pytest
 
-from episteme.common.enums import InternalVerdict, PublicVerdict, ResearchDepth, ResearchStateStatus
-from episteme.evidence.engine import EvidenceAssessmentEngine
-from episteme.models.mock import MockNLIModel, MockRerankerModel
-from episteme.orchestration.engine import AdaptiveResearchEngine
-from episteme.orchestration.graph import ResearchGraphRunner
-from episteme.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
+from tathvyn.common.enums import InternalVerdict, PublicVerdict, ResearchDepth, ResearchStateStatus
+from tathvyn.evidence.engine import EvidenceAssessmentEngine
+from tathvyn.models.mock import MockNLIModel, MockRerankerModel
+from tathvyn.orchestration.engine import AdaptiveResearchEngine
+from tathvyn.orchestration.graph import ResearchGraphRunner
+from tathvyn.retrieval.providers.mock import MockDocumentFetcher, MockSearchProvider
 
 
 @pytest.mark.asyncio

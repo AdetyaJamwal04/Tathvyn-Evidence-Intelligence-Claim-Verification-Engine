@@ -1,4 +1,4 @@
-# 🏛️ Episteme — Discover What the Evidence Supports
+# 🏛️ Tathvyn — Discover What the Evidence Supports
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)](https://fastapi.tiangolo.com/)
@@ -7,7 +7,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen.svg)](https://pytest-cov.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Episteme** (*from Greek ἐπιστήμη — justified true knowledge*) is an enterprise-grade automated claim verification and epistemic intelligence platform. It decomposes compound real-world claims into atomic propositions, retrieves live primary evidence across search engines, cross-examines evidence using transformer-based cross-encoders and Natural Language Inference (NLI), arbitrates contradictory provenance, and synthesizes calibrated, cited verdicts via **Google Gemini 2.0 Flash**.
+**Tathvyn** (*from Greek ἐπιστήμη — justified true knowledge*) is an enterprise-grade automated claim verification and epistemic intelligence platform. It decomposes compound real-world claims into atomic propositions, retrieves live primary evidence across search engines, cross-examines evidence using transformer-based cross-encoders and Natural Language Inference (NLI), arbitrates contradictory provenance, and synthesizes calibrated, cited verdicts via **Google Gemini 2.0 Flash**.
 
 ---
 
@@ -69,7 +69,7 @@ graph TD
 
 ## 📊 Benchmark Evaluation Performance
 
-Evaluated over the **Episteme 50-Claim Gold Benchmark Dataset**:
+Evaluated over the **Tathvyn 50-Claim Gold Benchmark Dataset**:
 
 | Metric | Score | Industry Benchmark |
 | :--- | :---: | :---: |
@@ -90,8 +90,8 @@ Evaluated over the **Episteme 50-Claim Gold Benchmark Dataset**:
 ### 2. Installation
 ```powershell
 # Clone the repository
-git clone https://github.com/AdetyaJamwal04/Episteme.git
-cd Episteme
+git clone https://github.com/AdetyaJamwal04/Tathvyn.git
+cd Tathvyn
 
 # Install dependencies with uv
 uv sync --extra dev
@@ -108,7 +108,7 @@ Configure your API keys in `.env`:
 GEMINI_API_KEY=your_gemini_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
 ```
-*(Note: If no API keys are provided, Episteme runs in offline simulation mode).*
+*(Note: If no API keys are provided, Tathvyn runs in offline simulation mode).*
 
 ---
 

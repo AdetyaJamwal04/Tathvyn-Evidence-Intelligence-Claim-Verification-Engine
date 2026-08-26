@@ -1,8 +1,8 @@
-# Episteme — Language Scope and Internationalization Policy
+# Tathvyn — Language Scope and Internationalization Policy
 
 ## 1. Purpose
 
-This document formally defines the language scope for Episteme MVP and establishes the system's behavioral contracts when encountering non-English input or multi-lingual web evidence.
+This document formally defines the language scope for Tathvyn MVP and establishes the system's behavioral contracts when encountering non-English input or multi-lingual web evidence.
 
 ---
 
@@ -40,7 +40,7 @@ During the **Claim Intelligence** phase, the input text is processed by a fast, 
 ```json
 {
   "error_code": "UNSUPPORTED_LANGUAGE",
-  "message": "Episteme MVP currently supports English claims only. Detected language: 'es' (Spanish) with confidence 0.96.",
+  "message": "Tathvyn MVP currently supports English claims only. Detected language: 'es' (Spanish) with confidence 0.96.",
   "detected_language": "es",
   "supported_languages": ["en"],
   "request_id": "req_non_en_123"

@@ -2,7 +2,7 @@
 
 import pytest
 
-from episteme.models.embedding import BGEEmbeddingModel
+from tathvyn.models.embedding import BGEEmbeddingModel
 
 
 @pytest.mark.asyncio

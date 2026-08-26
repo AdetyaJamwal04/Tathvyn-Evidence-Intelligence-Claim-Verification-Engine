@@ -1,7 +1,7 @@
 """Tests for Multi-Label Semantic Claim Classifier."""
 
-from episteme.claims.classifier import classify_claim
-from episteme.common.enums import ClaimType, ClaimVerifiability
+from tathvyn.claims.classifier import classify_claim
+from tathvyn.common.enums import ClaimType, ClaimVerifiability
 
 
 def test_numerical_and_financial_claim() -> None:

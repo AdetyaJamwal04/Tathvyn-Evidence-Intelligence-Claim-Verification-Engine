@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.common.exceptions import SecurityViolationError
-from episteme.common.security.sanitizer import InputSanitizer
+from tathvyn.common.exceptions import SecurityViolationError
+from tathvyn.common.security.sanitizer import InputSanitizer
 
 
 def test_sanitize_valid_claim() -> None:

@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.common.enums import EvidenceRelationship
-from episteme.models.nli import DeBERTaNLIModel
+from tathvyn.common.enums import EvidenceRelationship
+from tathvyn.models.nli import DeBERTaNLIModel
 
 
 @pytest.mark.asyncio

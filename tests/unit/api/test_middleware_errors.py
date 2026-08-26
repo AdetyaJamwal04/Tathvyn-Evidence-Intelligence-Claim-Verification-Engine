@@ -3,7 +3,7 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from episteme.api.app import create_app
+from tathvyn.api.app import create_app
 
 
 @pytest.mark.asyncio
@@ -19,7 +19,7 @@ async def test_unsupported_non_english_claim_returns_422_rfc7807() -> None:
         response = await client.post("/api/v1/check", json=payload)
         assert response.status_code == 422
         data = response.json()
-        assert data["type"] == "https://episteme.org/errors/unsupported-language"
+        assert data["type"] == "https://Tathvyn.org/errors/unsupported-language"
         assert data["title"] == "Unsupported Language"
         assert data["status"] == 422
         assert data["error_code"] == "UNSUPPORTED_LANGUAGE"
@@ -40,6 +40,6 @@ async def test_empty_claim_validation_error_returns_422_rfc7807() -> None:
         response = await client.post("/api/v1/check", json=payload)
         assert response.status_code == 422
         data = response.json()
-        assert data["type"] == "https://episteme.org/errors/validation-error"
+        assert data["type"] == "https://Tathvyn.org/errors/validation-error"
         assert data["error_code"] == "VALIDATION_ERROR"
         assert len(data["invalid_params"]) >= 1

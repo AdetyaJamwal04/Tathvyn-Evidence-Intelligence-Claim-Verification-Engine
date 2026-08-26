@@ -1,8 +1,8 @@
-# Episteme — MLOps and Model Lifecycle Engineering Specification
+# Tathvyn — MLOps and Model Lifecycle Engineering Specification
 
 ## 1. Purpose & Core Philosophy
 
-Episteme relies on a hybrid hierarchy of machine learning models:
+Tathvyn relies on a hybrid hierarchy of machine learning models:
 1. **Local Neural Classifiers & Encoders**: Embeddings (`BGE`), Cross-Encoder Rerankers, NLI Stance Classifiers (`DeBERTa-v3`), and Named Entity Recognizers (`spaCy`).
 2. **Deterministic NLP & Regex Parsers**: Date/interval extractors, numerical parsers, and unit normalizers.
 3. **Hosted Large Language Models (LLMs)**: Claude 3.5 / GPT-4o for complex planning, deep conflict arbitration, and grounded explanation generation.
@@ -78,7 +78,7 @@ class ModelRegistryEntry(BaseModel):
 
 ## 4. Benchmark Gating & Promotion Criteria
 
-A model candidate must automatically satisfy the following threshold gates on the **Episteme Evaluation Suite ($N=250+$)** before staging or canary deployment:
+A model candidate must automatically satisfy the following threshold gates on the **Tathvyn Evaluation Suite ($N=250+$)** before staging or canary deployment:
 
 ```text
 Gate Metric                       | Required Threshold      | Failure Action
@@ -121,7 +121,7 @@ The canary controller automatically reverts traffic to the previous active model
 
 ## 6. Model & Calibration Drift Monitoring
 
-Episteme continuously computes drift metrics over a rolling 7-day window:
+Tathvyn continuously computes drift metrics over a rolling 7-day window:
 
 ```mermaid
 flowchart LR

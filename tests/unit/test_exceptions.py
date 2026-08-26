@@ -1,6 +1,6 @@
 """Tests for Typed Domain Exception Classes."""
 
-from episteme.common.exceptions import (
+from tathvyn.common.exceptions import (
     BudgetExhaustedError,
     ClaimDecompositionError,
     ProviderError,

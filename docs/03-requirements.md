@@ -1,8 +1,8 @@
-# Episteme — Product & System Requirements
+# Tathvyn — Product & System Requirements
 
 ## 1. Purpose
 
-This document translates the Episteme product vision and problem definition into explicit, testable requirements.
+This document translates the Tathvyn product vision and problem definition into explicit, testable requirements.
 
 Requirements are divided into:
 
@@ -55,7 +55,7 @@ Normalization MAY include:
 - linguistic cleanup;
 - removal of verification framing such as "is it true that";
 ## FR-004b — Language Scope and Rejection
-The system SHALL detect input language and enforce English-first processing in MVP. Non-English claims ($\ge 0.85$ confidence) SHALL be rejected with structured code `UNSUPPORTED_LANGUAGE` as specified in [00-language-and-scope.md](file:///c:/Projects/Episteme/episteme_docs/00-language-and-scope.md).
+The system SHALL detect input language and enforce English-first processing in MVP. Non-English claims ($\ge 0.85$ confidence) SHALL be rejected with structured code `UNSUPPORTED_LANGUAGE` as specified in [00-language-and-scope.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-language-and-scope.md).
 
 ---
 
@@ -318,7 +318,7 @@ The system SHALL extract candidate passages that can materially affect an atomic
 
 ## FR-032 — Evidence Classification
 
-Each candidate evidence item SHALL be classified relative to an atomic claim according to the canonical taxonomy in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md):
+Each candidate evidence item SHALL be classified relative to an atomic claim according to the canonical taxonomy in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md):
 
 - SUPPORTS;
 - PARTIALLY_SUPPORTS;
@@ -455,7 +455,7 @@ Each atomic claim SHALL receive an internal verification state.
 
 ## FR-048 — Overall Verdict
 
-The system SHALL derive an overall verdict from the state of the atomic claims and their evidence according to [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+The system SHALL derive an overall verdict from the state of the atomic claims and their evidence according to [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 
 Canonical internal verdicts:
 
@@ -968,4 +968,4 @@ A subsystem is considered production-ready only when:
 
 > **Every feature must solve a defined problem, every expensive component must justify its cost, and every quality claim must be backed by measurement.**
 
-This requirements document is the contract from which the Episteme domain model and system architecture should be derived.
+This requirements document is the contract from which the Tathvyn domain model and system architecture should be derived.

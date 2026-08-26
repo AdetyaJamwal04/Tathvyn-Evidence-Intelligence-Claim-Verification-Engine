@@ -2,10 +2,10 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import EvidenceRelationship, InternalVerdict
-from episteme.common.models.evidence import Evidence
-from episteme.common.models.source import Document, Passage
-from episteme.verdict.explainer import GroundedExplanationBuilder
+from tathvyn.common.enums import EvidenceRelationship, InternalVerdict
+from tathvyn.common.models.evidence import Evidence
+from tathvyn.common.models.source import Document, Passage
+from tathvyn.verdict.explainer import GroundedExplanationBuilder
 
 
 def test_citation_building() -> None:

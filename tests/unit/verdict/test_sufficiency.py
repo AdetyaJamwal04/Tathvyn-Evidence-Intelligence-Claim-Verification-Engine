@@ -2,9 +2,9 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import EvidenceRelationship
-from episteme.common.models.evidence import Evidence
-from episteme.verdict.sufficiency import calculate_evidence_sufficiency
+from tathvyn.common.enums import EvidenceRelationship
+from tathvyn.common.models.evidence import Evidence
+from tathvyn.verdict.sufficiency import calculate_evidence_sufficiency
 
 
 def test_empty_evidence_insufficient() -> None:

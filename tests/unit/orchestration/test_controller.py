@@ -2,16 +2,16 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import (
+from tathvyn.common.enums import (
     ConflictSeverity,
     ConflictType,
     ResearchDepth,
     ResearchLoopDecision,
 )
-from episteme.common.models.conflict import Conflict
-from episteme.common.models.evidence import EvidenceState
-from episteme.orchestration.budget import BudgetTracker
-from episteme.orchestration.controller import AdaptiveLoopController
+from tathvyn.common.models.conflict import Conflict
+from tathvyn.common.models.evidence import EvidenceState
+from tathvyn.orchestration.budget import BudgetTracker
+from tathvyn.orchestration.controller import AdaptiveLoopController
 
 
 def test_controller_terminates_on_budget_exhaustion() -> None:

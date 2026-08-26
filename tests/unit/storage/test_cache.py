@@ -2,8 +2,8 @@
 
 import pytest
 
-from episteme.retrieval.interfaces import SearchResultItem
-from episteme.storage.cache import CacheManager
+from tathvyn.retrieval.interfaces import SearchResultItem
+from tathvyn.storage.cache import CacheManager
 
 
 @pytest.mark.asyncio

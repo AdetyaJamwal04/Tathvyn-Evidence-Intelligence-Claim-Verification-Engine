@@ -2,10 +2,10 @@
 
 from uuid import uuid4
 
-from episteme.common.enums import ConflictSeverity, ConflictType
-from episteme.common.models.claim import AtomicClaim
-from episteme.common.models.conflict import Conflict
-from episteme.orchestration.formulator import QueryFormulator
+from tathvyn.common.enums import ConflictSeverity, ConflictType
+from tathvyn.common.models.claim import AtomicClaim
+from tathvyn.common.models.conflict import Conflict
+from tathvyn.orchestration.formulator import QueryFormulator
 
 
 def test_initial_query_formulation() -> None:

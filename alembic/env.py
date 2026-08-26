@@ -8,9 +8,9 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from episteme.common.config import get_settings
-from episteme.storage.database import Base
-import episteme.storage.models  # noqa: F401
+from tathvyn.common.config import get_settings
+from tathvyn.storage.database import Base
+import tathvyn.storage.models  # noqa: F401
 
 config = context.config
 

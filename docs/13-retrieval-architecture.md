@@ -1,8 +1,8 @@
-# Episteme — Retrieval Architecture
+# Tathvyn — Retrieval Architecture
 
 ## 1. Purpose
 
-Retrieval is the most important information-access layer in Episteme.
+Retrieval is the most important information-access layer in Tathvyn.
 
 A perfect verdict engine cannot recover from evidence that was never retrieved.
 
@@ -2127,7 +2127,7 @@ The retrieval system should empirically answer:
 
 > **Retrieve for uncertainty reduction, not document accumulation.**
 
-A high-quality Episteme retrieval system should not return the largest pile of sources.
+A high-quality Tathvyn retrieval system should not return the largest pile of sources.
 
 It should return the smallest set of:
 

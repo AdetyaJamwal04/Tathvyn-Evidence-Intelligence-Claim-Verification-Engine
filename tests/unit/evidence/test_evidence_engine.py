@@ -4,11 +4,11 @@ from uuid import uuid4
 
 import pytest
 
-from episteme.common.enums import EvidenceRelationship
-from episteme.common.models.claim import AtomicClaim
-from episteme.common.models.source import Document, Passage
-from episteme.evidence.engine import EvidenceAssessmentEngine
-from episteme.models.mock import MockNLIModel, MockRerankerModel
+from tathvyn.common.enums import EvidenceRelationship
+from tathvyn.common.models.claim import AtomicClaim
+from tathvyn.common.models.source import Document, Passage
+from tathvyn.evidence.engine import EvidenceAssessmentEngine
+from tathvyn.models.mock import MockNLIModel, MockRerankerModel
 
 
 @pytest.mark.asyncio

@@ -1,4 +1,4 @@
-# Episteme — Evidence Engineering
+# Tathvyn — Evidence Engineering
 
 ## 1. Purpose
 

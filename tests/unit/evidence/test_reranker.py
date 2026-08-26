@@ -2,7 +2,7 @@
 
 import pytest
 
-from episteme.models.reranker import BGERerankerModel
+from tathvyn.models.reranker import BGERerankerModel
 
 
 @pytest.mark.asyncio

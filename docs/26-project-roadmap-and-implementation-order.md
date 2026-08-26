@@ -1,4 +1,4 @@
-# Episteme — Phased Implementation Roadmap and Engineering Sequence
+# Tathvyn — Phased Implementation Roadmap and Engineering Sequence
 
 ## 1. Purpose & Phasing Philosophy
 
@@ -34,7 +34,7 @@ flowchart TD
 - **Objective**: Establish rock-solid repository structure, typed Pydantic models, configuration system, logging, database schemas, and abstract provider interfaces.
 - **Entry Criteria**: Documentation reviews approved.
 - **Deliverables**:
-  - `episteme/common/` domain models matching `00-canonical-enums.md`.
+  - `Tathvyn/common/` domain models matching `00-canonical-enums.md`.
   - PostgreSQL 16 schema migrations with `pgvector` enabled via Alembic.
   - Abstract base interfaces for `SearchProvider`, `EmbeddingModel`, `NLIModel`, `ReasoningLLM`.
   - Configuration management via `pydantic-settings` with `.env` overrides.

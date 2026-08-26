@@ -1,8 +1,8 @@
-# Episteme — Adaptive Research Agent
+# Tathvyn — Adaptive Research Agent
 
 ## 1. Purpose
 
-This document defines the research-control layer of Episteme.
+This document defines the research-control layer of Tathvyn.
 
 The research agent is responsible for deciding:
 
@@ -37,7 +37,7 @@ LLM
 Answer
 ```
 
-Episteme should eventually follow:
+Tathvyn should eventually follow:
 
 ```text
 Claim
@@ -402,7 +402,7 @@ if primary source missing → D
 if sufficient → STOP
 ```
 
-Episteme should use agentic behavior only where conditional decisions provide measurable value.
+Tathvyn should use agentic behavior only where conditional decisions provide measurable value.
 
 ---
 
@@ -1619,7 +1619,7 @@ The learned policy should only replace deterministic logic where it demonstrates
 
 > **The research agent should spend computation where it can most reduce uncertainty, not where it can most easily produce more text.**
 
-A successful Episteme agent therefore behaves less like a chatbot and more like a bounded research investigator:
+A successful Tathvyn agent therefore behaves less like a chatbot and more like a bounded research investigator:
 
 ```text
 Observe

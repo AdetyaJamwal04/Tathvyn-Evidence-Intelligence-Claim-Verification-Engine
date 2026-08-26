@@ -1,8 +1,8 @@
-# Episteme — Data Architecture
+# Tathvyn — Data Architecture
 
 ## 1. Purpose
 
-This document defines the data architecture of Episteme.
+This document defines the data architecture of Tathvyn.
 
 The data layer must support two fundamentally different requirements:
 

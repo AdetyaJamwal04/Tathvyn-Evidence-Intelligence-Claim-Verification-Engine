@@ -1,6 +1,6 @@
 """Tests for Temporal Overlap and Alignment Validator."""
 
-from episteme.evidence.validators.temporal_validator import validate_temporal_alignment
+from tathvyn.evidence.validators.temporal_validator import validate_temporal_alignment
 
 
 def test_matching_temporal_year() -> None:

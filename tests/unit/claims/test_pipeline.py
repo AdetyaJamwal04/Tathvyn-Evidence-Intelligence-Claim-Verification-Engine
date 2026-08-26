@@ -4,9 +4,9 @@ from uuid import uuid4
 
 import pytest
 
-from episteme.claims.pipeline import ClaimIntelligencePipeline
-from episteme.common.enums import ClaimType, ClaimVerifiability
-from episteme.common.exceptions import UnsupportedLanguageError
+from tathvyn.claims.pipeline import ClaimIntelligencePipeline
+from tathvyn.common.enums import ClaimType, ClaimVerifiability
+from tathvyn.common.exceptions import UnsupportedLanguageError
 
 
 def test_pipeline_atomic_claim_flow() -> None:

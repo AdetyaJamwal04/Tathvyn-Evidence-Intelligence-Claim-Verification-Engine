@@ -1,8 +1,8 @@
-# Episteme — Domain Model
+# Tathvyn — Domain Model
 
 ## 1. Purpose
 
-This document defines the core domain model of Episteme.
+This document defines the core domain model of Tathvyn.
 
 The domain model is intentionally independent of:
 
@@ -21,7 +21,7 @@ The objective is to establish stable concepts and contracts before implementatio
 
 # 2. Domain Model Principles
 
-The Episteme domain model follows these principles:
+The Tathvyn domain model follows these principles:
 
 1. **Claims and evidence are separate entities.**
 2. **Atomic claims are independently verifiable units.**
@@ -658,7 +658,7 @@ Evidence must be traceable to its original passage.
 
 # 20. Evidence Relationship
 
-The canonical relationship taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+The canonical relationship taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 
 Values:
 
@@ -936,7 +936,7 @@ but:
 
 # 30. Verdict
 
-Represents the final interpretation of the available evidence. Canonical taxonomies are defined in [00-canonical-enums.md](file:///c:/Projects/Episteme/episteme_docs/00-canonical-enums.md).
+Represents the final interpretation of the available evidence. Canonical taxonomies are defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
 
 ## Values
 
@@ -1324,7 +1324,7 @@ Embedding
 Metadata
 ```
 
-Episteme requires more because its problem is different.
+Tathvyn requires more because its problem is different.
 
 It needs to represent:
 

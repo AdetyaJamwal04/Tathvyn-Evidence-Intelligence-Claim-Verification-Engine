@@ -1,14 +1,14 @@
-# Episteme — Cost, Latency, and Scale Engineering Specification
+# Tathvyn — Cost, Latency, and Scale Engineering Specification
 
 ## 1. Purpose & Economics Objective
 
 A fact verification system that achieves 99% accuracy at $5.00 per check is unusable for real-time web workflows. Conversely, a system that costs $0.0001 per check but hallucinates verdicts is actively dangerous.
 
-Episteme optimizes for **Quality-Adjusted Verification Cost ($C_{\text{correct}}$)** and **Predictable Latency Profiles**:
+Tathvyn optimizes for **Quality-Adjusted Verification Cost ($C_{\text{correct}}$)** and **Predictable Latency Profiles**:
 
 $$C_{\text{correct}} = \frac{\mathbb{E}[C_{\text{request}}]}{P(\text{Verdict is Correct})}$$
 
-This specification defines the mathematical cost models, latency budgets, batching strategies, caching hierarchies, and graceful degradation policies required to operate Episteme economically from 1 RPS to 1,000 RPS.
+This specification defines the mathematical cost models, latency budgets, batching strategies, caching hierarchies, and graceful degradation policies required to operate Tathvyn economically from 1 RPS to 1,000 RPS.
 
 ---
 
@@ -33,7 +33,7 @@ $$C_{\text{request}} = C_{\text{search}} + C_{\text{llm}} + C_{\text{local\_ml}}
 
 ## 3. Latency Waterfall & Stage Budgets
 
-Episteme enforces explicit wall-clock latency budgets per pipeline stage.
+Tathvyn enforces explicit wall-clock latency budgets per pipeline stage.
 
 ```text
 Latency Waterfall (STANDARD Mode — Target < 3,500 ms p95):
