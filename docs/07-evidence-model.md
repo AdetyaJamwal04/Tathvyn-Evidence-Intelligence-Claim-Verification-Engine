@@ -114,7 +114,7 @@ The object should remain traceable to its exact passage.
 
 # 6. Evidence Relationship
 
-The canonical relationship taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+The canonical relationship taxonomy is defined in [00-canonical-enums.md](./00-canonical-enums.md).
 
 Values:
 

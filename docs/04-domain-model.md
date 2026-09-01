@@ -658,7 +658,7 @@ Evidence must be traceable to its original passage.
 
 # 20. Evidence Relationship
 
-The canonical relationship taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+The canonical relationship taxonomy is defined in [00-canonical-enums.md](./00-canonical-enums.md).
 
 Values:
 
@@ -936,7 +936,7 @@ but:
 
 # 30. Verdict
 
-Represents the final interpretation of the available evidence. Canonical taxonomies are defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+Represents the final interpretation of the available evidence. Canonical taxonomies are defined in [00-canonical-enums.md](./00-canonical-enums.md).
 
 ## Values
 

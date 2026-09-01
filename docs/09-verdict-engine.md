@@ -55,7 +55,7 @@ Verification Result
 
 # 3. Verdict Vocabulary
 
-The canonical internal verdict taxonomy is defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md):
+The canonical internal verdict taxonomy is defined in [00-canonical-enums.md](./00-canonical-enums.md):
 
 ```text
 SUPPORTED

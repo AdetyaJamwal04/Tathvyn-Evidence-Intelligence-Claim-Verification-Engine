@@ -5,7 +5,7 @@
 The Tathvyn REST API exposes a stable, versioned HTTP interface for automated fact verification. 
 
 Key API Principles:
-1. **Canonical Schema Stability**: Output verdicts and evidence structures adhere strictly to [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+1. **Canonical Schema Stability**: Output verdicts and evidence structures adhere strictly to [00-canonical-enums.md](./00-canonical-enums.md).
 2. **Epistemic Transparency**: Every response exposes calibrated confidence scores, evidence sufficiency metrics, and traceable citations.
 3. **Idempotency & Deduplication**: Long-running or repeated requests utilize `Idempotency-Key` headers to prevent redundant computation.
 4. **Structured Error Model**: Errors conform to RFC-7807 problem details, distinguishing infrastructure failures from epistemic uncertainty.

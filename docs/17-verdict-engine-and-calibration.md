@@ -94,7 +94,7 @@ Explanation + Citations
 
 # 4. Verdict Classes
 
-Canonical internal and public taxonomies are defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+Canonical internal and public taxonomies are defined in [00-canonical-enums.md](./00-canonical-enums.md).
 
 Public user-facing verdicts:
 

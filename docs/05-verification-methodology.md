@@ -808,7 +808,7 @@ A claim exhibits framing distortion when:
 - the framing creates a materially incorrect interpretation;
 - or a true statement is used to imply a false conclusion.
 
-In the **canonical MVP taxonomy** (defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md)), such claims receive the verdict `PARTIALLY_SUPPORTED` accompanied by a metadata flag `framing_concerns: true`. 
+In the **canonical MVP taxonomy** (defined in [00-canonical-enums.md](./00-canonical-enums.md)), such claims receive the verdict `PARTIALLY_SUPPORTED` accompanied by a metadata flag `framing_concerns: true`. 
 
 A standalone `MISLEADING` top-level verdict is deferred to V2, where dedicated framing models and calibrated threshold data become available.
 

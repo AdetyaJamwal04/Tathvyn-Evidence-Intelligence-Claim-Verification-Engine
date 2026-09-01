@@ -169,7 +169,7 @@ A lack of evidence must not automatically be interpreted as evidence of falsity.
 
 ## 10. Overall Verdict Taxonomy
 
-The canonical taxonomies are formally defined in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+The canonical taxonomies are formally defined in [00-canonical-enums.md](./00-canonical-enums.md).
 
 | Verdict | Meaning |
 |---|---|

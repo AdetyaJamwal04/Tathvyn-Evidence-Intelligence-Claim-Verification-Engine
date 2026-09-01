@@ -55,7 +55,7 @@ Normalization MAY include:
 - linguistic cleanup;
 - removal of verification framing such as "is it true that";
 ## FR-004b — Language Scope and Rejection
-The system SHALL detect input language and enforce English-first processing in MVP. Non-English claims ($\ge 0.85$ confidence) SHALL be rejected with structured code `UNSUPPORTED_LANGUAGE` as specified in [00-language-and-scope.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-language-and-scope.md).
+The system SHALL detect input language and enforce English-first processing in MVP. Non-English claims ($\ge 0.85$ confidence) SHALL be rejected with structured code `UNSUPPORTED_LANGUAGE` as specified in [00-language-and-scope.md](./00-language-and-scope.md).
 
 ---
 
@@ -318,7 +318,7 @@ The system SHALL extract candidate passages that can materially affect an atomic
 
 ## FR-032 — Evidence Classification
 
-Each candidate evidence item SHALL be classified relative to an atomic claim according to the canonical taxonomy in [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md):
+Each candidate evidence item SHALL be classified relative to an atomic claim according to the canonical taxonomy in [00-canonical-enums.md](./00-canonical-enums.md):
 
 - SUPPORTS;
 - PARTIALLY_SUPPORTS;
@@ -455,7 +455,7 @@ Each atomic claim SHALL receive an internal verification state.
 
 ## FR-048 — Overall Verdict
 
-The system SHALL derive an overall verdict from the state of the atomic claims and their evidence according to [00-canonical-enums.md](file:///c:/Projects/Tathvyn/Tathvyn_docs/00-canonical-enums.md).
+The system SHALL derive an overall verdict from the state of the atomic claims and their evidence according to [00-canonical-enums.md](./00-canonical-enums.md).
 
 Canonical internal verdicts:
 
