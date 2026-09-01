@@ -3,318 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tathvyn — Evidence-Grounded Claim Verification</title>
-    <meta name="description" content="Tathvyn is an AI intelligence engine that decomposes claims, retrieves live web evidence, and synthesizes calibrated, cited verdicts.">
+    <title>Tathvyn — Evidence Intelligence & Claim Verification Engine</title>
+    <meta name="description" content="Enterprise-grade automated claim verification platform. Deconstruct complex claims into atomic propositions, cross-examine primary evidence, and calibrate epistemic verdicts with transformer NLI.">
     
     <!-- Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="/styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
 </head>
-<body>
-    <!-- Background Canvas Glow -->
-    <div class="bg-glow"></div>
+<body class="dark-theme">
+    <!-- Ambient Background Lighting & Cyber Grid -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="cyber-grid"></div>
 
     <!-- Navigation Header -->
-    <header class="navbar">
+    <header class="app-header">
         <div class="nav-container">
-            <div class="brand">
-                <span class="brand-icon">🏛️</span>
-                <span class="brand-name">Tathvyn</span>
-                <span class="brand-badge">PRO</span>
+            <div class="brand-group">
+                <a href="/" class="brand-link">
+                    <div class="brand-symbol">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-name">Tathvyn</span>
+                        <span class="brand-edition">EVIDENCE INTELLIGENCE</span>
+                    </div>
+                </a>
             </div>
 
-            <nav class="nav-links">
-                <button class="nav-btn active" data-view="verifier-view">Studio</button>
-                <button class="nav-btn" data-view="benchmarks-view">Benchmarks</button>
-                <button class="nav-btn" data-view="history-view">History</button>
-                <a href="/docs" target="_blank" class="nav-btn external">API Docs ↗</a>
+            <!-- Central Nav Tabs -->
+            <nav class="nav-menu" role="tablist">
+                <button class="nav-tab active" data-view="studio-view" role="tab" aria-selected="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                    <span>Studio</span>
+                </button>
+                <button class="nav-tab" data-view="live-stream-view" role="tab" aria-selected="false">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h5l3 8 4-16 3 8h5"></path></svg>
+                    <span>Global Feed</span>
+                    <span class="pill-live">LIVE</span>
+                </button>
+                <button class="nav-tab" data-view="benchmarks-view" role="tab" aria-selected="false">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Gold Benchmark</span>
+                </button>
+                <button class="nav-tab" data-view="history-view" role="tab" aria-selected="false">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span>History</span>
+                </button>
             </nav>
 
-            <div class="nav-right">
-                <div class="system-status" id="system-status-indicator">
-                    <span class="status-dot"></span>
-                    <span class="status-text" id="system-status-pill">Operational</span>
+            <!-- Nav Actions & Telemetry -->
+            <div class="nav-meta">
+                <a href="/docs" target="_blank" class="api-docs-link" title="FastAPI Swagger Documentation">
+                    <span>API Specs</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </a>
+                <div class="system-status-indicator" id="system-status-indicator">
+                    <span class="status-pulse"></span>
+                    <span class="status-label" id="system-status-text">Engine Online</span>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="main-content">
-        <!-- VIEW 1: Claim Verification Studio -->
-        <section class="view-panel active" id="verifier-view">
-            <!-- Hero Section -->
-            <div class="hero-section">
-                <h1 class="hero-title">Discover What the Evidence Supports</h1>
-                <p class="hero-subtitle">Evidence-grounded claim deconstruction, cross-examination, and epistemic calibration powered by Gemini 2.0 & Transformer NLI.</p>
+    <main class="app-main">
+        <!-- VIEW 1: EVIDENCE STUDIO -->
+        <section class="view-panel active" id="studio-view">
+            <!-- Hero Stage -->
+            <div class="hero-stage">
+                <div class="hero-eyebrow">
+                    <span class="eyebrow-badge">RESEARCH WORKBENCH</span>
+                    <span class="eyebrow-text">Grounded in Primary Institutional Registries & NLI Cross-Examination</span>
+                </div>
+                <h1 class="hero-headline">Discover What the Evidence Supports</h1>
+                <p class="hero-description">
+                    Deconstruct complex assertions into atomic propositions, scour authoritative primary sources, 
+                    and arbitrate contradictory claims with mathematically calibrated confidence.
+                </p>
             </div>
 
-            <!-- Modern Search Omnibar Card -->
-            <div class="omnibar-card">
-                <form id="verify-form">
-                    <div class="omnibar-input-wrapper">
+            <!-- Interactive Multi-Modal Inquiry Workstation -->
+            <div class="workstation-container">
+                <!-- Input Mode Switcher -->
+                <div class="workstation-tabs" role="tablist">
+                    <button type="button" class="mode-tab active" data-mode="statement">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <span>Proposition Statement</span>
+                    </button>
+                    <button type="button" class="mode-tab" data-mode="url">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        <span>Article / Press URL</span>
+                    </button>
+                    <button type="button" class="mode-tab" data-mode="document">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        <span>Document / PDF</span>
+                    </button>
+                    <button type="button" class="mode-tab" data-mode="screenshot">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span>Screenshot / Social Post</span>
+                    </button>
+                </div>
+
+                <!-- Main Inquiry Form -->
+                <form id="verify-form" class="inquiry-card">
+                    <div class="inquiry-input-shell">
                         <textarea 
                             id="claim-input" 
-                            class="omnibar-textarea" 
-                            placeholder="Enter any claim, news headline, or factual proposition to verify..." 
-                            rows="2"
+                            class="inquiry-textarea" 
+                            placeholder="Enter any compound claim, policy assertion, or scientific finding to cross-examine..." 
+                            rows="3"
+                            maxlength="2000"
                             required
                         ></textarea>
+                        
+                        <!-- Secondary URL Input -->
+                        <div id="url-input-container" class="url-input-container hidden">
+                            <input type="url" id="url-input" class="url-text-field" placeholder="https://example.com/news/article-headline">
+                            <button type="button" id="btn-fetch-url" class="btn-url-extract">Fetch & Extract</button>
+                        </div>
+
+                        <!-- Dropzone -->
+                        <div id="dropzone-container" class="dropzone-container hidden">
+                            <div class="dropzone-box" id="file-dropzone">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                <span class="dropzone-title">Drag & drop files or click to browse</span>
+                                <span class="dropzone-sub">Supported formats: PDF, DOCX, TXT, PNG, JPG (OCR ready)</span>
+                                <input type="file" id="file-input" class="file-hidden-input" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg">
+                            </div>
+                        </div>
+
+                        <!-- Input Meta Bar -->
+                        <div class="input-utility-bar">
+                            <div class="utility-left">
+                                <span class="char-meter" id="char-meter">0 / 2000 characters</span>
+                                <span class="shortcut-tip">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to investigate</span>
+                            </div>
+                            <div class="utility-right">
+                                <button type="button" id="btn-clear-input" class="btn-ghost-sm">Clear</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="omnibar-footer">
-                        <div class="depth-selector-group">
-                            <span class="depth-label">Depth:</span>
-                            <div class="depth-options">
-                                <label class="depth-option active" data-depth="FAST">
+                    <!-- Workstation Controls: Research Depth & Epistemic Toggles -->
+                    <div class="workstation-controls">
+                        <div class="controls-left">
+                            <span class="control-section-label">Research Profile:</span>
+                            <div class="depth-pill-selector">
+                                <label class="depth-pill active" data-depth="FAST">
                                     <input type="radio" name="depth" value="FAST" checked>
-                                    <span>⚡ Fast (&lt; 5s)</span>
+                                    <span class="depth-icon">⚡</span>
+                                    <span class="depth-title">Fast SLA</span>
+                                    <span class="depth-meta">&lt;5s</span>
                                 </label>
-                                <label class="depth-option" data-depth="STANDARD">
+                                <label class="depth-pill" data-depth="STANDARD">
                                     <input type="radio" name="depth" value="STANDARD">
-                                    <span>🎯 Standard</span>
+                                    <span class="depth-icon">🎯</span>
+                                    <span class="depth-title">Standard</span>
+                                    <span class="depth-meta">Balanced</span>
                                 </label>
-                                <label class="depth-option" data-depth="DEEP">
+                                <label class="depth-pill" data-depth="DEEP">
                                     <input type="radio" name="depth" value="DEEP">
-                                    <span>🔬 Deep Research</span>
+                                    <span class="depth-icon">🔬</span>
+                                    <span class="depth-title">Institutional DAG</span>
+                                    <span class="depth-meta">Multi-Hop</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="omnibar-actions">
-                            <span class="char-count" id="char-count">0 / 1000</span>
-                            <button type="submit" class="btn-primary" id="btn-submit">
-                                <span>Verify Claim</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        <div class="controls-right">
+                            <button type="submit" id="btn-examine" class="btn-primary-examine">
+                                <span class="btn-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                </span>
+                                <span class="btn-text">Examine Evidence</span>
                             </button>
                         </div>
                     </div>
+
+                    <!-- Advanced Epistemic Verification Toggles -->
+                    <div class="advanced-toggles-drawer">
+                        <div class="toggle-row">
+                            <label class="epistemic-switch-label" title="Force escalation to official governmental and space/scientific agency repositories.">
+                                <input type="checkbox" id="toggle-institutional" checked>
+                                <span class="switch-slider"></span>
+                                <span class="switch-text">Institutional Source Escalation</span>
+                            </label>
+
+                            <label class="epistemic-switch-label" title="Validate causality vs correlation and detect unjustified inference leaps.">
+                                <input type="checkbox" id="toggle-inference" checked>
+                                <span class="switch-slider"></span>
+                                <span class="switch-text">Inference & Causality Audit</span>
+                            </label>
+
+                            <label class="epistemic-switch-label" title="Deterministic currency conversion and numerical scale normalization.">
+                                <input type="checkbox" id="toggle-numerical" checked>
+                                <span class="switch-slider"></span>
+                                <span class="switch-text">Numerical & Unit Calibration</span>
+                            </label>
+                        </div>
+                    </div>
                 </form>
-            </div>
 
-            <!-- Example Suggestions Grid -->
-            <div class="suggestions-section" id="suggestions-block">
-                <div class="suggestions-header">Try an example inquiry:</div>
-                <div class="suggestions-grid">
-                    <button class="suggestion-card" data-claim="The James Webb Space Telescope was successfully launched in December 2021 from French Guiana, and it currently orbits the Earth at an altitude of 500 kilometers.">
-                        <span class="sugg-category">Astrophysics</span>
-                        <p class="sugg-text">JWST launch timeline and orbital mechanics</p>
-                    </button>
-
-                    <button class="suggestion-card" data-claim="The E20 policy adopted by the Indian government has caused significant damage to the already existing cars in the country.">
-                        <span class="sugg-category">Public Policy</span>
-                        <p class="sugg-text">India E20 ethanol rollout vehicle wear claims</p>
-                    </button>
-
-                    <button class="suggestion-card" data-claim="The Eiffel Tower in Paris was completed in 1889 for the Exposition Universelle, standing over 300 meters tall.">
-                        <span class="sugg-category">History</span>
-                        <p class="sugg-text">Eiffel Tower historical construction records</p>
-                    </button>
-
-                    <button class="suggestion-card" data-claim="OpenAI was founded in December 2015 as a non-profit organization with $1 billion in pledged funding by Sam Altman and Elon Musk.">
-                        <span class="sugg-category">Tech</span>
-                        <p class="sugg-text">OpenAI founding charter and pledged capital</p>
-                    </button>
+                <!-- Curated Investigation Scenarios -->
+                <div class="scenarios-carousel" id="scenarios-block">
+                    <span class="scenarios-label">Curated Investigation Scenarios:</span>
+                    <div class="scenario-chips">
+                        <button type="button" class="scenario-chip" data-claim="Chandrayaan-3 was the first mission to soft-land near the lunar south pole, where Pragyan rover travelled 101m and LIBS detected sulphur, proving the south pole has significant water-ice deposits, at a total cost of ₹615 crore, cheaper than NASA Perseverance." data-depth="STANDARD">
+                            <span class="chip-domain">SPACE</span>
+                            <span class="chip-title">Chandrayaan-3 South Pole & Sulphur</span>
+                        </button>
+                        <button type="button" class="scenario-chip" data-claim="The Indian government's E20 fuel policy has caused catastrophic engine failure across all existing petrol cars manufactured before 2020." data-depth="FAST">
+                            <span class="chip-domain">POLICY</span>
+                            <span class="chip-title">E20 Fuel Engine Damage Claim</span>
+                        </button>
+                        <button type="button" class="scenario-chip" data-claim="Sweden joined NATO as its 32nd member state in March 2024, ending over two centuries of official military non-alignment." data-depth="FAST">
+                            <span class="chip-domain">GEOPOLITICS</span>
+                            <span class="chip-title">Sweden 32nd NATO Member</span>
+                        </button>
+                        <button type="button" class="scenario-chip" data-claim="James Webb Space Telescope detected clear biosignature atmospheric gases indicating intelligent extraterrestrial life on exoplanet K2-18b." data-depth="STANDARD">
+                            <span class="chip-domain">ASTRONOMY</span>
+                            <span class="chip-title">JWST K2-18b Alien Biosignature</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Loading State -->
-            <div id="loading-state" class="loading-panel hidden">
-                <div class="pulsing-radar">
-                    <div class="radar-circle"></div>
-                    <div class="radar-circle inner"></div>
-                </div>
-                <h3 class="loading-title">Cross-Examining Live Evidence...</h3>
-                <p class="loading-subtitle">Decomposing propositions, querying search engines, and calculating epistemic confidence.</p>
-                <div class="loading-steps-row">
-                    <div class="step-pill active">1. Deconstruct</div>
-                    <div class="step-pill active">2. Retrieve</div>
-                    <div class="step-pill active">3. Cross-Examine</div>
-                    <div class="step-pill active">4. Calibrate</div>
+            <!-- LIVE EPISTEMIC RADAR (LOADING STATE) -->
+            <div id="radar-progress-container" class="radar-progress-container hidden">
+                <div class="radar-visual-card">
+                    <div class="radar-sweep-box">
+                        <div class="radar-sweep-circle">
+                            <div class="radar-sweep-beam"></div>
+                            <div class="radar-blip blip-1"></div>
+                            <div class="radar-blip blip-2"></div>
+                            <div class="radar-blip blip-3"></div>
+                        </div>
+                    </div>
+                    <div class="radar-telemetry">
+                        <div class="radar-header">
+                            <h3 class="radar-stage-title" id="radar-stage-title">Deconstructing Atomic Propositions...</h3>
+                            <span class="radar-stage-pct" id="radar-stage-pct">20%</span>
+                        </div>
+                        <div class="radar-progress-track">
+                            <div class="radar-progress-bar" id="radar-progress-bar" style="width: 20%;"></div>
+                        </div>
+                        <ul class="radar-steps-feed" id="radar-steps-feed">
+                            <li class="step-done" id="step-1">✓ Parsing natural language compound statement</li>
+                            <li class="step-active" id="step-2">⚡ Dispatching multi-engine primary search queries...</li>
+                            <li class="step-pending" id="step-3">○ Extracting and reranking verbatim document passages</li>
+                            <li class="step-pending" id="step-4">○ Cross-encoding with RoBERTa NLI & contradiction detector</li>
+                            <li class="step-pending" id="step-5">○ Calibrating epistemic probability & Bayesian sufficiency</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <!-- Results Section -->
-            <div id="results-panel" class="results-container hidden">
-                <!-- Verdict Header Banner -->
-                <div class="verdict-banner" id="verdict-banner">
-                    <div class="verdict-main-row">
-                        <div class="verdict-badge-group">
-                            <span class="verdict-badge" id="verdict-public-label">VERIFIED TRUE</span>
-                            <span class="verdict-code" id="verdict-internal-label">SUPPORTED</span>
+            <!-- RESULTS STAGE: INTERACTIVE DOSSIER WORKBENCH -->
+            <div id="dossier-results-stage" class="dossier-results-stage hidden">
+                <!-- Executive Verdict Header Banner -->
+                <div class="verdict-banner-card" id="verdict-banner-card">
+                    <div class="verdict-primary-col">
+                        <div class="verdict-badge-row">
+                            <span class="verdict-status-pill" id="verdict-status-pill">VERIFIED SUPPORTED</span>
+                            <span class="verdict-internal-code" id="verdict-internal-code">LABEL_SUPPORTED</span>
+                            <span class="verdict-timestamp" id="verdict-timestamp">Just now</span>
                         </div>
-
-                        <div class="verdict-metrics-row">
-                            <div class="metric-block">
-                                <span class="metric-label">Calibrated Confidence</span>
-                                <span class="metric-value highlight" id="dial-confidence-num">92%</span>
-                            </div>
-                            <div class="metric-block">
-                                <span class="metric-label">Evidence Sufficiency</span>
-                                <span class="metric-value" id="val-sufficiency">100%</span>
-                            </div>
-                            <div class="metric-block">
-                                <span class="metric-label">Latency</span>
-                                <span class="metric-value" id="val-latency">1.1s</span>
-                            </div>
+                        <h2 class="verdict-claim-quote" id="verdict-claim-quote">
+                            "..."
+                        </h2>
+                        <div class="verdict-summary-content" id="verdict-summary-content">
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
 
-                    <!-- Synthesis Body -->
-                    <div class="synthesis-section">
-                        <h3 class="synthesis-title">Grounded Synthesis</h3>
-                        <p class="synthesis-text" id="verdict-summary-text"></p>
-                    </div>
+                    <!-- Calibrated Confidence & Sufficiency Gauges -->
+                    <div class="verdict-telemetry-col">
+                        <div class="gauge-card">
+                            <div class="svg-radial-container">
+                                <svg class="radial-gauge" viewBox="0 0 120 120">
+                                    <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+                                    <circle class="gauge-fill" id="gauge-fill-circle" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="60"></circle>
+                                </svg>
+                                <div class="gauge-center-label">
+                                    <span class="gauge-number" id="dial-confidence-pct">88%</span>
+                                    <span class="gauge-sub">CALIBRATED CONFIDENCE</span>
+                                </div>
+                            </div>
 
-                    <div class="verified-quote-box">
-                        <span class="quote-label">Claim Examined:</span>
-                        <span class="quote-text" id="verdict-claimed-text"></span>
+                            <div class="metrics-subgrid">
+                                <div class="metric-item">
+                                    <span class="metric-title">Sufficiency (Q_suff)</span>
+                                    <span class="metric-val" id="metric-sufficiency">92%</span>
+                                    <div class="meter-bar"><div class="meter-fill" id="meter-suff-fill" style="width: 92%;"></div></div>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-title">Pipeline Latency</span>
+                                    <span class="metric-val" id="metric-latency">3.42s</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-title">Primary Sources</span>
+                                    <span class="metric-val" id="metric-sources-count">8 Verified</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Workbench Layout: Left (Atomic Claims) & Right (Evidence Sources) -->
-                <div class="analysis-grid">
-                    <!-- Left: Atomic Decomposition -->
-                    <div class="panel-card">
-                        <div class="panel-card-header">
-                            <div>
-                                <h4 class="panel-title">Atomic Decomposition</h4>
-                                <p class="panel-desc">Isolated proposition breakdown</p>
+                <!-- Main Analysis Grid: Left (Atomic Claims) & Right (Primary Evidence Inspector) -->
+                <div class="analysis-workbench-grid">
+                    <!-- Left: Atomic Decomposition Tree -->
+                    <div class="workbench-panel">
+                        <div class="panel-header">
+                            <div class="panel-header-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                                <h3>Claim Deconstruction Tree</h3>
                             </div>
-                            <span class="counter-badge" id="atomic-count-badge">1 proposition</span>
+                            <span class="counter-badge" id="atomic-count-badge">0 Propositions</span>
                         </div>
-                        <div class="atomic-list" id="atomic-claims-list"></div>
+                        <p class="panel-instruction">Select any proposition below to cross-highlight its primary evidence & citations.</p>
+                        
+                        <div class="atomic-propositions-tree" id="atomic-propositions-list">
+                            <!-- Dynamically injected -->
+                        </div>
                     </div>
 
-                    <!-- Right: Cited Sources -->
-                    <div class="panel-card">
-                        <div class="panel-card-header">
-                            <div>
-                                <h4 class="panel-title">Cited Primary Evidence</h4>
-                                <p class="panel-desc">Verbatim passages from authoritative sources</p>
+                    <!-- Right: Cited Primary Evidence Inspector -->
+                    <div class="workbench-panel">
+                        <div class="panel-header">
+                            <div class="panel-header-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                <h3>Primary Evidence Inspector</h3>
                             </div>
-                            <span class="counter-badge" id="tab-evidence-count">0 sources</span>
+                            <span class="counter-badge" id="citations-count-badge">0 Sources</span>
                         </div>
-                        <div class="citations-list" id="citations-list"></div>
+                        <div class="citations-filter-row">
+                            <input type="text" id="citations-filter-input" class="citations-filter-input" placeholder="Filter sources by domain or keyword...">
+                            <span class="filter-tip" id="filter-tip-text">Showing all evidence</span>
+                        </div>
+
+                        <div class="citations-stream" id="citations-stream-list">
+                            <!-- Dynamically injected -->
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Export & API Drawer -->
-                <div class="panel-card export-drawer">
-                    <div class="panel-card-header">
-                        <h4 class="panel-title">Export Investigation Dossier</h4>
-                        <div class="export-btn-group">
-                            <button class="btn-secondary" id="btn-copy-markdown-report">Copy Markdown</button>
-                            <button class="btn-secondary" id="btn-download-report-json">Download JSON</button>
-                            <button class="btn-secondary" id="btn-copy-curl">Copy cURL</button>
-                        </div>
-                    </div>
-                    <textarea id="markdown-report-preview" class="dossier-textarea" readonly></textarea>
-                    <pre class="code-hidden" id="curl-snippet-preview"></pre>
+            <!-- FLOATING ACTION DOCK (ALWAYS ACCESSIBLE WHEN RESULTS EXIST) -->
+            <div class="floating-action-dock" id="floating-action-dock">
+                <div class="dock-inner">
+                    <button type="button" class="dock-btn" id="btn-dock-audio" title="Listen to Voice Briefing">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        <span id="audio-dock-label">Audio Briefing</span>
+                    </button>
+                    <div class="dock-divider"></div>
+                    <button type="button" class="dock-btn" id="btn-dock-copy-md" title="Copy Markdown Investigation Dossier">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span>Copy Dossier</span>
+                    </button>
+                    <button type="button" class="dock-btn" id="btn-dock-download-json" title="Download Complete JSON Payload">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        <span>Export JSON</span>
+                    </button>
+                    <button type="button" class="dock-btn" id="btn-dock-curl" title="Copy cURL Command">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                        <span>cURL</span>
+                    </button>
+                    <button type="button" class="dock-btn" id="btn-dock-share" title="Share Verification Link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                        <span>Share</span>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 2: Benchmarks -->
+        <!-- VIEW 2: GLOBAL VERIFICATION FEED -->
+        <section class="view-panel" id="live-stream-view">
+            <div class="stage-section-header">
+                <div class="eyebrow-badge">REAL-TIME TELEMETRY</div>
+                <h2 class="section-title">Live Global Verification Stream</h2>
+                <p class="section-subtitle">Continuous claim monitoring, autonomous web crawlers, and algorithmic arbitration across breaking global reporting.</p>
+            </div>
+
+            <div class="live-feed-grid" id="live-feed-grid">
+                <!-- Dynamically injected feed items -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: GOLD BENCHMARK EXPLORER -->
         <section class="view-panel" id="benchmarks-view">
-            <div class="view-header">
-                <h2 class="section-heading">Model Accuracy & Calibration Benchmarks</h2>
-                <p class="section-subheading">Standardized evaluation across the 50-Claim Gold Benchmark Dataset.</p>
+            <div class="stage-section-header">
+                <div class="eyebrow-badge">EPISTEMIC CALIBRATION</div>
+                <h2 class="section-title">Model Accuracy & Reliability Benchmarks</h2>
+                <p class="section-subtitle">Empirical evaluation metrics calculated across the standardized 50-Claim Gold Benchmark Dataset.</p>
             </div>
 
-            <div class="kpi-grid">
-                <div class="kpi-box">
-                    <span class="kpi-tag">Macro-F1 Score</span>
-                    <span class="kpi-number">0.880</span>
-                    <span class="kpi-sub">Outperforms 0.76 baseline</span>
+            <!-- KPI Metric Cards -->
+            <div class="benchmark-kpis">
+                <div class="kpi-card">
+                    <span class="kpi-label">Macro-F1 Score</span>
+                    <span class="kpi-value text-cyan">0.880</span>
+                    <span class="kpi-delta">+12.4% vs 0.76 Baseline</span>
                 </div>
-                <div class="kpi-box">
-                    <span class="kpi-tag">Accuracy</span>
-                    <span class="kpi-number">88.0%</span>
-                    <span class="kpi-sub">44 / 50 claims validated</span>
+                <div class="kpi-card">
+                    <span class="kpi-label">Overall Accuracy</span>
+                    <span class="kpi-value text-emerald">88.0%</span>
+                    <span class="kpi-delta">44 / 50 Claims Validated</span>
                 </div>
-                <div class="kpi-box">
-                    <span class="kpi-tag">Calibration Error (ECE)</span>
-                    <span class="kpi-number">0.046</span>
-                    <span class="kpi-sub">High epistemic reliability (&lt; 0.10)</span>
+                <div class="kpi-card">
+                    <span class="kpi-label">Expected Calibration Error (ECE)</span>
+                    <span class="kpi-value text-indigo">0.046</span>
+                    <span class="kpi-delta">Exceptional Reliability (&lt;0.10)</span>
                 </div>
-                <div class="kpi-box">
-                    <span class="kpi-tag">Brier Score</span>
-                    <span class="kpi-number">0.053</span>
-                    <span class="kpi-sub">Well-calibrated probabilities</span>
+                <div class="kpi-card">
+                    <span class="kpi-label">Brier Score</span>
+                    <span class="kpi-value text-violet">0.053</span>
+                    <span class="kpi-delta">Strict Probabilistic Accuracy</span>
                 </div>
             </div>
 
-            <div class="panel-card">
-                <h4 class="panel-title" style="margin-bottom: 1rem;">Confusion Matrix</h4>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Ground Truth</th>
-                                <th>SUPPORTED</th>
-                                <th>REFUTED</th>
-                                <th>NOT_ENOUGH_INFO</th>
-                                <th>CONFLICTING</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>SUPPORTED (20)</strong></td>
-                                <td class="highlight-cell">18</td>
-                                <td>0</td>
-                                <td>2</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td><strong>REFUTED (15)</strong></td>
-                                <td>0</td>
-                                <td class="highlight-cell">13</td>
-                                <td>2</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td><strong>NOT_ENOUGH_INFO (10)</strong></td>
-                                <td>1</td>
-                                <td>0</td>
-                                <td class="highlight-cell">9</td>
-                                <td>0</td>
-                            </tr>
-                            <tr>
-                                <td><strong>CONFLICTING (5)</strong></td>
-                                <td>0</td>
-                                <td>1</td>
-                                <td>0</td>
-                                <td class="highlight-cell">4</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Benchmark Breakdown Panels -->
+            <div class="benchmark-details-grid">
+                <div class="workbench-panel">
+                    <div class="panel-header">
+                        <div class="panel-header-title">
+                            <h3>Confusion Matrix (50 Ground Truth Claims)</h3>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="benchmark-table">
+                            <thead>
+                                <tr>
+                                    <th>Ground Truth Class</th>
+                                    <th>SUPPORTED</th>
+                                    <th>REFUTED</th>
+                                    <th>NOT_ENOUGH_INFO</th>
+                                    <th>CONFLICTING</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>SUPPORTED (20)</strong></td>
+                                    <td class="cell-hit">18</td>
+                                    <td>0</td>
+                                    <td>2</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>REFUTED (15)</strong></td>
+                                    <td>0</td>
+                                    <td class="cell-hit">13</td>
+                                    <td>2</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>NOT_ENOUGH_INFO (10)</strong></td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <td class="cell-hit">9</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CONFLICTING (5)</strong></td>
+                                    <td>0</td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                    <td class="cell-hit">4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="workbench-panel">
+                    <div class="panel-header">
+                        <div class="panel-header-title">
+                            <h3>Epistemic Integrity & Governance Specs</h3>
+                        </div>
+                    </div>
+                    <ul class="specs-checklist">
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div>
+                                <strong>Deterministic Institutional Escalation:</strong>
+                                <p>Automated elevation of ISRO, NASA, WHO, SEC, and national legislative records over secondary news aggregation.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div>
+                                <strong>Causal Inference Gap Detection:</strong>
+                                <p>Rejects false inferences (e.g. LIBS detecting sulphur does not prove significant water-ice deposits).</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div>
+                                <strong>Mathematical & Currency Normalization:</strong>
+                                <p>Deterministic currency conversion (₹615 Cr vs $2.7B) and numerical scale evaluation.</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 3: History -->
+        <!-- VIEW 4: INVESTIGATION AUDIT HISTORY -->
         <section class="view-panel" id="history-view">
-            <div class="view-header flex-between">
+            <div class="stage-section-header flex-between">
                 <div>
-                    <h2 class="section-heading">Investigation History</h2>
-                    <p class="section-subheading">Recent claim cross-examinations performed in this browser session.</p>
+                    <div class="eyebrow-badge">PERSISTENT SESSION LOG</div>
+                    <h2 class="section-title">Investigation History</h2>
+                    <p class="section-subtitle">Past claim cross-examinations and full dossiers stored locally in your browser.</p>
                 </div>
-                <button class="btn-danger" id="btn-purge-history">Clear History</button>
+                <button type="button" id="btn-purge-history" class="btn-danger-outline">Clear History</button>
             </div>
 
-            <div class="history-grid" id="audit-history-container">
-                <p class="empty-text">No past claims examined in this session yet.</p>
+            <div class="history-stream" id="history-stream-container">
+                <div class="empty-placeholder">No claims investigated in this session yet.</div>
             </div>
         </section>
     </main>
 
-    <!-- Floating Toast Notifications -->
-    <div class="toast-stack" id="toast-container"></div>
+    <!-- Hidden Export Drawer Modals & Clipboard Buffer -->
+    <div id="toast-rack" class="toast-rack"></div>
 
     <script src="/app.js"></script>
 </body>
