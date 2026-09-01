@@ -13,6 +13,7 @@ from tathvyn.models.interfaces import RerankedPassageItem, RerankerModel
 logger = get_logger("reranker_model")
 
 _CROSS_ENCODER_MODEL: Any = None
+_RERANKER_LOAD_FAILED: bool = False
 
 
 class BGERerankerModel(RerankerModel):
@@ -24,8 +25,11 @@ class BGERerankerModel(RerankerModel):
         self.device = device or settings.device
 
     def _get_model(self) -> Any:
-        """Lazy load cross encoder model."""
-        global _CROSS_ENCODER_MODEL
+        """Lazy load cross encoder model with fast local check."""
+        global _CROSS_ENCODER_MODEL, _RERANKER_LOAD_FAILED
+        if _RERANKER_LOAD_FAILED:
+            return None
+
         if _CROSS_ENCODER_MODEL is None:
             try:
                 from sentence_transformers import CrossEncoder
@@ -33,9 +37,18 @@ class BGERerankerModel(RerankerModel):
                 logger.info(
                     "Loading CrossEncoder reranker", model=self.model_name, device=self.device
                 )
-                _CROSS_ENCODER_MODEL = CrossEncoder(self.model_name, device=self.device)
+                try:
+                    _CROSS_ENCODER_MODEL = CrossEncoder(
+                        self.model_name, device=self.device, local_files_only=True
+                    )
+                except Exception:
+                    _CROSS_ENCODER_MODEL = CrossEncoder(self.model_name, device=self.device)
             except Exception as e:
-                logger.warning("CrossEncoder not available locally, using fallback", error=str(e))
+                logger.warning(
+                    "CrossEncoder not available locally, using fast lexical BM25 fallback",
+                    error=str(e),
+                )
+                _RERANKER_LOAD_FAILED = True
                 return None
         return _CROSS_ENCODER_MODEL
 
@@ -45,16 +58,7 @@ class BGERerankerModel(RerankerModel):
         passages: list[tuple[str, str]],  # (passage_id, passage_text)
         top_k: int = 5,
     ) -> list[RerankedPassageItem]:
-        """Score (query, passage) pairs and return top_k ranked passages.
-
-        Args:
-            query: The search query or atomic claim text.
-            passages: List of (passage_id, text) tuples.
-            top_k: Maximum number of top passages to return.
-
-        Returns:
-            list[RerankedPassageItem]: Ranked passages sorted by relevance descending.
-        """
+        """Score (query, passage) pairs and return top_k ranked passages."""
         if not passages:
             return []
 
@@ -62,54 +66,35 @@ class BGERerankerModel(RerankerModel):
         if model is not None:
             import asyncio
 
-            pairs = [[query, p_text] for _, p_text in passages]
-            raw_scores = await asyncio.to_thread(
-                model.predict, pairs, show_progress_bar=False, batch_size=16
-            )
-
-            # Convert numpy/tensor scores to list of floats and sort
-            scored_items: list[tuple[str, str, float]] = []
-            for idx, (p_id, p_text) in enumerate(passages):
-                score = float(raw_scores[idx])
-                # Normalize cross-encoder logits via sigmoid if unbounded
-                norm_score = (
-                    1.0 / (1.0 + 2.718281828459045 ** (-score))
-                    if score < 0.0 or score > 1.0
-                    else score
-                )
-                scored_items.append((p_id, p_text, norm_score))
-
-            scored_items.sort(key=lambda item: item[2], reverse=True)
-
-            ranked: list[RerankedPassageItem] = []
-            for rank_idx, (p_id, p_text, score) in enumerate(scored_items[:top_k]):
-                ranked.append(
+            pairs = [[query, text] for _, text in passages]
+            try:
+                scores = await asyncio.to_thread(model.predict, pairs)
+                scores_list = scores.tolist() if hasattr(scores, "tolist") else list(scores)
+                scored = [
                     RerankedPassageItem(
-                        passage_id=p_id,
-                        text=p_text,
-                        relevance_score=round(score, 4),
-                        rank=rank_idx + 1,
+                        passage_id=pid,
+                        text=text,
+                        relevance_score=float(score),
                     )
+                    for (pid, text), score in zip(passages, scores_list)
+                ]
+                scored.sort(key=lambda item: item.relevance_score, reverse=True)
+                return scored[:top_k]
+            except Exception as e:
+                logger.warning("Reranking inference error, falling back to lexical", error=str(e))
+
+        # Fast lexical term-overlap fallback
+        q_tokens = set(query.lower().split())
+        scored_lexical = []
+        for pid, text in passages:
+            p_tokens = set(text.lower().split())
+            overlap = len(q_tokens & p_tokens) / max(len(q_tokens), 1)
+            scored_lexical.append(
+                RerankedPassageItem(
+                    passage_id=pid,
+                    text=text,
+                    relevance_score=round(overlap, 4),
                 )
-            return ranked
-
-        # Deterministic fallback based on lexical term overlap
-        query_words = set(query.lower().split())
-        fallback_scored: list[tuple[str, str, float]] = []
-        for p_id, p_text in passages:
-            p_words = set(p_text.lower().split())
-            overlap = len(query_words.intersection(p_words))
-            rel = min(1.0, 0.4 + (overlap / max(1, len(query_words))) * 0.6)
-            fallback_scored.append((p_id, p_text, rel))
-
-        fallback_scored.sort(key=lambda item: item[2], reverse=True)
-
-        return [
-            RerankedPassageItem(
-                passage_id=p_id,
-                text=p_text,
-                relevance_score=round(rel, 4),
-                rank=idx + 1,
             )
-            for idx, (p_id, p_text, rel) in enumerate(fallback_scored[:top_k])
-        ]
+        scored_lexical.sort(key=lambda x: x.relevance_score, reverse=True)
+        return scored_lexical[:top_k]

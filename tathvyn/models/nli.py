@@ -15,6 +15,7 @@ from tathvyn.models.interfaces import NLIModel, StanceScoreResult
 logger = get_logger("nli_model")
 
 _NLI_PIPELINE: Any = None
+_NLI_LOAD_FAILED: bool = False
 
 
 class DeBERTaNLIModel(NLIModel):
@@ -26,8 +27,11 @@ class DeBERTaNLIModel(NLIModel):
         self.device = device or settings.device
 
     def _get_pipeline(self) -> Any:
-        """Lazy load HuggingFace NLI pipeline."""
-        global _NLI_PIPELINE
+        """Lazy load HuggingFace NLI pipeline with fast local fallback."""
+        global _NLI_PIPELINE, _NLI_LOAD_FAILED
+        if _NLI_LOAD_FAILED:
+            return None
+
         if _NLI_PIPELINE is None:
             try:
                 from transformers import pipeline
@@ -36,16 +40,28 @@ class DeBERTaNLIModel(NLIModel):
                 logger.info(
                     "Loading DeBERTa NLI pipeline", model=self.model_name, device=self.device
                 )
-                _NLI_PIPELINE = pipeline(
-                    "text-classification",
-                    model=self.model_name,
-                    device=device_idx,
-                    top_k=None,
-                )
+                try:
+                    # Attempt loading local weights first to prevent DNS retry hangs
+                    _NLI_PIPELINE = pipeline(
+                        "text-classification",
+                        model=self.model_name,
+                        device=device_idx,
+                        top_k=None,
+                        model_kwargs={"local_files_only": True},
+                    )
+                except Exception:
+                    _NLI_PIPELINE = pipeline(
+                        "text-classification",
+                        model=self.model_name,
+                        device=device_idx,
+                        top_k=None,
+                    )
             except Exception as e:
                 logger.warning(
-                    "DeBERTa pipeline not available locally, using fallback", error=str(e)
+                    "DeBERTa pipeline not available locally, using fast deterministic fallback",
+                    error=str(e),
                 )
+                _NLI_LOAD_FAILED = True
                 return None
         return _NLI_PIPELINE
 
@@ -54,20 +70,11 @@ class DeBERTaNLIModel(NLIModel):
         premise: str,
         hypothesis: str,
     ) -> StanceScoreResult:
-        """Evaluate logical stance between premise (evidence) and hypothesis (claim).
-
-        Args:
-            premise: The extracted evidence passage text.
-            hypothesis: The atomic claim proposition.
-
-        Returns:
-            StanceScoreResult: Softmax probabilities and predicted EvidenceRelationship.
-        """
+        """Evaluate logical stance between premise (evidence) and hypothesis (claim)."""
         pipe = self._get_pipeline()
         if pipe is not None:
             import asyncio
 
-            # HuggingFace pipeline input format for NLI
             formatted_input = f"{premise} </s></s> {hypothesis}"
             try:
                 outputs = await asyncio.to_thread(pipe, formatted_input)
@@ -88,7 +95,6 @@ class DeBERTaNLIModel(NLIModel):
             except Exception as e:
                 logger.warning("Inference error in NLI model, falling back", error=str(e))
 
-        # Deterministic fallback based on lexical polarity & negation
         return self._deterministic_fallback_stance(premise, hypothesis)
 
     def _map_probabilities_to_relationship(
@@ -111,52 +117,48 @@ class DeBERTaNLIModel(NLIModel):
 
         return StanceScoreResult(
             relationship=rel,
-            entailment_prob=round(entailment_prob, 4),
-            contradiction_prob=round(contradiction_prob, 4),
-            neutral_prob=round(neutral_prob, 4),
+            entailment_prob=entailment_prob,
+            contradiction_prob=contradiction_prob,
+            neutral_prob=neutral_prob,
         )
 
-    def _deterministic_fallback_stance(self, premise: str, hypothesis: str) -> StanceScoreResult:
-        """Lexical and negation fallback for offline test execution."""
+    def _deterministic_fallback_stance(
+        self,
+        premise: str,
+        hypothesis: str,
+    ) -> StanceScoreResult:
+        """Rule-based lexical polarity fallback when DeBERTa is unavailable."""
         p_lower = premise.lower()
         h_lower = hypothesis.lower()
 
-        # Check for explicit refutation / negation terms in premise
-        negation_markers = [
-            "not",
-            "never",
-            "false",
-            "failed",
-            "incorrect",
-            "denied",
-            "rejected",
-            "debunked",
-        ]
-        has_negation = any(neg in p_lower for neg in negation_markers)
+        negation_terms = [" not ", " never ", " no ", " refuted ", " debunked ", " false "]
+        contradiction_signals = ["however", "contrary to", "despite", "refuted by", "in contrast"]
 
-        h_words = set(h_lower.split())
-        p_words = set(p_lower.split())
-        overlap = len(h_words.intersection(p_words))
-        overlap_ratio = overlap / max(1, len(h_words))
+        has_negation_premise = any(term in p_lower for term in negation_terms)
+        has_negation_hyp = any(term in h_lower for term in negation_terms)
+        has_contradiction_signal = any(sig in p_lower for sig in contradiction_signals)
 
-        if has_negation and overlap_ratio >= 0.4:
+        shared_tokens = set(p_lower.split()) & set(h_lower.split())
+        overlap_ratio = len(shared_tokens) / max(len(h_lower.split()), 1)
+
+        if has_contradiction_signal or (has_negation_premise != has_negation_hyp):
             return StanceScoreResult(
                 relationship=EvidenceRelationship.CONTRADICTS,
-                entailment_prob=0.04,
-                contradiction_prob=0.91,
-                neutral_prob=0.05,
+                entailment_prob=0.10,
+                contradiction_prob=0.75,
+                neutral_prob=0.15,
             )
-        elif overlap_ratio >= 0.5:
+        elif overlap_ratio > 0.35:
             return StanceScoreResult(
                 relationship=EvidenceRelationship.SUPPORTS,
-                entailment_prob=0.88,
-                contradiction_prob=0.04,
-                neutral_prob=0.08,
+                entailment_prob=0.80,
+                contradiction_prob=0.08,
+                neutral_prob=0.12,
             )
         else:
             return StanceScoreResult(
                 relationship=EvidenceRelationship.NEUTRAL,
-                entailment_prob=0.15,
+                entailment_prob=0.20,
                 contradiction_prob=0.15,
-                neutral_prob=0.70,
+                neutral_prob=0.65,
             )
