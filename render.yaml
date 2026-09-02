@@ -3,7 +3,9 @@ services:
     name: tathvyn
     runtime: python
     buildCommand: pip install uv && uv sync --frozen --no-dev
-    startCommand: uv run python -m uvicorn tathvyn.api.app:create_app --factory --host 0.0.0.0 --port $PORT
+    startCommand: uv run tathvyn server --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
+      - key: TATHVYN_ENVIRONMENT
+        value: production

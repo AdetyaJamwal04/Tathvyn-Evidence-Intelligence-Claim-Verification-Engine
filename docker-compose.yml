@@ -5,15 +5,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: verifact-api
+    container_name: tathvyn-api
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8080:8080"
     environment:
       - TATHVYN_ENVIRONMENT=production
       - TATHVYN_HOST=0.0.0.0
-      - TATHVYN_PORT=8000
-      - TATHVYN_DATABASE_URL=postgresql+asyncpg://tathvyn:verifact_secret@postgres:5432/verifact_db
+      - TATHVYN_PORT=8080
+      - TATHVYN_DATABASE_URL=postgresql+asyncpg://tathvyn:tathvyn_secret@postgres:5432/tathvyn_db
       - TATHVYN_REDIS_URL=redis://redis:6379/0
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - TAVILY_API_KEY=${TAVILY_API_KEY:-}
@@ -24,9 +24,9 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - hf_cache:/home/verifact/.cache
+      - hf_cache:/home/user/.cache
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/health"]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -35,12 +35,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: verifact-worker
+    container_name: tathvyn-worker
     restart: unless-stopped
     command: ["python", "-c", "import asyncio; from tathvyn.workers.worker import ResearchWorker; from tathvyn.workers.queue import JobQueueManager; asyncio.run(ResearchWorker(JobQueueManager()).run_loop())"]
     environment:
       - TATHVYN_ENVIRONMENT=production
-      - TATHVYN_DATABASE_URL=postgresql+asyncpg://tathvyn:verifact_secret@postgres:5432/verifact_db
+      - TATHVYN_DATABASE_URL=postgresql+asyncpg://tathvyn:tathvyn_secret@postgres:5432/tathvyn_db
       - TATHVYN_REDIS_URL=redis://redis:6379/0
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - TAVILY_API_KEY=${TAVILY_API_KEY:-}
@@ -51,29 +51,29 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - hf_cache:/home/verifact/.cache
+      - hf_cache:/home/user/.cache
 
   postgres:
     image: pgvector/pgvector:pg16
-    container_name: verifact-postgres
+    container_name: tathvyn-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: verifact
-      POSTGRES_PASSWORD: verifact_secret
-      POSTGRES_DB: verifact_db
+      POSTGRES_USER: tathvyn
+      POSTGRES_PASSWORD: tathvyn_secret
+      POSTGRES_DB: tathvyn_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U verifact -d verifact_db"]
+      test: ["CMD-SHELL", "pg_isready -U tathvyn -d tathvyn_db"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: verifact-redis
+    container_name: tathvyn-redis
     restart: unless-stopped
     command: ["redis-server", "--appendonly", "yes"]
     ports:

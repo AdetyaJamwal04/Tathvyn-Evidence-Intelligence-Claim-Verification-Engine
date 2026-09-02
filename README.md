@@ -4,7 +4,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)](https://fastapi.tiangolo.com/)
 [![Google Gemini](https://img.shields.io/badge/LLM-Google%20Gemini%202.0%20Flash-orange.svg)](https://ai.google.dev/)
 [![Tests](https://img.shields.io/badge/tests-143%20passed-brightgreen.svg)](https://pytest.org)
-[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen.svg)](https://pytest-cov.readthedocs.io/)
+[![Coverage](https://img.shields.io/badge/coverage-86%25-brightgreen.svg)](https://pytest-cov.readthedocs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Tathvyn** (*derived from Sanskrit **तथ्य** "Tathya" — empirical fact/truth, and Pravyn — adept intelligence*) is an enterprise-grade automated claim verification and epistemic intelligence engine.
@@ -61,13 +61,70 @@ graph TD
 
 ---
 
+## 📂 Repository Structure (`src/` Layout)
+
+The codebase strictly adheres to **PEP 517/621, Hatchling, and enterprise Python standards**:
+
+```text
+Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                     # Enterprise multi-stage GitHub Actions CI (Lint, Typecheck, Test, Docker)
+├── .dockerignore                      # Filters out .venv, caches, and secrets from Docker context
+├── Dockerfile                         # Production multi-stage container with PYTHONPATH=/app/src
+├── docker-compose.yml                 # Local multi-service stack (Postgres 16 + Redis 7 + Tathvyn)
+├── pyproject.toml                     # PEP 621 metadata, Hatch wheel config, [project.scripts] CLI
+├── uv.lock                            # Deterministic dependency lockfile
+├── alembic.ini                        # Database migration configuration
+├── alembic/                           # SQLAlchemy Alembic migrations
+├── main.py                            # Lightweight entrypoint wrapper delegating to tathvyn.cli
+├── README.md                          # Primary platform documentation
+├── LICENSE                            # MIT License
+│
+├── src/                               # Canonical PEP 517/621 source root
+│   └── tathvyn/                       # Core Python package
+│       ├── cli.py                     # Dedicated CLI dispatcher (server, verify, benchmark)
+│       ├── api/                       # FastAPI REST routes, schemas, middleware
+│       ├── claims/                    # Atomic claim decomposition & language gating
+│       ├── common/                    # Enums, config, domain models, logging
+│       ├── evaluation/                # Seed benchmark suite & scoring metrics
+│       ├── evidence/                  # Stance classifiers, validators, provenance
+│       ├── models/                    # Gemini 2.0 Flash, DeBERTa NLI, BGE Reranker
+│       ├── orchestration/             # Stateful research controller & LangGraph engine
+│       ├── retrieval/                 # Search managers, hardened fetchers, parsers
+│       ├── storage/                   # Multi-tier caching & repositories
+│       ├── verdict/                   # Epistemic aggregation, calibration & synthesis
+│       └── workers/                   # Background async verification workers
+│
+├── web/                               # Public-Facing Minimalist Web UI
+│   ├── index.html                     # Semantic Omnibar & Dossier workspace
+│   ├── styles.css                     # Matte obsidian design system
+│   └── app.js                         # Reactive client controller
+│
+├── tests/                             # Pytest automated test suite (143 unit tests passing)
+│   ├── conftest.py
+│   ├── unit/                          # Subsystem unit tests (api, claims, evidence, models, etc.)
+│   └── benchmarks/                    # Benchmark harness tests
+│
+├── scripts/                           # Developer & operational utilities
+│   ├── run_benchmark.py
+│   └── verify_claim.py
+│
+├── reports/                           # Benchmark outputs & evaluations
+│   └── benchmarks/
+│
+└── docs/                              # Complete engineering documentation (00 to 26)
+```
+
+---
+
 ## ✨ Core Highlights & Technical Capabilities
 
 - **Google Gemini 2.0 Flash Backbone**: Powered by the official `google-genai` SDK with native JSON Schema enforcement, sub-second TTFT, and isolated prompt construction.
 - **Deterministic Institutional Escalation**: Automatically identifies domain authorities (e.g., ISRO, NASA, WHO, SEC, legislative registries) and elevates their evidentiary weight over secondary journalistic or SEO aggregators.
 - **Causal & Relational Inference Auditing**: Evaluates whether cited empirical facts actually substantiate the asserted conclusion, preventing false inductive leaps (e.g. *detecting sulphur does not prove significant water-ice reservoirs*).
 - **Currency & Unit Scaling Normalization**: Resolves cross-currency valuations (e.g., Indian Crore ₹615 Cr vs USD $2.7B) deterministically.
-- **Decoupled Evidence Sufficiency ($Q_{	ext{suff}}$)**: Separates epistemic evidence completeness from probabilistic verdict confidence, ensuring honest uncertainty outputs (`UNVERIFIED` / `INSUFFICIENT_EVIDENCE`) when data is sparse.
+- **Decoupled Evidence Sufficiency ($Q_{\text{suff}}$)**: Separates epistemic evidence completeness from probabilistic verdict confidence, ensuring honest uncertainty outputs (`UNVERIFIED` / `INSUFFICIENT_EVIDENCE`) when data is sparse.
 - **SSRF-Hardened Web Retrieval**: Async HTTP fetcher preventing private network exfiltration (RFC-1918), AWS instance metadata queries (`169.254.169.254`), and loopback exploitation.
 - **Fast-Fallback Neural Models**: Local-first loading for DeBERTa-v3 NLI and BGE CrossEncoder with immediate rule-based fallback, preventing HuggingFace DNS retry hangs.
 - **Multi-Tier Performance Caching**: Sub-50ms repeat claim verdict caching, 12-hour search query caching ($\ge 40\%$ cost reduction), and dense vector caching via Redis or in-memory LRU.
@@ -86,7 +143,7 @@ Evaluated rigorously on the standardized **50-Claim Gold Benchmark Dataset**:
 | **Overall Accuracy** | **88.0%** (44/50) | 80.0% | ✅ Outperforms |
 | **Expected Calibration Error (ECE)** | **0.046** | $< 0.100$ | ✅ Well-Calibrated |
 | **Multi-Class Brier Score** | **0.053** | $< 0.120$ | ✅ High Reliability |
-| **Unit & Integration Tests** | **143 / 143 Passing** | 100% | ✅ Verified |
+| **Unit & Integration Tests** | **143 / 143 Passing** | 100% | ✅ Verified (86% Coverage) |
 
 ---
 
@@ -140,10 +197,10 @@ GEMINI_API_KEY=your_gemini_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
 
 # Optional: Secondary search fallback
-BRAVE_API_KEY=your_brave_api_key_here
+BRAVE_SEARCH_API_KEY=your_brave_api_key_here
 
 # Optional: Distributed cache (defaults to fast in-memory cache if omitted)
-REDIS_URL=redis://localhost:6379/0
+TATHVYN_REDIS_URL=redis://localhost:6379/0
 ```
 *(Note: If API keys are omitted, Tathvyn automatically engages offline deterministic fallback mode for testing).*
 
@@ -152,7 +209,12 @@ REDIS_URL=redis://localhost:6379/0
 ## ⚡ Running Tathvyn
 
 ### 1. Launch the API & Web Studio
+Run via the native `tathvyn` CLI binary (or `python main.py`):
 ```powershell
+# Native CLI binary
+uv run tathvyn server --port 8080
+
+# Or via the root wrapper
 uv run python main.py server --port 8080
 ```
 - **Web UI Studio**: Open [http://localhost:8080](http://localhost:8080) in your browser.
@@ -162,12 +224,12 @@ uv run python main.py server --port 8080
 ### 2. CLI Single-Claim Verification
 ```powershell
 # Verify a claim directly from your terminal
-uv run python main.py verify "Chandrayaan-3 was the first mission to soft-land near the lunar south pole, where Pragyan rover travelled 101m and LIBS detected sulphur, at a total cost of ₹615 crore." --depth STANDARD
+uv run tathvyn verify "Chandrayaan-3 was the first mission to soft-land near the lunar south pole, where Pragyan rover travelled 101m and LIBS detected sulphur, at a total cost of ₹615 crore." --depth STANDARD
 ```
 
 ### 3. Run the Evaluation Benchmark Suite
 ```powershell
-uv run python main.py benchmark
+uv run tathvyn benchmark
 ```
 
 ### 4. Run Automated Test Suite
