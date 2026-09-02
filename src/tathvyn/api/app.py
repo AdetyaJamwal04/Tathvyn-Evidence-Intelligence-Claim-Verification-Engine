@@ -66,9 +66,15 @@ def create_app() -> FastAPI:
 
     from fastapi.staticfiles import StaticFiles
 
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    web_dir = os.path.join(base_dir, "web")
-    if os.path.exists(web_dir):
+    # Locate web UI directory across development, container, and wheel installs
+    candidate_paths = [
+        os.path.join(os.getcwd(), "web"),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "web")),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "web")),
+        "/app/web",
+    ]
+    web_dir = next((p for p in candidate_paths if os.path.isdir(p)), None)
+    if web_dir:
         app.mount("/", StaticFiles(directory=web_dir, html=True), name="web_ui")
 
     return app

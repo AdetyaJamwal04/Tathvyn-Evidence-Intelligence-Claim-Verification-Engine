@@ -44,7 +44,8 @@ RUN useradd -m -u 1000 user
 
 # Copy installed virtual environment from builder
 COPY --from=builder /app/.venv /app/.venv
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONPATH="/app/src:$PYTHONPATH"
 
 # Copy application source code
 COPY --chown=user:user . /app

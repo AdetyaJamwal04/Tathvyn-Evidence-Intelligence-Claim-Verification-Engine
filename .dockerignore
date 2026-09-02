@@ -1,0 +1,37 @@
+# Git
+.git
+.gitignore
+
+# Virtual Environments
+.venv
+venv/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Local Secrets & Environment
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor Settings
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Reports & Scratch Files
+reports/
+scratch/

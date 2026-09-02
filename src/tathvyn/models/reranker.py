@@ -4,6 +4,7 @@ Wraps sentence-transformers CrossEncoder (BAAI/bge-reranker-v2-m3) to compute
 fine-grained relevance scores for (query, passage) pairs.
 """
 
+import math
 from typing import Any
 
 from tathvyn.common.config import get_settings
@@ -14,6 +15,23 @@ logger = get_logger("reranker_model")
 
 _CROSS_ENCODER_MODEL: Any = None
 _RERANKER_LOAD_FAILED: bool = False
+
+
+def _to_prob(val: float) -> float:
+    """Safely bound cross-encoder output to [0.0, 1.0] using sigmoid if unbounded."""
+    if 0.0 <= val <= 1.0:
+        return val
+    # Sigmoid normalization for raw logits
+    try:
+        if val >= 0:
+            z = math.exp(-val)
+            prob = 1.0 / (1.0 + z)
+        else:
+            z = math.exp(val)
+            prob = z / (1.0 + z)
+        return max(0.0, min(1.0, round(prob, 4)))
+    except OverflowError:
+        return 1.0 if val > 0 else 0.0
 
 
 class BGERerankerModel(RerankerModel):
@@ -70,16 +88,20 @@ class BGERerankerModel(RerankerModel):
             try:
                 scores = await asyncio.to_thread(model.predict, pairs)
                 scores_list = scores.tolist() if hasattr(scores, "tolist") else list(scores)
-                scored = [
+                raw_scored = [
+                    (pid, text, _to_prob(float(score)))
+                    for (pid, text), score in zip(passages, scores_list)
+                ]
+                raw_scored.sort(key=lambda item: item[2], reverse=True)
+                return [
                     RerankedPassageItem(
                         passage_id=pid,
                         text=text,
-                        relevance_score=float(score),
+                        relevance_score=score,
+                        rank=idx + 1,
                     )
-                    for (pid, text), score in zip(passages, scores_list)
+                    for idx, (pid, text, score) in enumerate(raw_scored[:top_k])
                 ]
-                scored.sort(key=lambda item: item.relevance_score, reverse=True)
-                return scored[:top_k]
             except Exception as e:
                 logger.warning("Reranking inference error, falling back to lexical", error=str(e))
 
@@ -89,12 +111,14 @@ class BGERerankerModel(RerankerModel):
         for pid, text in passages:
             p_tokens = set(text.lower().split())
             overlap = len(q_tokens & p_tokens) / max(len(q_tokens), 1)
-            scored_lexical.append(
-                RerankedPassageItem(
-                    passage_id=pid,
-                    text=text,
-                    relevance_score=round(overlap, 4),
-                )
+            scored_lexical.append((pid, text, round(overlap, 4)))
+        scored_lexical.sort(key=lambda x: x[2], reverse=True)
+        return [
+            RerankedPassageItem(
+                passage_id=pid,
+                text=text,
+                relevance_score=score,
+                rank=idx + 1,
             )
-        scored_lexical.sort(key=lambda x: x.relevance_score, reverse=True)
-        return scored_lexical[:top_k]
+            for idx, (pid, text, score) in enumerate(scored_lexical[:top_k])
+        ]

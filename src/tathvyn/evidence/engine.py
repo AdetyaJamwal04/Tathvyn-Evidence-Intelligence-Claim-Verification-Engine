@@ -108,7 +108,7 @@ class EvidenceAssessmentEngine:
                 atomic_claim_id=atomic_claim.atomic_claim_id,
                 passage_id=passage.passage_id,
                 relationship=relationship,
-                relevance_score=item.relevance_score,
+                relevance_score=max(0.0, min(1.0, float(item.relevance_score))),
                 entailment_score=stance.entailment_prob,
                 contradiction_score=stance.contradiction_prob,
                 source_quality_score=0.80,
