@@ -1,163 +1,164 @@
-# Google Cloud Platform (GCP) Deployment Guide
+# Google Cloud Platform (GCP) & Firebase Production Deployment Guide
 
-This guide details the complete manual deployment procedure for **Tathvyn** using **Option A (Google Cloud Run + Firebase Hosting)**.
-
----
-
-## Architecture Overview
-
-```
-                        [User Browser]
-                              │
-                              ▼
-                [Firebase Hosting (Global CDN)]
-                     (https://<project>.web.app)
-                              │
-         ┌────────────────────┴────────────────────┐
-         │ Static Assets                           │ API Requests
-         ▼ (/assets/*, /index.html)                ▼ (/api/*)
-  [Google Edge CDN]                       [Google Cloud Run]
-  (Instant React load)                    (service: tathvyn-backend)
-                                          (FastAPI + DeBERTa + PyTorch)
-                                                   │
-                                                   ▼
-                                          [Google Gemini 2.0]
-```
-
-- **Frontend**: Hosted on Firebase Hosting (Google's Global CDN). Instant page loads, global SSL, zero cold starts.
-- **Backend**: Hosted on Google Cloud Run (`tathvyn-backend`). Fully managed serverless container with 2 vCPUs and 4 GB RAM.
-- **Unified Domain (Zero CORS)**: Firebase Hosting automatically rewrites `/api/**` to Cloud Run, meaning both frontend and backend share the exact same domain origin.
+This guide details the exact, battle-tested production deployment runbook for **Tathvyn** using **Google Cloud Run (Backend)** + **Firebase Hosting (Frontend CDN)** + **Google Secret Manager (Encrypted Credentials)**.
 
 ---
 
-## Part 1: Prerequisites
+## 🏗️ Architecture Overview
 
-1. **Google Cloud Account**: [console.cloud.google.com](https://console.cloud.google.com)
-2. **GCP Project**: Create a new project (e.g. `tathvyn-production`).
-3. **CLI Tools** (Installed locally):
-   - **Google Cloud SDK (`gcloud`)**: [Install guide](https://cloud.google.com/sdk/docs/install)
-   - **Firebase CLI**: `npm install -g firebase-tools`
-4. Authenticate CLIs:
-   ```bash
-   gcloud auth login
-   gcloud config set project YOUR_PROJECT_ID
-   firebase login
-   ```
+```
+                         [User Browser]
+                               │
+               ┌───────────────┴───────────────┐
+               │                               │
+       Static Assets (HTML/JS/CSS)       API Calls & SSE Stream
+               │                               │
+               ▼                               ▼
+ [Firebase Hosting (Global CDN)]     [Google Cloud Run]
+  https://tathvyn-production.web.app  https://tathvyn-backend-906432301218.us-central1.run.app
+               │                               │
+       Instant edge delivery           FastAPI + PyTorch + DeBERTa
+       Zero cold starts                (2 vCPU, 4 GiB RAM, 1 warm instance)
+                                               │
+                                               ▼
+                                      [Google Secret Manager]
+                                      • GEMINI_API_KEY (Gemini 2.0 Flash)
+                                      • TAVILY_API_KEY (Web Search)
+```
+
+* **Frontend**: Hosted on Firebase Hosting (Google's Global Edge CDN). Instant page loads, global SSL/TLS certificates, zero cold starts.
+* **Backend**: Hosted on Google Cloud Run (`tathvyn-backend`). Fully managed container with 2 vCPUs and 4 GB RAM, with 1 warm min-instance to avoid model loading delays.
+* **Secrets**: Stored in Google Secret Manager, encrypted at rest, and mounted directly into container memory at runtime.
+* **CORS**: Cloud Run permits cross-origin requests directly from `https://tathvyn-production.web.app` with credentials.
 
 ---
 
-## Part 2: Deploy the Backend to Cloud Run
+## 🛠️ Step-by-Step Deployment Runbook
 
-### Step 1: Enable Cloud Run & Cloud Build APIs
-```bash
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com
-```
+### Step 1: Tooling & Authentication
 
-### Step 2: Deploy the Backend Container
-From the repository root, run:
-```bash
-gcloud run deploy tathvyn-backend \
-  --source ./backend \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --memory 4Gi \
-  --cpu 2 \
-  --min-instances 1 \
-  --timeout 300s \
-  --set-env-vars TATHVYN_ENVIRONMENT=production,GEMINI_API_KEY="YOUR_GEMINI_API_KEY",TAVILY_API_KEY="YOUR_TAVILY_API_KEY"
-```
+Ensure `gcloud` (Google Cloud SDK) and `firebase-tools` are installed:
+```powershell
+# Authenticate CLIs
+gcloud auth login
+firebase login
 
-> **Why these parameters?**
-> - `--memory 4Gi` & `--cpu 2`: Ensures PyTorch, DeBERTa, and Cross-Encoder neural models run with high throughput without out-of-memory errors.
-> - `--min-instances 1`: Keeps one container warm 24/7 so model weights remain cached in memory, eliminating cold starts.
-> - `--timeout 300s`: Allows deep research queries to complete without HTTP connection drops.
-
-### Step 3: Verify the Backend Service
-When Cloud Run finishes, it outputs a URL like:
-`https://tathvyn-backend-xxxxxxxx-uc.a.run.app`
-
-Test health endpoint:
-```bash
-curl -f https://tathvyn-backend-xxxxxxxx-uc.a.run.app/api/v1/health
-# Returns: {"status":"healthy", "environment":"production"}
+# Set active project
+gcloud config set project tathvyn-production
 ```
 
 ---
 
-## Part 3: Deploy the Frontend to Firebase Hosting
+### Step 2: Enable Google Cloud APIs
 
-### Step 1: Build the React Application
-From the repository root:
-```bash
+```powershell
+gcloud services enable `
+  run.googleapis.com `
+  artifactregistry.googleapis.com `
+  cloudbuild.googleapis.com `
+  secretmanager.googleapis.com `
+  firebase.googleapis.com `
+  firebasehosting.googleapis.com
+```
+
+---
+
+### Step 3: Create Artifact Registry & Service Account Permissions
+
+#### 1. Create Docker Repository:
+```powershell
+gcloud artifacts repositories create tathvyn-repo `
+  --repository-format=docker `
+  --location=us-central1 `
+  --description="Docker repository for Tathvyn"
+```
+
+#### 2. Grant Permissions to the Project Service Account:
+In modern GCP projects, Cloud Build and Cloud Run run under the compute service account (`PROJECT_NUMBER-compute@developer.gserviceaccount.com`). Grant it the required roles:
+```powershell
+$SA = "906432301218-compute@developer.gserviceaccount.com"
+
+gcloud projects add-iam-policy-binding tathvyn-production --member="serviceAccount:$SA" --role="roles/storage.objectViewer"
+gcloud projects add-iam-policy-binding tathvyn-production --member="serviceAccount:$SA" --role="roles/logging.logWriter"
+gcloud projects add-iam-policy-binding tathvyn-production --member="serviceAccount:$SA" --role="roles/artifactregistry.writer"
+gcloud projects add-iam-policy-binding tathvyn-production --member="serviceAccount:$SA" --role="roles/secretmanager.secretAccessor"
+```
+
+---
+
+### Step 4: Store API Secrets in Secret Manager
+
+```powershell
+# Store Gemini Key
+gcloud secrets create gemini-api-key --replication-policy="automatic" 2>$null
+Set-Content -Path "$env:TEMP\gemini_key.txt" -Value "YOUR_GEMINI_API_KEY" -NoNewline
+gcloud secrets versions add gemini-api-key --data-file="$env:TEMP\gemini_key.txt"
+Remove-Item "$env:TEMP\gemini_key.txt"
+
+# Store Tavily Key
+gcloud secrets create tavily-api-key --replication-policy="automatic" 2>$null
+Set-Content -Path "$env:TEMP	avily_key.txt" -Value "YOUR_TAVILY_API_KEY" -NoNewline
+gcloud secrets versions add tavily-api-key --data-file="$env:TEMP	avily_key.txt"
+Remove-Item "$env:TEMP	avily_key.txt"
+```
+
+---
+
+### Step 5: Build Backend Container with Cloud Build
+
+Ensure `backend/.gcloudignore` excludes the local virtualenv:
+```powershell
+gcloud builds submit backend --tag us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest
+```
+
+---
+
+### Step 6: Deploy Backend to Cloud Run
+
+```powershell
+gcloud run deploy tathvyn-backend `
+  --image us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest `
+  --region us-central1 `
+  --platform managed `
+  --allow-unauthenticated `
+  --memory 4Gi `
+  --cpu 2 `
+  --min-instances 1 `
+  --set-env-vars "Tathvyn_ENVIRONMENT=production" `
+  --set-secrets "GEMINI_API_KEY=gemini-api-key:latest,TAVILY_API_KEY=tavily-api-key:latest"
+```
+
+* Cloud Run outputs the service URL: `https://tathvyn-backend-906432301218.us-central1.run.app`
+* Test health endpoint: `https://tathvyn-backend-906432301218.us-central1.run.app/api/v1/health`
+
+---
+
+### Step 7: Build & Deploy Frontend to Firebase Hosting
+
+#### 1. Set Production API URL in Frontend:
+```powershell
+Set-Content -Path "frontend\.env.production" -Value "VITE_API_URL=https://tathvyn-backend-906432301218.us-central1.run.app"
+```
+
+#### 2. Build Production Bundle:
+```powershell
 cd frontend
-npm install
 npm run build
 cd ..
 ```
-This outputs compiled production assets to `frontend/dist/`.
 
-### Step 2: Associate Firebase Project
-In the root directory, create/update `.firebaserc`:
-```json
-{
-  "projects": {
-    "default": "YOUR_PROJECT_ID"
-  }
-}
-```
-*(Replace `YOUR_PROJECT_ID` with your actual GCP Project ID).*
-
-### Step 3: Verify `firebase.json`
-Confirm `firebase.json` at the root matches:
-```json
-{
-  "hosting": {
-    "public": "frontend/dist",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "/api/**",
-        "run": {
-          "serviceId": "tathvyn-backend",
-          "region": "us-central1"
-        }
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
-}
-```
-
-### Step 4: Deploy to Firebase Hosting
-```bash
+#### 3. Deploy to Firebase:
+```powershell
 firebase deploy --only hosting
 ```
 
 ---
 
-## Part 4: Testing & Verification
-
-1. Open your new Firebase URL in any browser:
-   `https://YOUR_PROJECT_ID.web.app` (or `.firebaseapp.com`)
-2. Enter a claim in the search bar:
-   *"Chandrayaan-3 confirmed water molecules on the lunar south pole."*
-3. Watch the live Server-Sent Events progress stream and verify the final synthesized verdict.
-
----
-
-## Summary of Maintenance Commands
+## 🔄 Routine Maintenance Commands
 
 | Action | Command |
 | :--- | :--- |
-| **Re-deploy backend after Python code changes** | `gcloud run deploy tathvyn-backend --source ./backend --region us-central1` |
-| **Re-deploy frontend after React changes** | `cd frontend && npm run build && cd .. && firebase deploy --only hosting` |
-| **View live backend logs** | `gcloud run services logs tail tathvyn-backend --region us-central1` |
-| **Check service status** | `gcloud run services describe tathvyn-backend --region us-central1` |
+| **Re-deploy Backend** (after Python code changes) | `gcloud builds submit backend --tag us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest`<br>`gcloud run deploy tathvyn-backend --image us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest --region us-central1` |
+| **Re-deploy Frontend** (after React code changes) | `cd frontend; npm run build; cd ..; firebase deploy --only hosting` |
+| **View Live Backend Logs** | `gcloud run services logs tail tathvyn-backend --region us-central1` |
+| **Check Cloud Run Health** | `curl -s https://tathvyn-backend-906432301218.us-central1.run.app/api/v1/health` |

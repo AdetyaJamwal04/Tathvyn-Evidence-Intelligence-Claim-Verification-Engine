@@ -4,7 +4,7 @@ The backend of **Tathvyn** is a high-performance Python 3.12+ engine powered by 
 
 ---
 
-## 📁 Directory Structure
+## 🏗️ Directory Structure
 
 ```
 backend/
@@ -21,6 +21,8 @@ backend/
 │   └── workers/          # Async job queue & background worker loop
 ├── scripts/              # CLI verification & benchmark runners
 ├── tests/                # Unit test suite & 50-claim evaluation benchmark
+├── Dockerfile            # Production Dockerfile for Cloud Run
+├── .gcloudignore         # Cloud Build optimization
 ├── pyproject.toml        # Hatchling build specification & dependencies
 ├── uv.lock               # Deterministic dependency lockfile
 └── main.py               # Backend entrypoint (CLI & FastAPI server)
@@ -28,7 +30,7 @@ backend/
 
 ---
 
-## 🚀 Running the Backend
+## 💻 Running the Backend Locally
 
 ### 1. Install Dependencies
 Using `uv`:
@@ -38,17 +40,37 @@ uv sync --extra dev
 
 ### 2. Start the API Server
 ```powershell
-uv run python main.py server --host 127.0.0.1 --port 8000
+uv run python main.py server --port 8000
 ```
-- Interactive Docs: `http://127.0.0.1:8000/docs`
-- Health Check: `http://127.0.0.1:8000/api/v1/health`
+Interactive Swagger docs: `http://127.0.0.1:8000/docs`
 
-### 3. Verify a Claim via CLI
+### 3. Run Tests
 ```powershell
-uv run python main.py verify "The Pacific Ocean is the largest ocean on Earth."
+uv run pytest tests/unit/ -k "not test_llm"
 ```
 
-### 4. Run the Test Suite
+---
+
+## ☁️ Production Deployment (Google Cloud Run)
+
+The backend is deployed to **Google Cloud Run** in region `us-central1`:
+
 ```powershell
-uv run python -m pytest tests/unit/ -k "not test_llm"
+# 1. Build and push image with Cloud Build
+gcloud builds submit backend --tag us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest
+
+# 2. Deploy to Cloud Run
+gcloud run deploy tathvyn-backend `
+  --image us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest `
+  --region us-central1 `
+  --platform managed `
+  --allow-unauthenticated `
+  --memory 4Gi `
+  --cpu 2 `
+  --min-instances 1 `
+  --set-env-vars "Tathvyn_ENVIRONMENT=production" `
+  --set-secrets "GEMINI_API_KEY=gemini-api-key:latest,TAVILY_API_KEY=tavily-api-key:latest"
 ```
+
+* **Live Cloud Run URL**: `https://tathvyn-backend-906432301218.us-central1.run.app`
+* **Health Endpoint**: `/api/v1/health`

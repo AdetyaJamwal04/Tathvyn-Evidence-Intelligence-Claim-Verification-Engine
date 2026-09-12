@@ -67,3 +67,14 @@ backend/__pycache__/
 
 # Agent guide
 .agent/
+# Firebase
+.firebase/
+
+# Environment files & secrets
+.env
+.env.*
+*.env
+frontend/.env*
+
+!*.env.example
+!frontend/.env.example

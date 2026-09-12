@@ -4,7 +4,7 @@ The frontend of **Tathvyn** is a modern Single-Page Application built with **Rea
 
 ---
 
-## 📁 Directory Structure
+## 🏗️ Directory Structure
 
 ```
 frontend/
@@ -20,6 +20,7 @@ frontend/
 │   ├── App.jsx                   # Primary layout & state coordinator
 │   ├── index.css                 # CSS custom properties, tokens, animations
 │   └── main.jsx                  # React DOM entrypoint
+├── .env.example                  # Environment variable template
 ├── index.html                    # HTML5 shell
 ├── package.json                  # Dependencies & scripts
 └── vite.config.js                # Vite build configuration & API proxy (:8000)
@@ -27,7 +28,7 @@ frontend/
 
 ---
 
-## 🚀 Getting Started
+## 💻 Running the Frontend Locally
 
 ### 1. Install Dependencies
 ```bash
@@ -38,10 +39,24 @@ npm install
 ```bash
 npm run dev
 ```
-Open **`http://localhost:3000`** in your browser.
+Open `http://localhost:3000/`. API requests are automatically proxied to the local backend at `http://localhost:8000`.
 
-### 3. Production Build
-```bash
+---
+
+## ☁️ Production Deployment (Firebase Hosting)
+
+The frontend is deployed to **Firebase Hosting** (Google Edge CDN) at:
+**[https://tathvyn-production.web.app](https://tathvyn-production.web.app)**
+
+### Build & Deploy:
+```powershell
+# 1. Set backend API URL
+Set-Content -Path "frontend\.env.production" -Value "VITE_API_URL=https://tathvyn-backend-906432301218.us-central1.run.app"
+
+# 2. Build production assets
 npm run build
+
+# 3. Deploy to Firebase (from project root)
+cd ..
+firebase deploy --only hosting
 ```
-Builds optimized production assets to `frontend/dist/`, which are automatically served by the FastAPI backend in production.

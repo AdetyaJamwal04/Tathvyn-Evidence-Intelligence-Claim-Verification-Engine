@@ -1,18 +1,30 @@
 # Tathvyn - Evidence Intelligence & Automated Claim Verification Platform
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-tathvyn--production.web.app-brightgreen.svg)](https://tathvyn-production.web.app)
+[![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Deployed-4285F4.svg)](https://tathvyn-backend-906432301218.us-central1.run.app/api/v1/health)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Node.js 20+](https://img.shields.io/badge/node-20+-green.svg)](https://nodejs.org/)
 [![Vite](https://img.shields.io/badge/vite-5.4+-646CFF.svg)](https://vitejs.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Tathvyn** (तथ्य - *truth / factual reality*) is an enterprise-grade, evidence-intelligence platform for automated, calibrated, and audit-traceable claim verification. It decomposes natural language claims into verifiable atomic propositions, autonomously retrieves multi-source authoritative web evidence, validates quantitative and causal assertions, evaluates bidirectional semantic stances with local cross-encoders (DeBERTa NLI), and synthesizes calibrated epistemic verdicts.
+**Tathvyn** (*truth / factual reality*) is an enterprise-grade, evidence-intelligence platform for automated, calibrated, and audit-traceable claim verification. It decomposes natural language claims into verifiable atomic propositions, autonomously retrieves multi-source authoritative web evidence, validates quantitative and causal assertions, evaluates bidirectional semantic stances with local cross-encoders (DeBERTa NLI), and synthesizes calibrated epistemic verdicts.
 
 ---
 
-## 🏛️ System Architecture
+## 🌐 Live Production Deployment
 
-Tathvyn is structured as a clean, two-tier monorepo:
+Tathvyn is live and deployed in production across Google Cloud:
+
+* **Web Application (Global CDN)**: [https://tathvyn-production.web.app](https://tathvyn-production.web.app)
+* **Backend API (Google Cloud Run)**: [https://tathvyn-backend-906432301218.us-central1.run.app](https://tathvyn-backend-906432301218.us-central1.run.app/api/v1/health)
+* **Architecture**: Decoupled Firebase Hosting (Google Edge CDN) + Google Cloud Run (2 vCPU, 4 GiB RAM, warm instance) + Google Secret Manager (encrypted credentials).
+
+---
+
+## 🏗️ System Architecture
+
+Tathvyn is structured as a high-efficiency monorepo:
 
 ```
 Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
@@ -24,11 +36,13 @@ Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
 │   │   ├── index.css          # Curated design system, theme tokens & dark mode
 │   │   └── main.jsx
 │   ├── package.json           # Node dependencies (React 18, Lucide icons, Vite)
-│   └── vite.config.js         # Dev server & reverse proxy to backend (:8000)
+│   ├── vite.config.js         # Dev server & reverse proxy to backend (:8000)
+│   └── .env.example           # Production API URL template
 ├── backend/                   # Python 3.12+ FastAPI & Verification Intelligence Engine
 │   ├── src/tathvyn/
 │   │   ├── api/               # FastAPI REST & SSE endpoints, CORS, rate limiting
 │   │   ├── claims/            # Normalization, clause decomposition, entity extraction
+│   │   ├── common/            # Canonical enums, Pydantic schemas, settings
 │   │   ├── evidence/          # Evidence assessment, numerical validation, conflict detection
 │   │   ├── models/            # DeBERTa-v3 NLI, MS-MARCO CrossEncoder reranker
 │   │   ├── orchestration/     # Adaptive research graph, query formulator
@@ -38,10 +52,13 @@ Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
 │   ├── scripts/               # CLI verification & evaluation benchmark runners
 │   ├── tests/                 # Unit test suite & 50-claim curated benchmark dataset
 │   ├── pyproject.toml         # Python packaging & dependencies (Hatchling)
+│   ├── Dockerfile             # Production container for Google Cloud Run
+│   ├── .gcloudignore          # Cloud Build ignore rules (excludes .venv and cache)
 │   └── main.py                # Backend FastAPI & CLI entry point
 ├── docs/                      # 27 comprehensive architectural specifications & ADRs
-├── Dockerfile                 # Multi-stage production container (Node build + Python runtime)
-├── docker-compose.yml         # Container composition
+│   └── GCP_DEPLOYMENT_GUIDE.md # Step-by-step production runbook
+├── firebase.json              # Firebase Hosting configuration
+├── .firebaserc                # Firebase project mapping (tathvyn-production)
 ├── main.py                    # Root convenience launcher (proxies into backend/)
 ├── pyrightconfig.json         # Workspace IDE language server search paths
 └── README.md
@@ -49,18 +66,18 @@ Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
 
 ---
 
-## ✨ Key Capabilities
+## ⚡ Key Capabilities
 
 1. **Autonomous Atomic Decomposition**:
    - Breaks complex sentences and compound assertions along coordinating conjunctions and predicate clauses without losing the core subject entity.
 2. **Multi-Source Evidence Retrieval**:
    - Queries real-time authoritative web sources via Tavily and Brave Search APIs with automatic fallback to high-density snippet extraction.
 3. **Deterministic Numerical & Date Gating**:
-   - Separates calendar years (1800–2099) and alphanumeric model identifiers from quantitative metrics, preventing false numerical contradictions.
+   - Separates calendar years (1800-2099) and alphanumeric model identifiers from quantitative metrics, preventing false numerical contradictions.
 4. **Local Neural Cross-Encoders**:
    - Utilizes `cross-encoder/ms-marco-MiniLM-L-6-v2` for semantic relevance reranking and `cross-encoder/nli-distilroberta-base` for directional entailment/contradiction classification.
 5. **Absence-of-Evidence Epistemic Refutation**:
-   - Decisively refutes fabricated claims (e.g., fictitious military strikes or mass casualties) when broad multi-source searches yield zero corroboration, achieving **84%–90% calibrated confidence**.
+   - Decisively refutes fabricated claims (e.g., fictitious military strikes or mass casualties) when broad multi-source searches yield zero corroboration, achieving **84%-90% calibrated confidence**.
 6. **Real-Time Progress Streaming (SSE)**:
    - Emits live Server-Sent Events stages (`ANALYZING` → `DECOMPOSED` → `SEARCHING` → `RETRIEVING` → `INFERENCE` → `SYNTHESIZING` → `COMPLETED`) to keep users engaged during deep verification.
 
@@ -120,18 +137,29 @@ uv run python main.py verify "Chandrayaan-3 successfully landed on the Moon in A
 
 ---
 
-### Option 3: Production Docker Deployment
+### Option 3: Deploying to Google Cloud (Production)
 
-Tathvyn features a multi-stage `Dockerfile` that builds the Node.js frontend and packages the Python backend together into a single container:
+See **[docs/GCP_DEPLOYMENT_GUIDE.md](docs/GCP_DEPLOYMENT_GUIDE.md)** for full step-by-step instructions.
 
-```bash
-# Build the unified production container
-docker build -t tathvyn .
+```powershell
+# 1. Build and deploy Backend to Cloud Run
+gcloud builds submit backend --tag us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest
+gcloud run deploy tathvyn-backend `
+  --image us-central1-docker.pkg.dev/tathvyn-production/tathvyn-repo/backend:latest `
+  --region us-central1 `
+  --platform managed `
+  --allow-unauthenticated `
+  --memory 4Gi `
+  --cpu 2 `
+  --min-instances 1 `
+  --set-env-vars "Tathvyn_ENVIRONMENT=production" `
+  --set-secrets "GEMINI_API_KEY=gemini-api-key:latest,TAVILY_API_KEY=tavily-api-key:latest"
 
-# Run container on port 7860
-docker run -p 7860:7860 --env-file .env tathvyn
+# 2. Build and deploy Frontend to Firebase Hosting
+Set-Content -Path "frontend\.env.production" -Value "VITE_API_URL=https://YOUR_CLOUD_RUN_URL"
+cd frontend; npm run build; cd ..
+firebase deploy --only hosting
 ```
-Navigate to **`http://localhost:7860`** to interact with the full web app and API.
 
 ---
 
@@ -148,7 +176,7 @@ Rigorous benchmark validation against real-world and synthetic test claims demon
 
 ---
 
-## 📡 REST & Streaming API Reference
+## 🔌 REST & Streaming API Reference
 
 ### 1. Real-Time Streaming Verification
 `POST /api/v1/verify/stream`
@@ -166,7 +194,7 @@ Rigorous benchmark validation against real-world and synthetic test claims demon
   ```json
   {
     "claim": "The Pacific Ocean is the largest ocean on Earth.",
-    "depth": "STANDARD"
+    "depth": "FAST"
   }
   ```
 - **Response (`200 OK`)**:
@@ -211,7 +239,7 @@ uv run python -m pytest tests/unit/ -k "not test_llm"
 cd frontend
 npm run build
 ```
-- **Result:** Vite transforms all 36 modules and packages production bundles into `frontend/dist/` in under 2 seconds.
+- **Result:** Vite transforms all modules and packages production bundles into `frontend/dist/` in under 2 seconds.
 
 ---
 
@@ -219,6 +247,7 @@ npm run build
 
 Comprehensive architectural specifications, threat models, and engineering decision records are located in [`docs/`](docs/):
 
+- **[docs/GCP_DEPLOYMENT_GUIDE.md](docs/GCP_DEPLOYMENT_GUIDE.md)**: Complete GCP Cloud Run & Firebase production runbook.
 - **[docs/01-product-vision.md](docs/01-product-vision.md)**: Product philosophy and epistemic principles.
 - **[docs/05-verification-methodology.md](docs/05-verification-methodology.md)**: End-to-end verification lifecycle.
 - **[docs/06-retrieval-strategy.md](docs/06-retrieval-strategy.md)**: Multi-provider search and ranking fusion.
