@@ -50,3 +50,20 @@ htmlcov/
 Thumbs.db
 .vscode/
 .idea/
+
+# Node & Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+.npm/
+*.metadata.json
+
+# Backend virtualenv & caches
+backend/.venv/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.coverage
+backend/__pycache__/
+
+# Agent guide
+.agent/

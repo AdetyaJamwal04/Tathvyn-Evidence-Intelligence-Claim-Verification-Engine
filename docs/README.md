@@ -2,6 +2,9 @@
 
 Welcome to the comprehensive architecture and design specification for **Tathvyn**, an evidence-grounded claim verification platform designed for automated, calibrated, and auditable fact verification.
 
+
+> **Monorepo Notice**: The implementation codebase is organized into [rontend/](../frontend/) (Node.js/React/Vite) and [ackend/](../backend/) (Python/FastAPI/DeBERTa).
+
 ---
 
 ## 1. Documentation Index & Map

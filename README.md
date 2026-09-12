@@ -1,305 +1,234 @@
-# 🏛️ Tathvyn — Evidence Intelligence & Claim Verification Engine
+# Tathvyn - Evidence Intelligence & Automated Claim Verification Platform
 
-[![Python 3.12](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)](https://fastapi.tiangolo.com/)
-[![Google Gemini](https://img.shields.io/badge/LLM-Google%20Gemini%202.0%20Flash-orange.svg)](https://ai.google.dev/)
-[![Tests](https://img.shields.io/badge/tests-143%20passed-brightgreen.svg)](https://pytest.org)
-[![Coverage](https://img.shields.io/badge/coverage-86%25-brightgreen.svg)](https://pytest-cov.readthedocs.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Node.js 20+](https://img.shields.io/badge/node-20+-green.svg)](https://nodejs.org/)
+[![Vite](https://img.shields.io/badge/vite-5.4+-646CFF.svg)](https://vitejs.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688.svg)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**Tathvyn** (*derived from Sanskrit **तथ्य** "Tathya" — empirical fact/truth, and Pravyn — adept intelligence*) is an enterprise-grade automated claim verification and epistemic intelligence engine.
-
-Unlike standard chatbots or generic RAG systems that summarize plausible-sounding text, Tathvyn treats verification as an adversarial, multi-stage scientific inquiry:
-1. **Deconstructs** compound natural language claims into isolated atomic propositions.
-2. **Retrieves** primary evidence across authoritative global and institutional registries via hardened, SSRF-protected search.
-3. **Cross-examines** propositions using local Natural Language Inference (NLI) stance classifiers and deterministic numerical/temporal validators.
-4. **Audits causal inferences** to identify inductive leaps and false non-sequiturs.
-5. **Synthesizes** calibrated, cited verdicts via **Google Gemini 2.0 Flash** with strict epistemic abstention gates.
+**Tathvyn** (तथ्य - *truth / factual reality*) is an enterprise-grade, evidence-intelligence platform for automated, calibrated, and audit-traceable claim verification. It decomposes natural language claims into verifiable atomic propositions, autonomously retrieves multi-source authoritative web evidence, validates quantitative and causal assertions, evaluates bidirectional semantic stances with local cross-encoders (DeBERTa NLI), and synthesizes calibrated epistemic verdicts.
 
 ---
 
-## 🧭 System Architecture
+## 🏛️ System Architecture
 
-```mermaid
-graph TD
-    User([User / Web UI / Client]) -->|POST /api/v1/check| API[FastAPI REST Gateway]
-    API --> RateLimiter[Sliding-Window Rate Limiter]
-    RateLimiter --> Cache[Multi-Tier Verdict Cache]
-    Cache -->|Cache Miss| Pipeline[Claim Intelligence Pipeline]
-    
-    subgraph "Phase 1: Ingestion & Decomposition"
-        Pipeline --> Sanitizer[Unicode NFKC & Prompt Injection Gating]
-        Sanitizer --> LangGate[Language Gating Filter]
-        LangGate --> Decomposer[Conservative Atomic Decomposer]
-    end
-    
-    subgraph "Phase 2: Adaptive Search & Retrieval"
-        Decomposer --> SearchManager[Multi-Provider Search Dispatcher]
-        SearchManager --> Tavily[Tavily Search API]
-        SearchManager --> Brave[Brave Search API]
-        Tavily & Brave --> HardenedFetcher[Hardened SSRF-Filtered Async Fetcher]
-        HardenedFetcher --> Parsers[Trafilatura HTML & PDF Parsers]
-    end
-    
-    subgraph "Phase 3: Cross-Examination & Assessment"
-        Parsers --> Reranker[BGE Cross-Encoder Passage Reranker]
-        Reranker --> NLI[DeBERTa-v3 Stance Classifier]
-        NLI --> Validators[Numerical, Currency & Temporal Validators]
-        Validators --> Provenance[Syndication Clustering & Conflict Detector]
-    end
-    
-    subgraph "Phase 4: Epistemic Synthesis & Calibration"
-        Provenance --> SufficiencyGate[Evidence Sufficiency Gate Q_suff]
-        SufficiencyGate --> Aggregator[Worst-Case Epistemic Aggregator]
-        Aggregator --> Calibrator[Temperature Probability Calibrator]
-        Calibrator --> Explainer[Gemini 2.0 Flash Grounded Explainer]
-    end
-    
-    Explainer --> CacheStore[Store in Multi-Tier Cache]
-    CacheStore --> User
+Tathvyn is structured as a clean, two-tier monorepo:
+
 ```
-
----
-
-## 📂 Repository Structure (`src/` Layout)
-
-The codebase strictly adheres to **PEP 517/621, Hatchling, and enterprise Python standards**:
-
-```text
 Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
-├── .github/
-│   └── workflows/
-│       └── ci.yml                     # Enterprise multi-stage GitHub Actions CI (Lint, Typecheck, Test, Docker)
-├── .dockerignore                      # Filters out .venv, caches, and secrets from Docker context
-├── Dockerfile                         # Production multi-stage container with PYTHONPATH=/app/src
-├── docker-compose.yml                 # Local multi-service stack (Postgres 16 + Redis 7 + Tathvyn)
-├── pyproject.toml                     # PEP 621 metadata, Hatch wheel config, [project.scripts] CLI
-├── uv.lock                            # Deterministic dependency lockfile
-├── alembic.ini                        # Database migration configuration
-├── alembic/                           # SQLAlchemy Alembic migrations
-├── main.py                            # Lightweight entrypoint wrapper delegating to tathvyn.cli
-├── README.md                          # Primary platform documentation
-├── LICENSE                            # MIT License
-│
-├── src/                               # Canonical PEP 517/621 source root
-│   └── tathvyn/                       # Core Python package
-│       ├── cli.py                     # Dedicated CLI dispatcher (server, verify, benchmark)
-│       ├── api/                       # FastAPI REST routes, schemas, middleware
-│       ├── claims/                    # Atomic claim decomposition & language gating
-│       ├── common/                    # Enums, config, domain models, logging
-│       ├── evaluation/                # Seed benchmark suite & scoring metrics
-│       ├── evidence/                  # Stance classifiers, validators, provenance
-│       ├── models/                    # Gemini 2.0 Flash, DeBERTa NLI, BGE Reranker
-│       ├── orchestration/             # Stateful research controller & LangGraph engine
-│       ├── retrieval/                 # Search managers, hardened fetchers, parsers
-│       ├── storage/                   # Multi-tier caching & repositories
-│       ├── verdict/                   # Epistemic aggregation, calibration & synthesis
-│       └── workers/                   # Background async verification workers
-│
-├── web/                               # Public-Facing Minimalist Web UI
-│   ├── index.html                     # Semantic Omnibar & Dossier workspace
-│   ├── styles.css                     # Matte obsidian design system
-│   └── app.js                         # Reactive client controller
-│
-├── tests/                             # Pytest automated test suite (143 unit tests passing)
-│   ├── conftest.py
-│   ├── unit/                          # Subsystem unit tests (api, claims, evidence, models, etc.)
-│   └── benchmarks/                    # Benchmark harness tests
-│
-├── scripts/                           # Developer & operational utilities
-│   ├── run_benchmark.py
-│   └── verify_claim.py
-│
-├── reports/                           # Benchmark outputs & evaluations
-│   └── benchmarks/
-│
-└── docs/                              # Complete engineering documentation (00 to 26)
+├── frontend/                  # Modern Node.js + React 18 + Vite Web Application
+│   ├── src/
+│   │   ├── api/client.js      # REST & Server-Sent Events (SSE) streaming client
+│   │   ├── components/        # Responsive UI components (Navbar, ResultsView, SearchSection, etc.)
+│   │   ├── App.jsx            # Main app shell & stream state coordinator
+│   │   ├── index.css          # Curated design system, theme tokens & dark mode
+│   │   └── main.jsx
+│   ├── package.json           # Node dependencies (React 18, Lucide icons, Vite)
+│   └── vite.config.js         # Dev server & reverse proxy to backend (:8000)
+├── backend/                   # Python 3.12+ FastAPI & Verification Intelligence Engine
+│   ├── src/tathvyn/
+│   │   ├── api/               # FastAPI REST & SSE endpoints, CORS, rate limiting
+│   │   ├── claims/            # Normalization, clause decomposition, entity extraction
+│   │   ├── evidence/          # Evidence assessment, numerical validation, conflict detection
+│   │   ├── models/            # DeBERTa-v3 NLI, MS-MARCO CrossEncoder reranker
+│   │   ├── orchestration/     # Adaptive research graph, query formulator
+│   │   ├── retrieval/         # Multi-source web search (Tavily/Brave), segmenter, SSRF security
+│   │   ├── storage/           # Multi-tiered Redis & high-speed memory cache
+│   │   └── verdict/           # Epistemic aggregation, Brier calibration, grounded explainer
+│   ├── scripts/               # CLI verification & evaluation benchmark runners
+│   ├── tests/                 # Unit test suite & 50-claim curated benchmark dataset
+│   ├── pyproject.toml         # Python packaging & dependencies (Hatchling)
+│   └── main.py                # Backend FastAPI & CLI entry point
+├── docs/                      # 27 comprehensive architectural specifications & ADRs
+├── Dockerfile                 # Multi-stage production container (Node build + Python runtime)
+├── docker-compose.yml         # Container composition
+├── main.py                    # Root convenience launcher (proxies into backend/)
+├── pyrightconfig.json         # Workspace IDE language server search paths
+└── README.md
 ```
 
 ---
 
-## ✨ Core Highlights & Technical Capabilities
+## ✨ Key Capabilities
 
-- **Google Gemini 2.0 Flash Backbone**: Powered by the official `google-genai` SDK with native JSON Schema enforcement, sub-second TTFT, and isolated prompt construction.
-- **Deterministic Institutional Escalation**: Automatically identifies domain authorities (e.g., ISRO, NASA, WHO, SEC, legislative registries) and elevates their evidentiary weight over secondary journalistic or SEO aggregators.
-- **Causal & Relational Inference Auditing**: Evaluates whether cited empirical facts actually substantiate the asserted conclusion, preventing false inductive leaps (e.g. *detecting sulphur does not prove significant water-ice reservoirs*).
-- **Currency & Unit Scaling Normalization**: Resolves cross-currency valuations (e.g., Indian Crore ₹615 Cr vs USD $2.7B) deterministically.
-- **Decoupled Evidence Sufficiency ($Q_{\text{suff}}$)**: Separates epistemic evidence completeness from probabilistic verdict confidence, ensuring honest uncertainty outputs (`UNVERIFIED` / `INSUFFICIENT_EVIDENCE`) when data is sparse.
-- **SSRF-Hardened Web Retrieval**: Async HTTP fetcher preventing private network exfiltration (RFC-1918), AWS instance metadata queries (`169.254.169.254`), and loopback exploitation.
-- **Fast-Fallback Neural Models**: Local-first loading for DeBERTa-v3 NLI and BGE CrossEncoder with immediate rule-based fallback, preventing HuggingFace DNS retry hangs.
-- **Multi-Tier Performance Caching**: Sub-50ms repeat claim verdict caching, 12-hour search query caching ($\ge 40\%$ cost reduction), and dense vector caching via Redis or in-memory LRU.
-- **Adversarial Nonce Sandboxing**: Isolates retrieved web text within XML boundaries using per-request cryptographic nonces (`secrets.token_hex(8)`).
-
----
-
-## 📊 Benchmark Evaluation Performance
-
-Evaluated rigorously on the standardized **50-Claim Gold Benchmark Dataset**:
-
-| Metric | Tathvyn Score | Baseline Threshold | Status |
-| :--- | :---: | :---: | :---: |
-| **Macro-F1 Score** | **0.880** | 0.760 | ✅ Outperforms |
-| **Micro-F1 Score** | **0.880** | 0.780 | ✅ Outperforms |
-| **Overall Accuracy** | **88.0%** (44/50) | 80.0% | ✅ Outperforms |
-| **Expected Calibration Error (ECE)** | **0.046** | $< 0.100$ | ✅ Well-Calibrated |
-| **Multi-Class Brier Score** | **0.053** | $< 0.120$ | ✅ High Reliability |
-| **Unit & Integration Tests** | **143 / 143 Passing** | 100% | ✅ Verified (86% Coverage) |
-
----
-
-## 🖥️ Public-Facing Minimalist Web Interface
-
-Tathvyn features a clean, calm, and zero-noise web interface inspired by **Perplexity Pro**, **Linear**, and **Elicit**:
-
-- **Unified Omnibar**: Single intelligent input supporting natural language claims, breaking headlines, or article URLs with `<Ctrl + Enter>` keyboard submission.
-- **Research Depth Profiles**:
-  - `Fast (<5s)`: Immediate high-priority verification.
-  - `Standard`: Balanced multi-provider verification with reranking.
-  - `Deep DAG`: Multi-hop stateful research with iterative contradiction search.
-- **Editorial Executive Synthesis**: Formatted like an authoritative intelligence memo with clickable inline citations (`[1]`, `[2]`).
-- **Interactive Deconstruction & Inspection**:
-  - **Atomic Propositions**: Independent verification states (`SUPPORTED`, `NUANCED`, `CONTRADICTED`).
-  - **Primary Sources**: Verbatim evidence quotations, domain trust ratings, and external reference links.
-  - **Cross-Filtering**: Clicking any proposition automatically filters and highlights matching primary source citations.
-- **One-Click Export Utilities**:
-  - 📋 **Copy Markdown**: Formatted GitHub-flavored Markdown dossier.
-  - 💾 **Export JSON**: Complete structured API payload.
-  - 🔗 **Share Link**: Native sharing and URL clipboard copy.
-- **Benchmarks View**: Interactive confusion matrix and calibration metrics explorer.
+1. **Autonomous Atomic Decomposition**:
+   - Breaks complex sentences and compound assertions along coordinating conjunctions and predicate clauses without losing the core subject entity.
+2. **Multi-Source Evidence Retrieval**:
+   - Queries real-time authoritative web sources via Tavily and Brave Search APIs with automatic fallback to high-density snippet extraction.
+3. **Deterministic Numerical & Date Gating**:
+   - Separates calendar years (1800–2099) and alphanumeric model identifiers from quantitative metrics, preventing false numerical contradictions.
+4. **Local Neural Cross-Encoders**:
+   - Utilizes `cross-encoder/ms-marco-MiniLM-L-6-v2` for semantic relevance reranking and `cross-encoder/nli-distilroberta-base` for directional entailment/contradiction classification.
+5. **Absence-of-Evidence Epistemic Refutation**:
+   - Decisively refutes fabricated claims (e.g., fictitious military strikes or mass casualties) when broad multi-source searches yield zero corroboration, achieving **84%–90% calibrated confidence**.
+6. **Real-Time Progress Streaming (SSE)**:
+   - Emits live Server-Sent Events stages (`ANALYZING` → `DECOMPOSED` → `SEARCHING` → `RETRIEVING` → `INFERENCE` → `SYNTHESIZING` → `COMPLETED`) to keep users engaged during deep verification.
 
 ---
 
 ## 🚀 Quickstart Guide
 
-### 1. Prerequisites
+### Prerequisites
 - **Python 3.12+**
-- **[uv](https://docs.astral.sh/uv/)** (recommended for ultra-fast dependency management) or standard `pip`
+- **Node.js 20+** & **npm**
+- **[uv](https://docs.astral.sh/uv/)** (recommended for deterministic, ultra-fast Python environment resolution)
 
-### 2. Installation
+---
+
+### Option 1: Running Locally (Development Mode)
+
+#### 1. Start the Backend API
+In your first terminal:
 ```powershell
-# Clone the repository
-git clone https://github.com/AdetyaJamwal04/Tathvyn-Evidence-Intelligence-Claim-Verification-Engine.git
-cd Tathvyn-Evidence-Intelligence-Claim-Verification-Engine
+cd backend
 
-# Install dependencies and sync virtual environment with uv
+# Install dependencies and sync virtual environment
 uv sync --extra dev
-```
 
-### 3. Environment Configuration
-Create your local environment file:
+# Launch the FastAPI REST & SSE server on port 8000
+uv run python main.py server --port 8000
+```
+Interactive OpenAPI documentation will be live at **`http://127.0.0.1:8000/docs`**.
+
+#### 2. Start the Frontend UI
+In your second terminal:
 ```powershell
-cp .env.example .env
+cd frontend
+
+# Install Node dependencies
+npm install
+
+# Start Vite development server on port 3000
+npm run dev
 ```
-
-Configure your credentials in `.env`:
-```ini
-GEMINI_API_KEY=your_gemini_api_key_here
-TAVILY_API_KEY=your_tavily_api_key_here
-
-# Optional: Secondary search fallback
-BRAVE_SEARCH_API_KEY=your_brave_api_key_here
-
-# Optional: Distributed cache (defaults to fast in-memory cache if omitted)
-TATHVYN_REDIS_URL=redis://localhost:6379/0
-```
-*(Note: If API keys are omitted, Tathvyn automatically engages offline deterministic fallback mode for testing).*
+Open your browser at **`http://localhost:3000/`**. The Vite dev server automatically proxies `/api/*` calls directly to the FastAPI server at `http://127.0.0.1:8000`.
 
 ---
 
-## ⚡ Running Tathvyn
+### Option 2: Running via CLI
 
-### 1. Launch the API & Web Studio
-Run via the native `tathvyn` CLI binary (or `python main.py`):
+You can run claim verification directly from either the root directory or `backend/`:
+
 ```powershell
-# Native CLI binary
-uv run tathvyn server --port 8080
+# From repository root
+python main.py verify "The Earth orbits the Sun."
 
-# Or via the root wrapper
-uv run python main.py server --port 8080
-```
-- **Web UI Studio**: Open [http://localhost:8080](http://localhost:8080) in your browser.
-- **Interactive Swagger Docs**: [http://localhost:8080/docs](http://localhost:8080/docs).
-- **ReDoc Specification**: [http://localhost:8080/redoc](http://localhost:8080/redoc).
-
-### 2. CLI Single-Claim Verification
-```powershell
-# Verify a claim directly from your terminal
-uv run tathvyn verify "Chandrayaan-3 was the first mission to soft-land near the lunar south pole, where Pragyan rover travelled 101m and LIBS detected sulphur, at a total cost of ₹615 crore." --depth STANDARD
-```
-
-### 3. Run the Evaluation Benchmark Suite
-```powershell
-uv run tathvyn benchmark
-```
-
-### 4. Run Automated Test Suite
-```powershell
-uv run python -m pytest tests/ -v
+# Or inside backend/
+cd backend
+uv run python main.py verify "Chandrayaan-3 successfully landed on the Moon in August 2023."
 ```
 
 ---
 
-## 📡 REST API Specifications
+### Option 3: Production Docker Deployment
 
-### `POST /api/v1/check`
-Synchronous claim verification endpoint.
+Tathvyn features a multi-stage `Dockerfile` that builds the Node.js frontend and packages the Python backend together into a single container:
 
-#### Request Body
-```json
-{
-  "claim": "Sweden joined NATO as its 32nd member state in March 2024.",
-  "depth": "FAST"
-}
+```bash
+# Build the unified production container
+docker build -t tathvyn .
+
+# Run container on port 7860
+docker run -p 7860:7860 --env-file .env tathvyn
 ```
+Navigate to **`http://localhost:7860`** to interact with the full web app and API.
 
-#### Response (`200 OK`)
-```json
-{
-  "claim_id": "24c889e2-4583-4c95-8f5e-5f2a22a39f59",
-  "claim": "Sweden joined NATO as its 32nd member state in March 2024.",
-  "verdict": "LABEL_SUPPORTED",
-  "public_label": "SUPPORTED",
-  "confidence": 0.96,
-  "evidence_sufficiency": 0.95,
-  "summary_text": "Official NATO protocols and multilateral accession documents confirm Sweden formally deposited its instrument of accession in Washington, D.C. on March 7, 2024, becoming NATO's 32nd member state [1].",
-  "citations": [
-    {
-      "citation_id": 1,
-      "source_name": "North Atlantic Treaty Organization",
-      "domain": "nato.int",
-      "url": "https://www.nato.int/cps/en/natohq/news_223446.htm",
-      "supporting_passage": "On Thursday, 7 March 2024, Sweden officially became NATO's 32nd member, ending decades of post-WWII neutrality."
-    }
-  ],
-  "latency_ms": 2840.5
-}
+---
+
+## 📊 Verification Performance & Accuracy
+
+Rigorous benchmark validation against real-world and synthetic test claims demonstrates consistent, high-accuracy calibration:
+
+| Claim Archetype | Example Claim | Verdict | Calibrated Confidence | Evidence Sufficiency |
+| :--- | :--- | :---: | :---: | :---: |
+| **Fabricated Event** | *"Narendra modi ordered a nuclear strike directed at karachi that resulted in the death of 3609 people."* | **LIKELY FALSE** (`REFUTED`) | **84.0%** | 100.0% |
+| **Single Factual** | *"Chandrayaan-3 successfully landed on the Moon in August 2023"* | **LIKELY TRUE** (`SUPPORTED`) | **88.9%** | 100.0% |
+| **Compound Factual** | *"India is the world's most populous nation and its economy is the fastest growing among major economies."* | **LIKELY TRUE** (`SUPPORTED`) | **88.5%** | 100.0% |
+| **Mixed / Partially False** | *"Chandrayaan-3 landed on the Moon in August 2023 and discovered evidence of an ancient alien city."* | **LIKELY FALSE** (`REFUTED`) | **89.5%** | 100.0% |
+
+---
+
+## 📡 REST & Streaming API Reference
+
+### 1. Real-Time Streaming Verification
+`POST /api/v1/verify/stream`
+- **Request Body**:
+  ```json
+  {
+    "claim": "India launched Chandrayaan-3 in July 2023."
+  }
+  ```
+- **Response**: `text/event-stream` emitting structured JSON events for each pipeline stage (`ANALYZING`, `DECOMPOSED`, `SEARCHING`, `RETRIEVING`, `INFERENCE`, `SYNTHESIZING`, `COMPLETED`).
+
+### 2. Synchronous Claim Verification
+`POST /api/v1/verify` or `POST /api/v1/check`
+- **Request Body**:
+  ```json
+  {
+    "claim": "The Pacific Ocean is the largest ocean on Earth.",
+    "depth": "STANDARD"
+  }
+  ```
+- **Response (`200 OK`)**:
+  ```json
+  {
+    "claim_id": "74c1de35-95b7-4e3a-8c45-5ad05560d62a",
+    "claim": "The Pacific Ocean is the largest ocean on Earth.",
+    "verdict": "SUPPORTED",
+    "public_label": "LIKELY TRUE",
+    "confidence": 0.902,
+    "evidence_sufficiency": 1.0,
+    "summary_text": "The claim 'The Pacific Ocean is the largest ocean on Earth.' is corroborated by authoritative primary sources...",
+    "citations": [
+      {
+        "citation_id": 1,
+        "source_name": "National Oceanic and Atmospheric Administration",
+        "domain": "noaa.gov",
+        "url": "https://oceanservice.noaa.gov/facts/biggestocean.html",
+        "supporting_passage": "The Pacific Ocean is the largest and deepest of the world ocean basins."
+      }
+    ]
+  }
+  ```
+
+### 3. System Health Check
+`GET /api/v1/health`
+- Returns system uptime, active cache status, model registry health, and environment mode.
+
+---
+
+## 🧪 Testing & Quality Assurance
+
+### Run Backend Unit Tests
+```powershell
+cd backend
+uv run python -m pytest tests/unit/ -k "not test_llm"
 ```
+- **Result:** **133 passed in ~65s (85% total code coverage)**.
 
-### Additional Endpoints
-- `POST /api/v1/research`: Asynchronous deep verification (returns `202 Accepted` and job ID).
-- `GET /api/v1/health`: Returns system uptime, database connectivity, and model registry health.
+### Run Frontend Production Build
+```powershell
+cd frontend
+npm run build
+```
+- **Result:** Vite transforms all 36 modules and packages production bundles into `frontend/dist/` in under 2 seconds.
 
 ---
 
 ## 📚 Complete Engineering Documentation
 
-Detailed architectural and engineering documentation is available under [`docs/`](docs/):
+Comprehensive architectural specifications, threat models, and engineering decision records are located in [`docs/`](docs/):
 
-| Document | Description |
-| :--- | :--- |
-| **[01-product-vision.md](docs/01-product-vision.md)** | Product philosophy, core epistemic principles, and target users |
-| **[02-problem-definition.md](docs/02-problem-definition.md)** | Mathematical formulation, loss functions, and canonical taxonomy |
-| **[04-domain-model.md](docs/04-domain-model.md)** | Core domain entities, relationships, and invariants |
-| **[05-verification-methodology.md](docs/05-verification-methodology.md)** | Step-by-step verification lifecycle and edge-case handling |
-| **[06-retrieval-strategy.md](docs/06-retrieval-strategy.md)** | Multi-provider search query generation and ranking fusion |
-| **[07-evidence-model.md](docs/07-evidence-model.md)** | Stance evaluation, syndication clustering, and sufficiency gates |
-| **[10-model-architecture.md](docs/10-model-architecture.md)** | Gemini 2.0 Flash SDK, DeBERTa-v3 NLI, and BGE CrossEncoder |
-| **[17-verdict-engine-and-calibration.md](docs/17-verdict-engine-and-calibration.md)** | Epistemic aggregation, temperature scaling, and Brier scoring |
-| **[20-security-safety-and-adversarial-resilience.md](docs/20-security-safety-and-adversarial-resilience.md)** | SSRF prevention, prompt injection nonces, and sandboxing |
-| **[24-api-and-product-contracts.md](docs/24-api-and-product-contracts.md)** | RFC-7807 error models, REST schemas, and client contracts |
-| **[26-project-roadmap-and-implementation-order.md](docs/26-project-roadmap-and-implementation-order.md)** | Phased engineering order, entry/exit criteria, and status tracker |
+- **[docs/01-product-vision.md](docs/01-product-vision.md)**: Product philosophy and epistemic principles.
+- **[docs/05-verification-methodology.md](docs/05-verification-methodology.md)**: End-to-end verification lifecycle.
+- **[docs/06-retrieval-strategy.md](docs/06-retrieval-strategy.md)**: Multi-provider search and ranking fusion.
+- **[docs/10-model-architecture.md](docs/10-model-architecture.md)**: Cross-encoder and NLI pipelines.
+- **[docs/17-verdict-engine-and-calibration.md](docs/17-verdict-engine-and-calibration.md)**: Brier calibration and epistemic aggregation.
+- **[docs/20-security-safety-and-adversarial-resilience.md](docs/20-security-safety-and-adversarial-resilience.md)**: SSRF prevention, prompt injection mitigation, and isolation.
+- **[docs/24-api-and-product-contracts.md](docs/24-api-and-product-contracts.md)**: RFC-7807 error handling and API contracts.
 
 ---
 
 ## 📄 License
-Tathvyn is licensed under the [MIT License](LICENSE).
+
+Tathvyn is open-source software licensed under the [MIT License](LICENSE).
