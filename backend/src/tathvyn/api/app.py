@@ -31,17 +31,20 @@ def create_app() -> FastAPI:
     """Construct and configure the production FastAPI application."""
     settings = get_settings()
 
+    # Disable interactive API docs in production to reduce attack surface
+    _is_production = settings.environment == "production"
+
     app = FastAPI(
         title="Tathvyn API",
         description="Evidence-Grounded Automated Claim Verification & Adaptive Research Platform",
         version="1.0.0",
-        docs_url="/docs",
-        redoc_url="/redoc",
-        openapi_url="/openapi.json",
+        docs_url=None if _is_production else "/docs",
+        redoc_url=None if _is_production else "/redoc",
+        openapi_url=None if _is_production else "/openapi.json",
         lifespan=lifespan,
     )
 
-    # CORS configuration
+    # CORS configuration — set Tathvyn_CORS_ORIGINS env var to restrict in production
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -54,6 +57,25 @@ def create_app() -> FastAPI:
     from tathvyn.api.rate_limiter import RateLimitMiddleware
 
     app.add_middleware(RateLimitMiddleware, max_requests=60, window_seconds=60)
+
+    # Request body size cap — prevents memory exhaustion from oversized payloads
+    from starlette.middleware.base import BaseHTTPMiddleware
+    from fastapi import Request
+    from fastapi.responses import JSONResponse
+
+    MAX_BODY_SIZE = 64 * 1024  # 64 KB
+
+    class BodySizeLimitMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request: Request, call_next):
+            content_length = request.headers.get("content-length")
+            if content_length and int(content_length) > MAX_BODY_SIZE:
+                return JSONResponse(
+                    status_code=413,
+                    content={"detail": "Request body too large. Maximum allowed size is 64KB."},
+                )
+            return await call_next(request)
+
+    app.add_middleware(BodySizeLimitMiddleware)
 
     # Register RFC-7807 Problem Details Error Handlers
     setup_error_handlers(app)

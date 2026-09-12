@@ -56,4 +56,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:${PORT:-8080}/api/v1/health || exit 1
 
 # Launch FastAPI server with Uvicorn
-CMD ["sh", "-c", "python -m uvicorn tathvyn.api.app:create_app --factory --host 0.0.0.0 --port ${PORT:-8080}"]
+# --forwarded-allow-ips='*' trusts X-Forwarded-For from GCP load balancer/Firebase proxy
+CMD ["sh", "-c", "python -m uvicorn tathvyn.api.app:create_app --factory --host 0.0.0.0 --port ${PORT:-8080} --forwarded-allow-ips='*'"]
