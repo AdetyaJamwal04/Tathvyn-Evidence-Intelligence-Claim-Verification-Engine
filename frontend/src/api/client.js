@@ -2,7 +2,7 @@
  * Tathvyn API Client with Real-Time Server-Sent Events (SSE) Streaming
  */
 
-const BASE_URL = ''; // Relative URL leverages Vite proxy (/api -> http://localhost:8000)
+const BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 
 /**
  * Stream verification progress events in real-time until completion.
