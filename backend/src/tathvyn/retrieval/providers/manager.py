@@ -22,6 +22,7 @@ class SearchProviderManager:
 
     def __init__(self, primary_provider: SearchProvider | None = None) -> None:
         settings = get_settings()
+        self.settings = settings
         self.providers: list[SearchProvider] = []
         self.cache_manager = get_cache_manager()
 
@@ -34,10 +35,13 @@ class SearchProviderManager:
             # Register Brave if API key is present
             if settings.brave_search_api_key.get_secret_value():
                 self.providers.append(BraveSearchProvider())
-            # If no live API keys are configured, fallback to MockSearchProvider
+            # If no live API keys are configured, fallback to MockSearchProvider only in non-production
             if not self.providers:
-                logger.info("No live search API keys configured. Using MockSearchProvider.")
-                self.providers.append(MockSearchProvider())
+                if settings.environment == "production":
+                    logger.error("No live search API keys configured in production environment!")
+                else:
+                    logger.info("No live search API keys configured. Using MockSearchProvider.")
+                    self.providers.append(MockSearchProvider())
 
     async def search(
         self,
@@ -82,7 +86,17 @@ class SearchProviderManager:
                 )
                 continue
 
-        # If all registered providers failed, use MockSearchProvider as safety net
+        # If all registered providers failed:
+        current_settings = get_settings()
+        if current_settings.environment == "production":
+            logger.error("All configured search providers failed in production. Refusing mock fallback.")
+            raise ProviderError(
+                "search_manager",
+                "All configured search providers failed. Real evidence could not be retrieved.",
+                status_code=502,
+            )
+
+        # In development/test mode, use MockSearchProvider as safety net
         logger.warning("All configured search providers failed. Using emergency mock response.")
         mock = MockSearchProvider()
         return await mock.search(query, max_results=max_results, domain_filter=domain_filter)

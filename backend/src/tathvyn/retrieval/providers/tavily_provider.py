@@ -40,6 +40,15 @@ class TavilySearchProvider(SearchProvider):
             )
 
         start_time = time.perf_counter()
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+            ),
+        }
         payload: dict[str, Any] = {
             "api_key": self.api_key,
             "query": query,
@@ -50,9 +59,21 @@ class TavilySearchProvider(SearchProvider):
 
         async with httpx.AsyncClient(timeout=10.0) as client:
             try:
-                response = await client.post(TAVILY_API_URL, json=payload)
+                response = await client.post(TAVILY_API_URL, json=payload, headers=headers)
                 if response.status_code == 429:
                     raise ProviderRateLimitError(self.provider_name)
+                if response.status_code == 403:
+                    if "<html" in response.text.lower():
+                        raise ProviderError(
+                            self.provider_name,
+                            "Cloudflare/WAF blocked the search request (HTTP 403 HTML). Ensure appropriate headers are sent.",
+                            status_code=403,
+                        )
+                    raise ProviderError(
+                        self.provider_name,
+                        f"Tavily authentication forbidden (HTTP 403): {response.text}",
+                        status_code=403,
+                    )
                 if response.status_code != 200:
                     raise ProviderError(
                         self.provider_name,

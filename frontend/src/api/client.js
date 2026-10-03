@@ -109,3 +109,22 @@ async function fallbackSyncVerify(claim, depth, onStageUpdate) {
 
   return await res.json();
 }
+
+/**
+ * Quick diagnostic health check to verify backend connectivity.
+ */
+export async function checkHealth() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/v1/health`, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+    });
+    if (!res.ok) {
+      return { status: 'unhealthy', http_status: res.status };
+    }
+    const data = await res.json();
+    return { status: 'healthy', ...data };
+  } catch (err) {
+    return { status: 'offline', error: err.message };
+  }
+}

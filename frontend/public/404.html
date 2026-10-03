@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tathvyn — Verification Gateway Notice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1012;
+      --card-bg: #18191c;
+      --card-border: #2a2c32;
+      --text: #f2f2f0;
+      --muted: #9b9ea4;
+      --accent: #2563eb;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f9f9f8;
+        --card-bg: #ffffff;
+        --card-border: #e4e4e1;
+        --text: #121417;
+        --muted: #64676c;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      line-height: 1.6;
+    }
+    .card {
+      max-width: 580px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .glow-strip {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--warning), var(--accent));
+    }
+    .icon-badge {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.25);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+    p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
+    }
+    .probe-box {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px dashed var(--card-border);
+      border-radius: 10px;
+      padding: 0.85rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--warning);
+      display: inline-block;
+      margin-right: 0.5rem;
+      box-shadow: 0 0 6px var(--warning);
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.75rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+    }
+    .btn-secondary:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="glow-strip"></div>
+    <div class="icon-badge">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+    </div>
+
+    <h1>Tathvyn Epistemic Gateway Notice</h1>
+    <p>
+      The requested route or verification resource is currently resolving. If you reached this during an active deployment or maintenance window, the service will recover automatically.
+    </p>
+
+    <div class="probe-box">
+      <div>
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">Checking backend gateway connectivity...</span>
+      </div>
+      <button class="btn btn-secondary" onclick="probe()" style="padding: 0.3rem 0.7rem; font-size: 0.78rem;">
+        Ping
+      </button>
+    </div>
+
+    <div class="actions">
+      <a href="/" class="btn btn-primary">
+        Return to Verification Studio
+      </a>
+      <button class="btn btn-secondary" onclick="window.location.reload()">
+        Refresh Connection
+      </button>
+    </div>
+  </div>
+
+  <script>
+    async function probe() {
+      const dot = document.getElementById('status-dot');
+      const text = document.getElementById('status-text');
+      dot.style.background = 'var(--warning)';
+      text.innerText = 'Testing connection...';
+      try {
+        const res = await fetch('/api/v1/health');
+        if (res.ok) {
+          dot.style.background = 'var(--success)';
+          dot.style.boxShadow = '0 0 8px var(--success)';
+          text.innerText = 'Backend Gateway Online (HTTP 200)';
+        } else {
+          dot.style.background = 'var(--warning)';
+          text.innerText = 'Gateway Degraded (' + res.status + ')';
+        }
+      } catch (err) {
+        dot.style.background = 'var(--danger)';
+        dot.style.boxShadow = '0 0 8px var(--danger)';
+        text.innerText = 'Gateway Endpoint Offline';
+      }
+    }
+    probe();
+  </script>
+</body>
+</html>

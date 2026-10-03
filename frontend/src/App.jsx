@@ -3,11 +3,12 @@ import Navbar from './components/Navbar';
 import SearchSection from './components/SearchSection';
 import StreamingProgress from './components/StreamingProgress';
 import ResultsView from './components/ResultsView';
+import ErrorFallback from './components/ErrorFallback';
 import { streamVerifyClaim } from './api/client';
 
 export default function App() {
   const [claim, setClaim] = useState('');
-  const [viewState, setViewState] = useState('home'); // 'home' | 'loading' | 'results'
+  const [viewState, setViewState] = useState('home'); // 'home' | 'loading' | 'results' | 'error'
   const [currentStage, setCurrentStage] = useState('ANALYZING');
   const [stageMessage, setStageMessage] = useState('');
   const [stageData, setStageData] = useState(null);
@@ -36,8 +37,8 @@ export default function App() {
       setViewState('results');
     } catch (err) {
       console.error('Verification failed:', err);
-      setErrorMessage(err.message || 'Verification could not be completed.');
-      setViewState('home');
+      setErrorMessage(err.message || 'Verification pipeline encountered an unrecoverable error.');
+      setViewState('error');
     }
   };
 
@@ -57,38 +58,6 @@ export default function App() {
       <Navbar onReset={handleReset} />
 
       <main id="main-container" className={viewState === 'results' ? 'results-active' : ''}>
-        {errorMessage && (
-          <div
-            style={{
-              padding: '1rem 1.25rem',
-              borderRadius: 'var(--radius-md)',
-              background: 'rgba(220, 38, 38, 0.1)',
-              border: '1px solid var(--verdict-refuted)',
-              color: 'var(--verdict-refuted)',
-              marginBottom: '2rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              fontSize: '0.9rem',
-            }}
-          >
-            <span>{errorMessage}</span>
-            <button
-              onClick={() => handleVerify(claim)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'inherit',
-                fontWeight: 600,
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              Retry
-            </button>
-          </div>
-        )}
-
         {viewState === 'home' && (
           <SearchSection
             claim={claim}
@@ -110,6 +79,16 @@ export default function App() {
           <ResultsView
             result={result}
             onEditQuery={handleEditQuery}
+          />
+        )}
+
+        {viewState === 'error' && (
+          <ErrorFallback
+            claim={claim}
+            error={errorMessage}
+            onRetry={() => handleVerify(claim)}
+            onEditQuery={handleEditQuery}
+            onReset={handleReset}
           />
         )}
       </main>

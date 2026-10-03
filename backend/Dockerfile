@@ -42,12 +42,22 @@ ENV PATH="/app/.venv/bin:$PATH" \
 
 COPY --chown=user:user . /app
 
-# Cache dir for transformer model weights
+# Cache dir for transformer model weights and HuggingFace cache
 RUN mkdir -p /home/user/.cache/huggingface && chown -R user:user /home/user/.cache
 
 USER user
 ENV HOME=/home/user \
+    HF_HOME=/home/user/.cache/huggingface \
+    TRANSFORMERS_CACHE=/home/user/.cache/huggingface \
     PORT=8080
+
+# Pre-cache transformer model weights into image so cold starts never hit HuggingFace Hub
+RUN python -c "\
+from sentence_transformers import CrossEncoder; \
+from transformers import pipeline; \
+CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2'); \
+pipeline('text-classification', model='cross-encoder/nli-distilroberta-base'); \
+"
 
 # Cloud Run defaults to port 8080
 EXPOSE 8080
