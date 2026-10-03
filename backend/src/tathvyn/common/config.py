@@ -52,7 +52,7 @@ class Settings(BaseSettings):
     anthropic_api_key: SecretStr = Field(default=SecretStr(""), alias="ANTHROPIC_API_KEY")
     openai_api_key: SecretStr = Field(default=SecretStr(""), alias="OPENAI_API_KEY")
     llm_provider: str = Field(default="gemini", description="'gemini', 'openai', 'anthropic', or 'mock'")
-    llm_model_name: str = Field(default="gemini-2.0-flash", description="Model name for reasoning/synthesis")
+    llm_model_name: str = Field(default="gemini-3.8-flash", description="Model name for reasoning/synthesis")
 
     # Local ML Model Settings
     device: str = Field(default="cpu", description="'cpu', 'cuda', or 'directml'")

@@ -10,6 +10,7 @@ from tathvyn.common.exceptions import ProviderError, ProviderRateLimitError
 from tathvyn.common.logging import get_logger
 from tathvyn.retrieval.interfaces import SearchProvider, SearchResponse, SearchResultItem
 from tathvyn.retrieval.providers.brave_provider import BraveSearchProvider
+from tathvyn.retrieval.providers.gemini_search_provider import GeminiSearchProvider
 from tathvyn.retrieval.providers.ddg_provider import DuckDuckGoSearchProvider
 from tathvyn.retrieval.providers.mock import MockSearchProvider
 from tathvyn.retrieval.providers.tavily_provider import TavilySearchProvider
@@ -33,6 +34,9 @@ class SearchProviderManager:
             # Register Tavily if API key is present
             if settings.tavily_api_key.get_secret_value():
                 self.providers.append(TavilySearchProvider())
+            # Register Gemini Google Search Grounding if API key is present
+            if settings.gemini_api_key.get_secret_value():
+                self.providers.append(GeminiSearchProvider())
             # Register Brave if API key is present
             if settings.brave_search_api_key.get_secret_value():
                 self.providers.append(BraveSearchProvider())

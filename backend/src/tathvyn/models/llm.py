@@ -52,7 +52,7 @@ class GeminiLLMClient(BaseLLMClient):
     def __init__(
         self,
         api_key: str,
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.8-flash",
     ) -> None:
         self.api_key = api_key
         self.model_name = model_name
@@ -179,11 +179,11 @@ def get_llm_client(settings: Settings | None = None) -> BaseLLMClient:
     if (cfg.llm_provider == "gemini" or not cfg.llm_provider) and gemini_key:
         return GeminiLLMClient(
             api_key=gemini_key,
-            model_name=cfg.llm_model_name if "gemini" in cfg.llm_model_name else "gemini-2.0-flash",
+            model_name=cfg.llm_model_name if "gemini" in cfg.llm_model_name else "gemini-3.8-flash",
         )
 
     if gemini_key:
-        return GeminiLLMClient(api_key=gemini_key, model_name="gemini-2.0-flash")
+        return GeminiLLMClient(api_key=gemini_key, model_name="gemini-3.8-flash")
 
     logger.debug("no_hosted_llm_key_found_using_mock_client")
     return MockLLMClient()
