@@ -20,9 +20,10 @@ class BraveSearchProvider(SearchProvider):
 
     def __init__(self, api_key: str | None = None) -> None:
         settings = get_settings()
-        self.api_key = (
+        raw_key = (
             api_key if api_key is not None else settings.brave_search_api_key.get_secret_value()
         )
+        self.api_key = raw_key.strip().strip("'\"").strip() if raw_key else ""
 
     @property
     def provider_name(self) -> str:

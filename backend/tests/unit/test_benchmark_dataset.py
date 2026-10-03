@@ -8,7 +8,7 @@ from tathvyn.common.enums import InternalVerdict, PublicVerdict
 
 def test_seed_benchmark_dataset_validity() -> None:
     """Verify benchmark_seed_v1.json contains 50 valid annotated claims."""
-    benchmark_path = Path("tests/benchmarks/data/benchmark_seed_v1.json")
+    benchmark_path = Path(__file__).resolve().parent.parent / "benchmarks" / "data" / "benchmark_seed_v1.json"
     assert benchmark_path.exists(), "Seed benchmark file missing!"
 
     with open(benchmark_path, encoding="utf-8") as f:

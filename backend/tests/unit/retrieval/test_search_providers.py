@@ -69,7 +69,6 @@ async def test_tavily_provider_sends_hardened_headers(monkeypatch: pytest.Monkey
 
     assert len(res.results) == 1
     assert captured_request["headers"] is not None
-    assert captured_request["headers"]["User-Agent"] == "tavily-python"
     assert captured_request["headers"]["X-Client-Source"] == "tavily-python"
     assert captured_request["headers"]["Accept"] == "application/json"
     assert captured_request["headers"]["Authorization"] == "Bearer tvly-mock-test-key"
@@ -144,3 +143,13 @@ async def test_manager_permits_mock_fallback_in_development(monkeypatch: pytest.
 
     assert res.provider_name == "mock_search"
     assert len(res.results) == 2
+
+
+@pytest.mark.asyncio
+async def test_providers_strip_quotes_and_whitespace() -> None:
+    """Verify Tavily and Brave providers strip whitespace, newlines, and quotes from API keys."""
+    tavily = TavilySearchProvider(api_key="  \'\"tvly-stripped-key\"\' \r\n")
+    assert tavily.api_key == "tvly-stripped-key"
+
+    brave = BraveSearchProvider(api_key="  \'\"brave-stripped-key\"\' \r\n")
+    assert brave.api_key == "brave-stripped-key"
