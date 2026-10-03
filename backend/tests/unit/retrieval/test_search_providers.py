@@ -69,7 +69,8 @@ async def test_tavily_provider_sends_hardened_headers(monkeypatch: pytest.Monkey
 
     assert len(res.results) == 1
     assert captured_request["headers"] is not None
-    assert "Mozilla/5.0" in captured_request["headers"]["User-Agent"]
+    assert captured_request["headers"]["User-Agent"] == "tavily-python"
+    assert captured_request["headers"]["X-Client-Source"] == "tavily-python"
     assert captured_request["headers"]["Accept"] == "application/json"
     assert captured_request["headers"]["Authorization"] == "Bearer tvly-mock-test-key"
     assert captured_request["json"]["api_key"] == "tvly-mock-test-key"
