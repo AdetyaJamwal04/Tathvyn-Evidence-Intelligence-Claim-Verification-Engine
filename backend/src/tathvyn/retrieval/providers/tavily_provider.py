@@ -51,9 +51,10 @@ class TavilySearchProvider(SearchProvider):
             "api_key": self.api_key,
             "query": query,
             "max_results": max_results,
-            "search_depth": "advanced",
-            "include_domains": domain_filter or [],
+            "search_depth": "basic",
         }
+        if domain_filter:
+            payload["include_domains"] = domain_filter
 
         async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
             try:

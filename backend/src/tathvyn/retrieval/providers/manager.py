@@ -10,6 +10,7 @@ from tathvyn.common.exceptions import ProviderError, ProviderRateLimitError
 from tathvyn.common.logging import get_logger
 from tathvyn.retrieval.interfaces import SearchProvider, SearchResponse, SearchResultItem
 from tathvyn.retrieval.providers.brave_provider import BraveSearchProvider
+from tathvyn.retrieval.providers.ddg_provider import DuckDuckGoSearchProvider
 from tathvyn.retrieval.providers.mock import MockSearchProvider
 from tathvyn.retrieval.providers.tavily_provider import TavilySearchProvider
 from tathvyn.storage.cache import get_cache_manager
@@ -35,13 +36,11 @@ class SearchProviderManager:
             # Register Brave if API key is present
             if settings.brave_search_api_key.get_secret_value():
                 self.providers.append(BraveSearchProvider())
-            # If no live API keys are configured, fallback to MockSearchProvider only in non-production
-            if not self.providers:
-                if settings.environment == "production":
-                    logger.error("No live search API keys configured in production environment!")
-                else:
-                    logger.info("No live search API keys configured. Using MockSearchProvider.")
-                    self.providers.append(MockSearchProvider())
+            # Always register DuckDuckGo as resilient live web fallback
+            self.providers.append(DuckDuckGoSearchProvider())
+            # In non-production with no keys, MockSearchProvider can also be present
+            if settings.environment != "production" and not any(isinstance(p, (TavilySearchProvider, BraveSearchProvider)) for p in self.providers):
+                self.providers.append(MockSearchProvider())
 
     async def search(
         self,
