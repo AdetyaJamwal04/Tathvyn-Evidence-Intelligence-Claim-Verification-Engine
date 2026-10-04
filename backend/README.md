@@ -4,7 +4,7 @@ The backend of **Tathvyn** is a high-performance Python 3.12+ engine powered by 
 
 ---
 
-## 🏗️ Directory Structure
+## 🏛️ Directory Structure
 
 ```
 backend/
@@ -15,13 +15,22 @@ backend/
 │   ├── evidence/         # Evidence assessment, numerical & temporal validators
 │   ├── models/           # CrossEncoder reranker, DeBERTa NLI, LLM fallback
 │   ├── orchestration/    # Adaptive research graph, query formulator, degradation
-│   ├── retrieval/        # Tavily & Brave providers, HTML/PDF parsers, segmenter
+│   ├── retrieval/        # Multi-tier search providers, HTML/PDF parsers, segmenter
+│   │   ├── providers/
+│   │   │   ├── tavily_provider.py        # Tavily Search API with basic depth & key stripping
+│   │   │   ├── gemini_search_provider.py # Google Search Grounding via google-genai
+│   │   │   ├── ddg_provider.py           # DuckDuckGo live web search fallback
+│   │   │   ├── brave_provider.py         # Brave Search API provider
+│   │   │   └── manager.py                # Multi-provider fallback manager
+│   │   ├── fetcher.py    # Resilient async HTML/PDF document fetcher
+│   │   ├── segmenter.py  # Overlapping sentence chunker
+│   │   └── security.py   # SSRF protection & IP validation
 │   ├── storage/          # Cache management & Redis connection pooling
 │   ├── verdict/          # Epistemic aggregation, calibration, explainer
 │   └── workers/          # Async job queue & background worker loop
 ├── scripts/              # CLI verification & benchmark runners
-├── tests/                # Unit test suite & 50-claim evaluation benchmark
-├── Dockerfile            # Production Dockerfile for Cloud Run
+├── tests/                # 144 unit tests & 50-claim evaluation benchmark
+├── Dockerfile            # Production Dockerfile for Cloud Run (pre-cached weights)
 ├── .gcloudignore         # Cloud Build optimization
 ├── pyproject.toml        # Hatchling build specification & dependencies
 ├── uv.lock               # Deterministic dependency lockfile
@@ -30,7 +39,7 @@ backend/
 
 ---
 
-## 💻 Running the Backend Locally
+## 🚀 Running the Backend Locally
 
 ### 1. Install Dependencies
 Using `uv`:
@@ -46,7 +55,7 @@ Interactive Swagger docs: `http://127.0.0.1:8000/docs`
 
 ### 3. Run Tests
 ```powershell
-uv run pytest tests/unit/ -k "not test_llm"
+uv run pytest tests/ -v
 ```
 
 ---

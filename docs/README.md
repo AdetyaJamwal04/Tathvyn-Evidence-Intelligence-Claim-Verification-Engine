@@ -3,13 +3,13 @@
 Welcome to the comprehensive architecture and design specification for **Tathvyn**, an evidence-grounded claim verification platform designed for automated, calibrated, and auditable fact verification.
 
 
-> **Monorepo Notice**: The implementation codebase is organized into [rontend/](../frontend/) (Node.js/React/Vite) and [ackend/](../backend/) (Python/FastAPI/DeBERTa).
+> **Monorepo Notice**: The implementation codebase is organized into [frontend/](../frontend/) (Node.js/React/Vite) and [backend/](../backend/) (Python/FastAPI/DeBERTa).
 
 ---
 
 ## 1. Documentation Index & Map
 
-The documentation is organized into three major tiers: **Foundations & Canonical Standards (00-05)**, **Core Subsystem Specifications (06-17)**, and **Production & Scale Engineering (18-26)**.
+The documentation is organized into three major tiers: **Foundations & Canonical Standards (00-05)**, **Core Subsystem Specifications (06-17)**, and **Production & Scale Engineering (18-26)**, along with the **Production GCP Runbook**.
 
 ```text
 docs/
@@ -48,7 +48,8 @@ docs/
 ├── 23-data-schema-and-provenance.md                   # Relational & vector schemas, provenance graphs, and snapshots
 ├── 24-api-and-product-contracts.md                    # REST API specifications, response schemas, and errors
 ├── 25-deployment-ci-cd-and-production-readiness.md    # Docker, CI/CD pipelines, observability, and checklist
-└── 26-project-roadmap-and-implementation-order.md     # Phased roadmap, entry/exit criteria, and status tracker
+├── 26-project-roadmap-and-implementation-order.md     # Phased roadmap, entry/exit criteria, and status tracker
+└── GCP_DEPLOYMENT_GUIDE.md                            # Complete GCP Cloud Run & Firebase production runbook
 ```
 
 ---
