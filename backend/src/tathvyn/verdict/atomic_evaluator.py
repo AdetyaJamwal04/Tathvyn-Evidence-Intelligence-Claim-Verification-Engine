@@ -97,7 +97,10 @@ class AtomicClaimVerdictEvaluator:
         context_count = len(evidence_state.context_evidence)
         coverage = evidence_state.coverage_score
 
-        if (context_count >= 2 or len(evidence_state.contradicting_evidence) > 0) and w_sup == 0.0:
+        if (
+            (len(evidence_state.contradicting_evidence) > 0 and w_con >= 0.25)
+            or (context_count >= 2 and coverage >= 0.35 and w_sup == 0.0)
+        ):
             neg_conf = min(0.85, 0.72 + min(max(coverage, 0.1), 0.40) * 0.30)
             return AtomicVerdictEvaluation(
                 verdict=AtomicClaimVerdict.REFUTED,
@@ -105,9 +108,9 @@ class AtomicClaimVerdictEvaluator:
                 contradiction_weight=round(w_con, 4),
                 confidence=round(neg_conf, 4),
                 rationale=(
-                    f"Authoritative multi-source search ({context_count} topic-relevant passages) found zero corroborating evidence. "
+                    f"Authoritative multi-source search ({context_count} topic-relevant passages, coverage={coverage:.2f}) found zero corroborating evidence. "
                     f"For extraordinary or specific empirical assertions, the complete absence of confirmation across "
-                    f"credible public records refutes the claim (coverage={coverage:.2f})."
+                    f"credible public records refutes the claim."
                 ),
             )
 

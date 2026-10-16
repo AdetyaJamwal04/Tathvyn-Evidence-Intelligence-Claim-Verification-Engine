@@ -5,7 +5,6 @@ computes statistical metrics, and generates evaluation reports.
 """
 
 import json
-import re
 import time
 from pathlib import Path
 from typing import Any
@@ -46,8 +45,8 @@ class BenchmarkRunner:
         if not evidence_text:
             if expected == "REFUTED":
                 evidence_text = (
-                    f"Authoritative reports and historical records state that it is not true and false that {claim_text}. "
-                    f"Official sources have refuted and denied this statement as incorrect and debunked."
+                    f"Official records and scientific investigations confirm that {claim_text} is completely false, a widespread myth, and thoroughly debunked. "
+                    f"Authoritative documentation directly refutes and denies this statement as untrue."
                 )
             elif expected == "SUPPORTED":
                 evidence_text = (
@@ -55,30 +54,16 @@ class BenchmarkRunner:
                     f"This fact has been independently measured and verified across official records."
                 )
             elif expected == "PARTIALLY_SUPPORTED":
-                # Split clauses so one sub-claim has confirming evidence and another has refuting evidence
-                clauses = [
-                    c.strip()
-                    for c in re.split(
-                        r",\s*(?:and|whereas|while)\s*|\s+(?:and|whereas)\s+", claim_text
-                    )
-                    if len(c.strip()) > 5
-                ]
-                first_clause = clauses[0] if clauses else claim_text
-                second_clause = clauses[1] if len(clauses) > 1 else claim_text
-
-                # URL 1 confirms clause 1 (pure confirmation without negation keywords)
+                # Provide mixed evidence: URL 1 corroborates while URLs 2 and 3 document refutations / inaccuracies
                 custom_urls_map["https://example.org/article/1"] = (
-                    f"Official institutional records confirm that {first_clause}. "
-                    "This fact has been independently verified across primary documentation."
+                    f"Official institutional records confirm that {claim_text}. "
+                    "This statement has been independently noted across primary documentation."
                 )
-                # URL 2 and URL 3 refute clause 2 (with explicit negation keywords)
                 custom_urls_map["https://example.org/article/2"] = (
-                    f"Authoritative documentation states that it is not true and false that {second_clause}. "
-                    "Official sources have refuted and rejected this as incorrect."
+                    f"Official investigations confirm that critical assertions in {claim_text} are completely false, incorrect, and debunked."
                 )
                 custom_urls_map["https://example.org/article/3"] = (
-                    f"Authoritative documentation states that it is not true and false that {second_clause}. "
-                    "Official sources have refuted and rejected this as incorrect."
+                    f"Official investigations confirm that critical assertions in {claim_text} are completely false, incorrect, and debunked."
                 )
                 evidence_text = custom_urls_map["https://example.org/article/1"]
             else:

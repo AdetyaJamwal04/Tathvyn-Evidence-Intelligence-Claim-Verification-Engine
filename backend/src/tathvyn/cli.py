@@ -72,14 +72,33 @@ def main() -> None:
     elif args.command == "verify":
         claim_text = " ".join(args.claim)
         depth = VerificationMode(args.depth)
-        from scripts.verify_claim import verify_single_claim
-
-        asyncio.run(verify_single_claim(claim_text=claim_text, depth=depth, use_mock=args.mock))
+        try:
+            from pathlib import Path
+            scripts_dir = Path(__file__).resolve().parents[3] / "scripts"
+            if str(scripts_dir) not in sys.path:
+                sys.path.insert(0, str(scripts_dir))
+            from scripts.verify_claim import verify_single_claim  # type: ignore[import-not-found]
+            asyncio.run(verify_single_claim(claim_text=claim_text, depth=depth, use_mock=args.mock))
+        except ImportError:
+            from tathvyn.orchestration.engine import AdaptiveResearchEngine
+            engine = AdaptiveResearchEngine()
+            decision, _ = asyncio.run(engine.verify(claim_text=claim_text, depth=depth))
+            print(f"Verdict: {decision.verdict.value} (Confidence: {decision.confidence:.2f})")
 
     elif args.command == "benchmark":
-        from scripts.run_benchmark import main as run_benchmark_main
-
-        asyncio.run(run_benchmark_main())
+        try:
+            from pathlib import Path
+            scripts_dir = Path(__file__).resolve().parents[3] / "scripts"
+            if str(scripts_dir) not in sys.path:
+                sys.path.insert(0, str(scripts_dir))
+            from scripts.run_benchmark import (  # type: ignore[import-not-found]
+                main as run_benchmark_main,
+            )
+            asyncio.run(run_benchmark_main())
+        except ImportError:
+            from tathvyn.evaluation.runner import BenchmarkRunner
+            runner = BenchmarkRunner()
+            asyncio.run(runner.run_benchmark(benchmark_file="tests/benchmarks/data/benchmark_seed_v1.json"))
 
 
 if __name__ == "__main__":

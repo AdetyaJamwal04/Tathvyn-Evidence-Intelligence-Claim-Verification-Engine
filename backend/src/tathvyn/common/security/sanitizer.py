@@ -23,8 +23,8 @@ class InputSanitizer:
     def sanitize_claim_text(
         cls,
         text: str,
-        min_chars: int = 4,
-        max_chars: int = 1000,
+        min_chars: int = 3,
+        max_chars: int = 2000,
     ) -> str:
         """Normalize and sanitize a natural language claim input.
 

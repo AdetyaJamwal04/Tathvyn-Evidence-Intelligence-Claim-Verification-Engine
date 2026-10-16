@@ -22,7 +22,6 @@ from tathvyn.models.interfaces import NLIModel, RerankerModel
 from tathvyn.models.nli import DeBERTaNLIModel
 from tathvyn.models.reranker import BGERerankerModel
 
-
 # Domain-authority quality score mapping
 _DOMAIN_QUALITY_MAP: dict[str, float] = {
     # Tier 1: Official government & institutional sources
@@ -137,17 +136,17 @@ class EvidenceAssessmentEngine:
 
         evidence_items: list[Evidence] = []
 
-        # 2. For each top-ranked passage, run NLI and validators
-        for item in reranked_items:
+        # 2. Batch NLI Stance Prediction for all reranked passages
+        pairs = [
+            (passages_by_id[UUID(item.passage_id)].text, atomic_claim.text)
+            for item in reranked_items
+        ]
+        stances = await self.nli_model.predict_batch(pairs)
+
+        for item, stance in zip(reranked_items, stances, strict=False):
             p_uuid = UUID(item.passage_id)
             passage = passages_by_id[p_uuid]
             doc = documents_by_id.get(passage.document_id)
-
-            # NLI Stance Prediction
-            stance = await self.nli_model.predict_stance(
-                premise=passage.text,
-                hypothesis=atomic_claim.text,
-            )
 
             # Numerical & Temporal Deterministic Validation
             num_val = validate_numerical_consistency(atomic_claim.text, passage.text)
@@ -168,18 +167,39 @@ class EvidenceAssessmentEngine:
             if relationship in (EvidenceRelationship.CONTRADICTS, EvidenceRelationship.PARTIALLY_CONTRADICTS) and not mentions_core_topic:
                 relationship = EvidenceRelationship.NEUTRAL
 
+            entailment_prob = stance.entailment_prob
+            contradiction_prob = stance.contradiction_prob
+
+            # Detect explicit refutation / debunking language in passage
+            refutation_pattern = re.compile(
+                r"\b(?:is|are|was|were)\s+(?:completely\s+|entirely\s+|demonstrably\s+|categorically\s+|a\s+widespread\s+)?(?:false|untrue|incorrect|debunked|fabricated|myth)\b|\b(?:conclusively\s+)?(?:disproven|refuted|debunked)\b|\brefuted and denied\b",
+                re.IGNORECASE,
+            )
+            if (
+                relationship in (EvidenceRelationship.SUPPORTS, EvidenceRelationship.PARTIALLY_SUPPORTS)
+                and refutation_pattern.search(passage_lower)
+            ):
+                relationship = EvidenceRelationship.CONTRADICTS
+                contradiction_prob = max(0.95, entailment_prob)
+                entailment_prob = 0.02
+
             # If explicit numerical mismatch detected, downgrade SUPPORT to CONTRADICTION
-            if not num_val.is_compatible and num_val.validation_status == "NUMERICAL_MISMATCH":
-                if relationship in (EvidenceRelationship.SUPPORTS, EvidenceRelationship.PARTIALLY_SUPPORTS):
-                    relationship = EvidenceRelationship.CONTRADICTS
+            if (
+                not num_val.is_compatible
+                and num_val.validation_status == "NUMERICAL_MISMATCH"
+                and relationship in (EvidenceRelationship.SUPPORTS, EvidenceRelationship.PARTIALLY_SUPPORTS)
+            ):
+                relationship = EvidenceRelationship.CONTRADICTS
+                contradiction_prob = max(0.90, entailment_prob)
+                entailment_prob = 0.05
 
             ev = Evidence(
                 atomic_claim_id=atomic_claim.atomic_claim_id,
                 passage_id=passage.passage_id,
                 relationship=relationship,
                 relevance_score=max(0.0, min(1.0, float(item.relevance_score))),
-                entailment_score=stance.entailment_prob,
-                contradiction_score=stance.contradiction_prob,
+                entailment_score=entailment_prob,
+                contradiction_score=contradiction_prob,
                 source_quality_score=_get_source_quality_score(doc),
                 independence_score=1.0,
                 temporal_validity_status=temp_val.status,

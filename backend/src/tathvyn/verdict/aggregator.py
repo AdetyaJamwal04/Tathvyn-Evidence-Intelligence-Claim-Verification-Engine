@@ -73,9 +73,8 @@ class ParentVerdictAggregator:
                 iv = InternalVerdict.REFUTED
             elif verdict == AtomicClaimVerdict.UNVERIFIABLE:
                 iv = InternalVerdict.UNVERIFIABLE
-            elif docs_retrieved >= 2 and verdict == AtomicClaimVerdict.INSUFFICIENT:
-                # When topic documents were retrieved but zero corroboration was found
-                iv = InternalVerdict.REFUTED
+            elif verdict == AtomicClaimVerdict.CONFLICTED:
+                iv = InternalVerdict.PARTIALLY_SUPPORTED
             else:
                 iv = InternalVerdict.INSUFFICIENT_EVIDENCE
 

@@ -14,8 +14,15 @@ if __name__ == "__main__":
     backend_dir = root_dir / "backend"
     backend_main = backend_dir / "main.py"
 
+    root_venv_py = root_dir / ".venv" / "Scripts" / "python.exe"
     backend_venv_py = backend_dir / ".venv" / "Scripts" / "python.exe"
-    python_bin = str(backend_venv_py) if backend_venv_py.is_file() else sys.executable
+
+    if root_venv_py.is_file():
+        python_bin = str(root_venv_py)
+    elif backend_venv_py.is_file():
+        python_bin = str(backend_venv_py)
+    else:
+        python_bin = sys.executable
 
     env = os.environ.copy()
     src_dir = str(backend_dir / "src")
