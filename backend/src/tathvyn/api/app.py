@@ -99,7 +99,11 @@ def create_app() -> FastAPI:
         logger.warning("Wildcard CORS origin disallowed in production with credentials; using domain whitelist")
         cors_origins = [o for o in cors_origins if o != "*"]
         if not cors_origins:
-            cors_origins = ["https://tathvyn.web.app"]
+            cors_origins = [
+                "https://tathvyn.web.app",
+                "https://tathvyn-production.web.app",
+                "https://tathvyn-production.firebaseapp.com",
+            ]
 
     app.add_middleware(
         CORSMiddleware,
@@ -141,3 +145,4 @@ def create_app() -> FastAPI:
         app.mount("/", StaticFiles(directory=web_dir, html=True), name="web_ui")
 
     return app
+
