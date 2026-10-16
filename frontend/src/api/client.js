@@ -9,7 +9,11 @@ const isLocal = typeof window !== 'undefined' && (
   window.location.hostname === '127.0.0.1' ||
   window.location.port === '8080'
 );
-const BASE_URL = isLocal ? '' : envUrl;
+const isFirebase = typeof window !== 'undefined' && (
+  window.location.hostname.endsWith('.web.app') ||
+  window.location.hostname.endsWith('.firebaseapp.com')
+);
+const BASE_URL = (isLocal || isFirebase) ? '' : envUrl;
 
 /**
  * Stream verification progress events in real-time until completion.
@@ -170,3 +174,4 @@ export async function checkHealth() {
     return { status: 'offline', error: err.message };
   }
 }
+
