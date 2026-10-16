@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import SearchSection from './components/SearchSection';
 import StreamingProgress from './components/StreamingProgress';
@@ -7,6 +7,11 @@ import ErrorFallback from './components/ErrorFallback';
 import { streamVerifyClaim } from './api/client';
 
 export default function App() {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
   const [claim, setClaim] = useState('');
   const [selectedDepth, setSelectedDepth] = useState('FAST');
   const [viewState, setViewState] = useState('home'); // 'home' | 'loading' | 'results' | 'error'
@@ -97,3 +102,4 @@ export default function App() {
     </>
   );
 }
+

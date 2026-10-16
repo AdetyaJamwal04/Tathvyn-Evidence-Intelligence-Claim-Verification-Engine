@@ -91,3 +91,4 @@ export default function SearchSection({ claim, setClaim, onVerify, isLoading }) 
     </section>
   );
 }
+
