@@ -10,8 +10,8 @@ from tathvyn.common.exceptions import ProviderError, ProviderRateLimitError
 from tathvyn.common.logging import get_logger
 from tathvyn.retrieval.interfaces import SearchProvider, SearchResponse, SearchResultItem
 from tathvyn.retrieval.providers.brave_provider import BraveSearchProvider
-from tathvyn.retrieval.providers.gemini_search_provider import GeminiSearchProvider
 from tathvyn.retrieval.providers.ddg_provider import DuckDuckGoSearchProvider
+from tathvyn.retrieval.providers.gemini_search_provider import GeminiSearchProvider
 from tathvyn.retrieval.providers.mock import MockSearchProvider
 from tathvyn.retrieval.providers.tavily_provider import TavilySearchProvider
 from tathvyn.storage.cache import get_cache_manager
@@ -72,8 +72,11 @@ class SearchProviderManager:
                 logger.info(
                     "Dispatching search query", provider=provider.provider_name, query=query
                 )
-                response = await provider.search(
-                    query, max_results=max_results, domain_filter=domain_filter
+                response = await asyncio.wait_for(
+                    provider.search(
+                        query, max_results=max_results, domain_filter=domain_filter
+                    ),
+                    timeout=5.0,
                 )
                 # Store in Cache
                 if response.results:
@@ -81,9 +84,9 @@ class SearchProviderManager:
                         query, provider.provider_name, response.results
                     )
                 return response
-            except (ProviderRateLimitError, ProviderError) as e:
+            except (ProviderRateLimitError, ProviderError, TimeoutError) as e:
                 logger.warning(
-                    "Search provider failed, attempting fallback",
+                    "Search provider failed or timed out, attempting fallback",
                     provider=provider.provider_name,
                     error=str(e),
                 )

@@ -13,6 +13,7 @@ from tathvyn.retrieval.interfaces import SearchProvider, SearchResponse, SearchR
 logger = get_logger("tavily_provider")
 
 TAVILY_API_URL = "https://api.tavily.com/search"
+DEFAULT_TAVILY_TIMEOUT = 5.0  # Fast timeout to minimize latency
 
 
 class TavilySearchProvider(SearchProvider):
@@ -56,7 +57,7 @@ class TavilySearchProvider(SearchProvider):
         if domain_filter:
             payload["include_domains"] = domain_filter
 
-        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+        async with httpx.AsyncClient(timeout=DEFAULT_TAVILY_TIMEOUT, follow_redirects=True) as client:
             try:
                 response = await client.post(TAVILY_API_URL, json=payload, headers=headers)
                 if response.status_code == 403 and "<html" in response.text.lower():

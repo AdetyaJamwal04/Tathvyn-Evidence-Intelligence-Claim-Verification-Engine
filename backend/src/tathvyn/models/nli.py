@@ -97,6 +97,33 @@ class DeBERTaNLIModel(NLIModel):
 
         return self._deterministic_fallback_stance(premise, hypothesis)
 
+    async def predict_batch(
+        self,
+        pairs: list[tuple[str, str]],
+    ) -> list[StanceScoreResult]:
+        """Batch evaluate stances using GPU/CPU vectorized pipeline."""
+        if not pairs:
+            return []
+        pipe = self._get_pipeline()
+        if pipe is not None:
+            import asyncio
+            try:
+                inputs = [{"text": p, "text_pair": h} for p, h in pairs]
+                outputs = await asyncio.to_thread(pipe, inputs, truncation=True, max_length=512, batch_size=16)
+                results = []
+                for out in outputs:
+                    raw_out = out[0] if isinstance(out, list) and len(out) > 0 and isinstance(out[0], list) else out
+                    scores = {item["label"].upper(): float(item["score"]) for item in raw_out}
+                    ent = scores.get("ENTAILMENT", scores.get("LABEL_0", 0.0))
+                    neu = scores.get("NEUTRAL", scores.get("LABEL_1", 0.0))
+                    con = scores.get("CONTRADICTION", scores.get("LABEL_2", 0.0))
+                    results.append(self._map_probabilities_to_relationship(ent, con, neu))
+                return results
+            except Exception as e:
+                logger.warning("Batch NLI inference failed, using fallback", error=str(e))
+
+        return [self._deterministic_fallback_stance(p, h) for p, h in pairs]
+
     def _map_probabilities_to_relationship(
         self,
         entailment_prob: float,

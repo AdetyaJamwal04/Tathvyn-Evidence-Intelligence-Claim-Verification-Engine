@@ -5,7 +5,8 @@ Adaptive Research Graph Orchestrator implementing high-throughput concurrent DAG
 from __future__ import annotations
 
 import asyncio
-from typing import Any, AsyncGenerator
+from collections.abc import AsyncGenerator
+from typing import Any
 from uuid import UUID, uuid4
 
 from tathvyn.claims.pipeline import ClaimIntelligencePipeline
@@ -275,9 +276,9 @@ class ResearchGraphRunner:
             ]
             fetch_results = await asyncio.gather(*fetch_tasks, return_exceptions=True)
 
-            for res in fetch_results:
-                if isinstance(res, tuple) and res is not None:
-                    doc, passages = res
+            for fetch_res in fetch_results:
+                if isinstance(fetch_res, tuple) and fetch_res is not None:
+                    doc, passages = fetch_res
                     docs_by_id[doc.document_id] = doc
                     for p in passages:
                         passages_by_id[p.passage_id] = p
@@ -293,27 +294,29 @@ class ResearchGraphRunner:
 
             # C. Concurrent Assessment Node: Evaluate all atomic claims concurrently
             all_passages = list(passages_by_id.values())
+            eval_top_k = 5 if depth == ResearchDepth.FAST else (8 if depth == ResearchDepth.DEEP else 6)
             assessment_tasks = [
                 self.evidence_engine.evaluate_atomic_claim_evidence(
                     atomic_claim=ac,
                     passages=all_passages,
                     documents_by_id=docs_by_id,
-                    top_k=8,
+                    top_k=eval_top_k,
                 )
                 for ac in atomic_claims
             ]
             eval_results = await asyncio.gather(*assessment_tasks, return_exceptions=True)
 
             current_conflicts = []
-            for ac, res in zip(atomic_claims, eval_results, strict=False):
-                if isinstance(res, Exception):
-                    logger.error("Error evaluating atomic claim", error=str(res))
+            for ac, eval_res in zip(atomic_claims, eval_results, strict=False):
+                if isinstance(eval_res, Exception):
+                    logger.error("Error evaluating atomic claim", error=str(eval_res))
                     continue
-                ev_state, clusters, confs = res
-                latest_evidence_states[ac.atomic_claim_id] = ev_state
-                current_conflicts.extend(confs)
-                all_clusters.extend(clusters)
-                all_evidence.extend(ev_state.supporting_evidence + ev_state.contradicting_evidence)
+                if isinstance(eval_res, tuple) and len(eval_res) == 3:
+                    ev_state, clusters, confs = eval_res
+                    latest_evidence_states[ac.atomic_claim_id] = ev_state
+                    current_conflicts.extend(confs)
+                    all_clusters.extend(clusters)
+                    all_evidence.extend(ev_state.supporting_evidence + ev_state.contradicting_evidence)
 
             state.unresolved_conflicts = current_conflicts
             state.provenance_clusters = all_clusters
@@ -347,9 +350,9 @@ class ResearchGraphRunner:
         for ac in atomic_claims:
             ev_state_item = latest_evidence_states.get(ac.atomic_claim_id)
             if ev_state_item is not None:
-                res = self.atomic_evaluator.evaluate_atomic_claim(ev_state_item)
-                atomic_evaluations.append((ac, res.verdict))
-                eval_confidences.append(res.confidence)
+                atomic_eval = self.atomic_evaluator.evaluate_atomic_claim(ev_state_item)
+                atomic_evaluations.append((ac, atomic_eval.verdict))
+                eval_confidences.append(atomic_eval.confidence)
             else:
                 atomic_evaluations.append((ac, AtomicClaimVerdict.INSUFFICIENT))
                 eval_confidences.append(0.30)
@@ -371,12 +374,18 @@ class ResearchGraphRunner:
 
         is_refuted = (agg_result.internal_verdict == InternalVerdict.REFUTED)
 
+        avg_source_quality = (
+            sum(e.source_quality_score for e in all_evidence) / len(all_evidence)
+            if all_evidence
+            else 0.80
+        )
         calibrated_conf = self.calibrator.calibrate(
             raw_confidence=raw_conf,
             sufficiency_score=suff_result.sufficiency_score,
             has_temporal_discrepancy=False,
             has_unresolved_conflict=len(current_conflicts) > 0,
             is_negative_evidence_refuted=is_refuted,
+            source_quality_score=avg_source_quality,
         )
 
         citations = self.explainer.build_citations(

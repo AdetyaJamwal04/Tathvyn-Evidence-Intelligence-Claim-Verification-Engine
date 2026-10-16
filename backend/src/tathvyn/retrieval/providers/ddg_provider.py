@@ -3,7 +3,6 @@
 import re
 import time
 import urllib.parse
-from typing import Any
 
 import httpx
 

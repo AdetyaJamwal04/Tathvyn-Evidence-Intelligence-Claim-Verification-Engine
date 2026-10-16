@@ -77,17 +77,30 @@ class BGERerankerModel(RerankerModel):
         if not passages:
             return []
 
+        # Fast lexical pre-filtering if candidate pool is large to eliminate CPU latency bottleneck
+        if len(passages) > 16:
+            q_tokens = set(query.lower().split())
+            scored_candidates = []
+            for pid, text in passages:
+                p_tokens = set(text.lower().split())
+                overlap = len(q_tokens & p_tokens) / max(len(q_tokens), 1)
+                scored_candidates.append((pid, text, overlap))
+            scored_candidates.sort(key=lambda x: x[2], reverse=True)
+            eval_passages = [(pid, text) for pid, text, _ in scored_candidates[:16]]
+        else:
+            eval_passages = passages
+
         model = self._get_model()
         if model is not None:
             import asyncio
 
-            pairs = [[query, text] for _, text in passages]
+            pairs = [[query, text] for _, text in eval_passages]
             try:
-                scores = await asyncio.to_thread(model.predict, pairs)
+                scores = await asyncio.to_thread(model.predict, pairs, batch_size=16)
                 scores_list = scores.tolist() if hasattr(scores, "tolist") else list(scores)
                 raw_scored = [
                     (pid, text, _to_prob(float(score)))
-                    for (pid, text), score in zip(passages, scores_list, strict=False)
+                    for (pid, text), score in zip(eval_passages, scores_list, strict=False)
                 ]
                 raw_scored.sort(key=lambda item: item[2], reverse=True)
                 return [

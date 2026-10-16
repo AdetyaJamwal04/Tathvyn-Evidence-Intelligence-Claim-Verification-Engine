@@ -8,7 +8,7 @@ import time
 from typing import Any
 
 from tathvyn.common.config import get_settings
-from tathvyn.common.exceptions import ProviderError, ProviderRateLimitError
+from tathvyn.common.exceptions import ProviderError
 from tathvyn.common.logging import get_logger
 from tathvyn.retrieval.interfaces import SearchProvider, SearchResponse, SearchResultItem
 

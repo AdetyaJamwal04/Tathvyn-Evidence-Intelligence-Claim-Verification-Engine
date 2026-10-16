@@ -65,3 +65,11 @@ class NLIModel(ABC):
     ) -> StanceScoreResult:
         """Evaluate logical relationship (entailment, contradiction, neutral)."""
         pass
+
+
+    async def predict_batch(
+        self,
+        pairs: list[tuple[str, str]],
+    ) -> list[StanceScoreResult]:
+        """Evaluate a batch of (premise, hypothesis) pairs."""
+        return [await self.predict_stance(premise=p, hypothesis=h) for p, h in pairs]
