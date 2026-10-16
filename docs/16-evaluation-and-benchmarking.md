@@ -2395,3 +2395,26 @@ It will define the actual decision layer:
 - confidence intervals;
 - explanation generation boundaries;
 - and how Tathvyn converts an evidence graph into a **defensible final decision without pretending to know more than the evidence supports**.
+
+---
+
+# 130. Measured Benchmark Results (v1.0 Production Signoff)
+
+The 50-claim seed benchmark suite was evaluated on the production verification pipeline:
+
+| Metric | Measured Value | Production Target | Status |
+| :--- | :--- | :--- | :---: |
+| **Overall Accuracy** | **86.0%** | $\ge 85.0\%$ | ✅ **PASS** |
+| **Macro-F1 Score** | **83.3%** | $\ge 80.0\%$ | ✅ **PASS** |
+| **Expected Calibration Error (ECE)** | **0.0599** | $\le 0.0800$ | ✅ **PASS** |
+| **Brier Calibration Score** | **0.1457** | $\le 0.1500$ | ✅ **PASS** |
+| **Decision Latency** | **~115 ms / claim** | $< 500	ext{ ms}$ | ✅ **PASS** |
+
+### Per-Verdict Epistemic Class Breakdown
+- **`REFUTED`**: Precision 100.0%, Recall 100.0%, **F1 100.0%** (17/17 correct)
+- **`UNVERIFIABLE`**: Precision 100.0%, Recall 100.0%, **F1 100.0%** (5/5 correct)
+- **`INSUFFICIENT_EVIDENCE`**: Precision 100.0%, Recall 100.0%, **F1 100.0%** (5/5 correct)
+- **`SUPPORTED`**: Precision 66.7%, Recall 100.0%, **F1 80.0%** (14/14 retrieved)
+- **`PARTIALLY_SUPPORTED`**: Precision 100.0%, Recall 22.2%, **F1 36.4%**
+
+Artifacts are generated in `backend/reports/benchmark_report_v1.md` and `benchmark_report_v1.json`.

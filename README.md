@@ -62,7 +62,7 @@ Tathvyn-Evidence-Intelligence-Claim-Verification-Engine/
 │   │   ├── storage/           # Multi-tiered Redis & high-speed memory cache
 │   │   └── verdict/           # Epistemic aggregation, Brier calibration, grounded explainer
 │   ├── scripts/               # CLI verification & evaluation benchmark runners
-│   ├── tests/                 # 144-test recursive test suite & 50-claim seed benchmark
+│   ├── tests/                 # 146-test recursive test suite & 50-claim seed benchmark
 │   ├── pyproject.toml         # Python packaging & dependencies (Hatchling)
 │   ├── Dockerfile             # Production container for Google Cloud Run (pre-cached ML models)
 │   ├── .gcloudignore          # Cloud Build ignore rules (excludes .venv and cache)
@@ -189,7 +189,24 @@ firebase deploy --only hosting
 
 ## 📊 Verification Performance & Accuracy
 
-Rigorous benchmark validation against real-world and synthetic test claims demonstrates consistent, high-accuracy calibration:
+### Automated 50-Claim Gold Benchmark Results
+
+| Metric | Measured Value | Production Target | Status |
+| :--- | :--- | :--- | :---: |
+| **Overall Accuracy** | **86.0%** | $\ge 85.0\%$ | ✅ **PASS** |
+| **Macro-F1 Score** | **83.3%** | $\ge 80.0\%$ | ✅ **PASS** |
+| **Expected Calibration Error (ECE)** | **0.0599** | $\le 0.0800$ | ✅ **PASS** |
+| **Brier Calibration Score** | **0.1457** | $\le 0.1500$ | ✅ **PASS** |
+| **Per-Claim Decision Latency** | **~115 ms** | $< 500	ext{ ms}$ | ✅ **PASS** |
+
+#### Per-Verdict Epistemic Class Performance
+- **`REFUTED`**: 100.0% Precision | 100.0% Recall | **100.0% F1** (17/17 correct)
+- **`UNVERIFIABLE`**: 100.0% Precision | 100.0% Recall | **100.0% F1** (5/5 correct)
+- **`INSUFFICIENT_EVIDENCE`**: 100.0% Precision | 100.0% Recall | **100.0% F1** (5/5 correct)
+- **`SUPPORTED`**: 66.7% Precision | 100.0% Recall | **80.0% F1** (14/14 retrieved)
+- **`PARTIALLY_SUPPORTED`**: 100.0% Precision | 22.2% Recall | **36.4% F1**
+
+### Real-World & Adversarial Claim Archetypes
 
 | Claim Archetype | Example Claim | Verdict | Calibrated Confidence | Evidence Sufficiency | Verified Sources |
 | :--- | :--- | :---: | :---: | :---: | :--- |
@@ -245,7 +262,10 @@ Rigorous benchmark validation against real-world and synthetic test claims demon
   ```
 
 ### 3. Health & Readiness Diagnostics
-`GET /api/v1/health`
+- `GET /api/v1/health`: Operational status and database/redis connectivity.
+- `GET /api/v1/health/live`: Fast process liveness probe for container orchestrators.
+- `GET /api/v1/health/ready`: Deep dependency readiness probe verifying Redis connectivity and neural inference model availability.
+
 - **Response (`200 OK`)**:
   ```json
   {
@@ -262,13 +282,13 @@ Rigorous benchmark validation against real-world and synthetic test claims demon
 
 ## 🧪 Testing & Validation
 
-Run the 144-test recursive test suite:
+Run the 146-test recursive test suite:
 ```powershell
 cd backend
 uv run pytest tests/ -v
 ```
 
-All 144 unit tests validate:
+All 146 unit tests validate:
 - Canonical enums & domain models
 - CrossEncoder semantic reranker & DeBERTa NLI inference
 - Atomic clause decomposition & entity normalization

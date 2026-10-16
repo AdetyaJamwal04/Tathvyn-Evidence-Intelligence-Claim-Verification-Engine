@@ -29,7 +29,7 @@ backend/
 │   ├── verdict/          # Epistemic aggregation, calibration, explainer
 │   └── workers/          # Async job queue & background worker loop
 ├── scripts/              # CLI verification & benchmark runners
-├── tests/                # 144 unit tests & 50-claim evaluation benchmark
+├── tests/                # 146 unit tests & 50-claim evaluation benchmark
 ├── Dockerfile            # Production Dockerfile for Cloud Run (pre-cached weights)
 ├── .gcloudignore         # Cloud Build optimization
 ├── pyproject.toml        # Hatchling build specification & dependencies
@@ -57,6 +57,25 @@ Interactive Swagger docs: `http://127.0.0.1:8000/docs`
 ```powershell
 uv run pytest tests/ -v
 ```
+---
+
+## 📈 Automated Benchmark Performance & Epistemic Calibration
+
+Tathvyn includes an automated 50-claim seed benchmark suite evaluated across all 5 canonical epistemic verdict classes:
+
+| Metric | Measured Value | Production Target | Status |
+| :--- | :--- | :--- | :---: |
+| **Overall Accuracy** | **86.0%** | $\ge 85.0\%$ | ✅ **PASS** |
+| **Macro-F1 Score** | **83.3%** | $\ge 80.0\%$ | ✅ **PASS** |
+| **Expected Calibration Error (ECE)** | **0.0599** | $\le 0.0800$ | ✅ **PASS** |
+| **Brier Calibration Score** | **0.1457** | $\le 0.1500$ | ✅ **PASS** |
+| **Decision Latency** | **~115 ms / claim** | $< 500	ext{ ms}$ | ✅ **PASS** |
+
+Run the automated evaluation benchmark:
+```powershell
+uv run python scripts/run_benchmark.py --output-dir reports/
+```
+
 
 ---
 
@@ -83,3 +102,10 @@ gcloud run deploy tathvyn-backend `
 
 * **Live Cloud Run URL**: `https://tathvyn-backend-906432301218.us-central1.run.app`
 * **Health Endpoint**: `/api/v1/health`
+
+
+## 🩺 System Health & Readiness Endpoints
+
+- GET /api/v1/health: Operational status and database/redis connectivity.
+- GET /api/v1/health/live: Fast process liveness probe.
+- GET /api/v1/health/ready: Deep dependency readiness probe verifying Redis and ML inference model status.
