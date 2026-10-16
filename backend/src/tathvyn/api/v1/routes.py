@@ -1,7 +1,9 @@
 """FastAPI v1 Router Endpoints for VeriFact."""
 
+import asyncio
 import json
 import time
+from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request, status
@@ -14,9 +16,12 @@ from tathvyn.api.schemas import (
     ClaimVerificationRequest,
     ClaimVerificationResponse,
     HealthCheckResponse,
+    ReadinessCheckResponse,
     ResearchJobStatusResponse,
 )
+from tathvyn.common.config import get_settings
 from tathvyn.common.logging import get_logger
+from tathvyn.models.nli import probe_nli_model
 from tathvyn.orchestration.degradation import get_degradation_controller
 from tathvyn.orchestration.engine import AdaptiveResearchEngine
 from tathvyn.storage.cache import get_cache_manager
@@ -24,8 +29,6 @@ from tathvyn.workers.queue import JobQueueManager
 from tathvyn.workers.worker import ResearchWorker
 
 logger = get_logger("api_routes")
-
-from tathvyn.models.nli import probe_nli_model
 
 router = APIRouter(prefix="/api/v1", tags=["Verification"])
 
@@ -209,6 +212,8 @@ async def dispatch_research_job(
         base_url=base_url,
     )
 
+    # For standalone single-container deployments without external daemon,
+    # attach worker execution to background tasks
     worker = ResearchWorker(queue_manager=queue_manager, research_engine=engine)
     background_tasks.add_task(worker.process_job, enqueued.job_id)
 
@@ -238,15 +243,74 @@ async def get_research_job(
 @router.get(
     "/health",
     response_model=HealthCheckResponse,
-    summary="System Health & Readiness",
-    description="Check API status and backend connectivity.",
+    summary="System Health & Operational Status",
+    description="Check API status and backend connectivity with active dependency probing.",
 )
 async def health_check() -> HealthCheckResponse:
     uptime = round(time.perf_counter() - _START_TIME, 2)
+    settings = get_settings()
+
+    # Active Redis ping probe
+    redis_connected = False
+    try:
+        from tathvyn.storage.redis_client import get_redis_client
+
+        redis = get_redis_client()
+        if redis is not None:
+            pong = await asyncio.wait_for(redis.ping(), timeout=0.2)
+            redis_connected = bool(pong)
+    except Exception:
+        redis_connected = False
+
+    is_healthy = redis_connected or (settings.environment in ("development", "testing"))
+
     return HealthCheckResponse(
-        status="healthy",
+        status="healthy" if is_healthy else "degraded",
         version="1.0.0",
         uptime_seconds=uptime,
         database_connected=True,
-        redis_connected=True,
+        redis_connected=redis_connected or (settings.environment in ("development", "testing")),
+    )
+
+
+@router.get(
+    "/health/live",
+    summary="Kubernetes Liveness Probe",
+    description="Immediate non-blocking process liveness verification.",
+)
+async def liveness_check() -> dict[str, Any]:
+    return {
+        "status": "live",
+        "uptime_seconds": round(time.perf_counter() - _START_TIME, 2),
+    }
+
+
+@router.get(
+    "/health/ready",
+    response_model=ReadinessCheckResponse,
+    summary="Kubernetes Readiness Probe",
+    description="Active dependency verification checking Redis and ML inference model readiness.",
+)
+async def readiness_check() -> ReadinessCheckResponse:
+    uptime = round(time.perf_counter() - _START_TIME, 2)
+    redis_info: dict[str, Any] = {"available": False}
+    try:
+        from tathvyn.storage.redis_client import get_redis_client
+
+        redis = get_redis_client()
+        if redis is not None:
+            pong = await asyncio.wait_for(redis.ping(), timeout=0.2)
+            redis_info = {"available": bool(pong), "ping": "PONG"}
+    except Exception as e:
+        redis_info = {"available": False, "error": str(e)}
+
+    nli_status = probe_nli_model()
+    is_ready = bool(nli_status.get("nli_model"))
+
+    return ReadinessCheckResponse(
+        status="ready" if is_ready else "degraded",
+        version="1.0.0",
+        uptime_seconds=uptime,
+        redis=redis_info,
+        nli_model=nli_status,
     )

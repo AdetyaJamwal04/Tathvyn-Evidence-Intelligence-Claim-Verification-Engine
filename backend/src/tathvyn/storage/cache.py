@@ -5,7 +5,7 @@ Provides high-throughput, low-latency caching for:
 2. Search Engine Query Results (>=40% external API cost reduction)
 3. Dense Passage Embeddings
 
-Supports Redis with automatic fallback to high-performance in-memory TTL/LRU caching.
+Supports Redis with automatic fallback to bounded in-memory LRU caching.
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from collections import OrderedDict
 from typing import Any
 
 from tathvyn.common.config import get_settings
@@ -22,13 +23,18 @@ from tathvyn.storage.redis_client import get_redis_client
 
 logger = get_logger("cache_manager")
 
+DEFAULT_MAX_MEMORY_ENTRIES = 5000
+
 
 class CacheManager:
-    """Manages Redis and in-memory multi-tier caching with TTL expiration."""
+    """Manages Redis and in-memory multi-tier caching with TTL expiration and LRU eviction."""
 
-    def __init__(self, use_redis: bool = True) -> None:
+    def __init__(
+        self, use_redis: bool = True, max_memory_entries: int = DEFAULT_MAX_MEMORY_ENTRIES
+    ) -> None:
         self.use_redis = use_redis
-        self._in_memory_cache: dict[str, tuple[str, float]] = {}  # key -> (json_val, expire_time)
+        self.max_memory_entries = max_memory_entries
+        self._in_memory_cache: OrderedDict[str, tuple[str, float]] = OrderedDict()  # key -> (json_val, expire_time)
         self._redis_offline_until: float = 0.0
 
     def _hash_key(self, prefix: str, raw_key: str) -> str:
@@ -53,11 +59,12 @@ class CacheManager:
                 self._redis_offline_until = time.time() + 60.0
                 logger.debug("redis_get_failed_fallback_to_memory", error=str(e))
 
-        # In-Memory Cache Fallback
+        # In-Memory Cache Fallback with LRU update
         entry = self._in_memory_cache.get(cache_key)
         if entry is not None:
             val_str, expires_at = entry
             if time.time() < expires_at:
+                self._in_memory_cache.move_to_end(cache_key)
                 logger.debug("memory_cache_hit", key=cache_key)
                 return json.loads(val_str)
             else:
@@ -66,7 +73,7 @@ class CacheManager:
         return None
 
     async def set(self, prefix: str, key: str, value: Any, ttl_seconds: int = 86400) -> None:
-        """Serialize and store value in cache with TTL."""
+        """Serialize and store value in cache with TTL and LRU bounds."""
         cache_key = self._hash_key(prefix, key)
         val_str = json.dumps(value)
 
@@ -81,9 +88,12 @@ class CacheManager:
                 self._redis_offline_until = time.time() + 60.0
                 logger.debug("redis_set_failed_fallback_to_memory", error=str(e))
 
-        # In-Memory Cache Storage
+        # In-Memory Cache Storage with bounded LRU eviction
         expires_at = time.time() + ttl_seconds
+        if len(self._in_memory_cache) >= self.max_memory_entries:
+            self._in_memory_cache.popitem(last=False)
         self._in_memory_cache[cache_key] = (val_str, expires_at)
+        self._in_memory_cache.move_to_end(cache_key)
         logger.debug("memory_cache_set", key=cache_key, ttl=ttl_seconds)
 
     # =========================================================================

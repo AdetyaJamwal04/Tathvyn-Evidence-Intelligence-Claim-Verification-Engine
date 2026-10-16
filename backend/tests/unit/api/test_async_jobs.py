@@ -1,5 +1,7 @@
 """Tests for Asynchronous Deep Research Dispatch and Polling."""
 
+import contextlib
+
 import pytest
 from httpx import ASGITransport, AsyncClient
 
@@ -57,3 +59,31 @@ async def test_nonexistent_job_returns_404() -> None:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/api/v1/research/00000000-0000-0000-0000-000000000000")
         assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_worker_run_loop_and_dequeue() -> None:
+    import asyncio
+
+    from tathvyn.workers.queue import JobQueueManager
+    from tathvyn.workers.worker import ResearchWorker
+
+    queue_manager = JobQueueManager(use_redis=False)
+    worker = ResearchWorker(queue_manager=queue_manager)
+
+    # Test enqueue and dequeue
+    job_resp = await queue_manager.enqueue_job(claim="Test loop claim", depth="FAST")
+    assert job_resp.job_id is not None
+
+    dequeued_id = await queue_manager.dequeue_job(timeout=0.1)
+    assert dequeued_id == job_resp.job_id
+
+    # Test run_loop stop and cancellation
+    loop_task = asyncio.create_task(worker.run_loop(poll_interval=0.05))
+    await asyncio.sleep(0.1)
+    worker.stop()
+    await asyncio.sleep(0.1)
+    loop_task.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await loop_task
+    assert worker._running is False

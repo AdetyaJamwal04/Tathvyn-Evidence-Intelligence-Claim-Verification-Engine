@@ -72,14 +72,25 @@ RUN mkdir -p /home/user/.cache/huggingface && chown -R user:user /home/user/.cac
 # Switch to non-root user
 USER user
 ENV HOME=/home/user \
-    PORT=7860
+    HF_HOME=/home/user/.cache/huggingface \
+    TRANSFORMERS_CACHE=/home/user/.cache/huggingface \
+    PORT=8080
+
+# Pre-cache transformer model weights into image layer so cold starts never hit HuggingFace Hub
+RUN python -c "\
+from sentence_transformers import CrossEncoder; \
+from transformers import pipeline; \
+CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2'); \
+pipeline('text-classification', model='cross-encoder/nli-distilroberta-base'); \
+"
+
 
 # Expose default port
-EXPOSE 7860
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-7860}/api/v1/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/api/v1/health || exit 1
 
 # Launch FastAPI server
-CMD ["sh", "-c", "python -m uvicorn tathvyn.api.app:create_app --factory --host 0.0.0.0 --port ${PORT:-7860}"]
+CMD ["sh", "-c", "python -m uvicorn tathvyn.api.app:create_app --factory --host 0.0.0.0 --port ${PORT:-8080} --forwarded-allow-ips='*'"]

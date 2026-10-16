@@ -26,7 +26,7 @@ class ClaimVerificationRequest(BaseModel):
     claim: str = Field(
         ...,
         min_length=3,
-        max_length=4000,
+        max_length=2000,
         description="Raw natural language claim text to verify.",
         examples=["Sweden joined NATO as its 32nd member state in March 2024."],
     )
@@ -63,7 +63,7 @@ class AsyncResearchJobRequest(BaseModel):
     claim: str = Field(
         ...,
         min_length=3,
-        max_length=4000,
+        max_length=2000,
         description="Claim to dispatch for background deep research.",
     )
     depth: ResearchDepth = Field(
@@ -104,6 +104,19 @@ class HealthCheckResponse(BaseModel):
     uptime_seconds: float
     database_connected: bool
     redis_connected: bool
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+
+
+
+class ReadinessCheckResponse(BaseModel):
+    """Active readiness check response for Kubernetes/Cloud Run."""
+
+    status: str = "ready"
+    version: str = "1.0.0"
+    uptime_seconds: float
+    redis: dict[str, Any]
+    nli_model: dict[str, Any]
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
