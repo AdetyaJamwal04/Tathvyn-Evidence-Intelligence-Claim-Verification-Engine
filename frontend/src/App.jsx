@@ -8,6 +8,7 @@ import { streamVerifyClaim } from './api/client';
 
 export default function App() {
   const [claim, setClaim] = useState('');
+  const [selectedDepth, setSelectedDepth] = useState('FAST');
   const [viewState, setViewState] = useState('home'); // 'home' | 'loading' | 'results' | 'error'
   const [currentStage, setCurrentStage] = useState('ANALYZING');
   const [stageMessage, setStageMessage] = useState('');
@@ -15,19 +16,20 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleVerify = async (queryToVerify) => {
+  const handleVerify = async (queryToVerify, depth = selectedDepth) => {
     const targetQuery = queryToVerify || claim;
     if (!targetQuery.trim()) return;
 
+    setSelectedDepth(depth);
     setViewState('loading');
     setCurrentStage('ANALYZING');
-    setStageMessage('Connecting to verification engine...');
+    setStageMessage(`Connecting to verification engine (${depth === 'DEEP' ? 'Deep Research' : 'Fast Path'})...`);
     setStageData(null);
     setErrorMessage(null);
     setResult(null);
 
     try {
-      const finalResult = await streamVerifyClaim(targetQuery, 'FAST', (event) => {
+      const finalResult = await streamVerifyClaim(targetQuery, depth, (event) => {
         if (event.stage) setCurrentStage(event.stage);
         if (event.message) setStageMessage(event.message);
         setStageData(event);
@@ -86,7 +88,7 @@ export default function App() {
           <ErrorFallback
             claim={claim}
             error={errorMessage}
-            onRetry={() => handleVerify(claim)}
+            onRetry={() => handleVerify(claim, selectedDepth)}
             onEditQuery={handleEditQuery}
             onReset={handleReset}
           />

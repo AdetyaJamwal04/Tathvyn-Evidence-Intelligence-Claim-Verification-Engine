@@ -625,3 +625,40 @@ body {
 .animate-fade-in {
   animation: fadeInSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ── VERIFICATION DEPTH TOGGLE ──────────────────────────────── */
+.depth-toggle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-elevated, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: 9999px;
+  padding: 3px;
+  margin-top: 14px;
+  gap: 4px;
+}
+
+.depth-toggle-btn {
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.depth-toggle-btn:hover {
+  color: var(--text-main, #f8fafc);
+}
+
+.depth-toggle-btn.active {
+  background: var(--brand-primary, #6366f1);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(99, 102, 241, 0.35);
+}

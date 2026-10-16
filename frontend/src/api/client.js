@@ -1,14 +1,21 @@
 /**
  * Tathvyn API Client with Real-Time Server-Sent Events (SSE) Streaming
+ * and Distributed Background Research Polling.
  */
 
-const BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const envUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+const isLocal = typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1' ||
+  window.location.port === '8080'
+);
+const BASE_URL = isLocal ? '' : envUrl;
 
 /**
  * Stream verification progress events in real-time until completion.
  * 
  * @param {string} claim The claim text to verify.
- * @param {string} depth "FAST" or "DEEP"
+ * @param {string} depth "FAST", "STANDARD", or "DEEP"
  * @param {function} onStageUpdate Callback receiving { stage, message, queries?, atomic_claims? }
  * @returns {Promise<object>} Final ClaimVerificationResponse object
  */
@@ -18,7 +25,7 @@ export async function streamVerifyClaim(claim, depth = 'FAST', onStageUpdate = (
   try {
     onStageUpdate({
       stage: 'ANALYZING',
-      message: 'Connecting to Tathvyn Verification Engine...',
+      message: `Connecting to Tathvyn Verification Engine (${normalizedDepth})...`,
     });
 
     const response = await fetch(`${BASE_URL}/api/v1/verify/stream`, {
@@ -100,6 +107,41 @@ async function fallbackSyncVerify(claim, depth, onStageUpdate) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ claim, depth }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Backend error: ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+/**
+ * Dispatch an asynchronous deep research background job.
+ */
+export async function dispatchAsyncJob(claim, depth = 'DEEP') {
+  const res = await fetch(`${BASE_URL}/api/v1/research`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claim, depth: depth.toUpperCase() }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || `Backend error: ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+/**
+ * Poll status and result for an asynchronous background job.
+ */
+export async function pollAsyncJob(jobId) {
+  const res = await fetch(`${BASE_URL}/api/v1/research/${jobId}`, {
+    method: 'GET',
+    headers: { 'Accept': 'application/json' },
   });
 
   if (!res.ok) {

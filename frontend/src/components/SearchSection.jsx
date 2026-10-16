@@ -1,23 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const EXAMPLE_QUERIES = [
   "Is coffee bad for your heart?",
-  "Did the US pass the new privacy bill?",
+  "Did Sweden join NATO in 2024?",
   "Do electric vehicles produce more lifetime emissions?",
 ];
 
 export default function SearchSection({ claim, setClaim, onVerify, isLoading }) {
+  const [depth, setDepth] = useState('FAST');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (claim.trim() && !isLoading) {
-      onVerify(claim.trim());
+      onVerify(claim.trim(), depth);
     }
   };
 
   const handleChipClick = (query) => {
     setClaim(query);
     if (!isLoading) {
-      onVerify(query);
+      onVerify(query, depth);
     }
   };
 
@@ -49,6 +51,25 @@ export default function SearchSection({ claim, setClaim, onVerify, isLoading }) 
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
+          </button>
+        </div>
+
+        <div className="depth-toggle-wrapper">
+          <button
+            type="button"
+            className={`depth-toggle-btn ${depth === 'FAST' ? 'active' : ''}`}
+            onClick={() => setDepth('FAST')}
+            disabled={isLoading}
+          >
+            <span>⚡ Fast Path</span>
+          </button>
+          <button
+            type="button"
+            className={`depth-toggle-btn ${depth === 'DEEP' ? 'active' : ''}`}
+            onClick={() => setDepth('DEEP')}
+            disabled={isLoading}
+          >
+            <span>🔬 Deep Research</span>
           </button>
         </div>
       </form>
